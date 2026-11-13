@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidence Log — Auto OCR + Share</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:600px;margin:auto;padding:16px;background:#f4f5f7}
+  h1{font-size:1.3rem}
+  .card{background:#fff;border-radius:10px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  label{font-weight:600;display:block;margin-top:10px}
+  input,textarea,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;margin-top:4px;font-size:1rem}
+  button{background:#0a66c2;color:#fff;border:0;padding:12px;border-radius:8px;font-size:1rem;width:100%;margin-top:12px;cursor:pointer}
+  button.sec{background:#444}
+  .rec{border-bottom:1px solid #eee;padding:10px 0}
+  .rec small{color:#666}
+  .rec img{max-width:80px;border-radius:6px;margin:4px 4px 0 0}
+  #status{font-size:.9rem;color:#060;margin:8px 0;white-space:pre-line}
+  .auto{background:#e8f5e9;border:1px dashed #4caf50;padding:6px;border-radius:6px;font-size:.85rem;color:#2e7d32;margin-top:4px}
+  .btnrow button{width:auto;padding:6px 12px;font-size:.85rem;margin:4px 4px 0 0}
+  .share{background:#25d366}
+</style>
+</head>
+<body>
+<h1>📋 Evidence Log (Auto-Read + Share)</h1>
+
+<div class="card">
+  <div id="status">Ready. Take a screenshot of the order — Order ID & Store name will be read automatically.</div>
+
+  <label>📸 Order screenshot — auto-reads Order ID + Store name</label>
+  <input id="shot" type="file" accept="image/*">
+
+  <div id="autoBox" style="display:none">
+    <div class="auto" id="autoInfo"></div>
+  </div>
+
+  <label>Category</label>
+  <select id="cat">
+    <option>Reusable bag not given</option>
+    <option>Frozen items not packed separately</option>
+    <option>Wrong item given</option>
+    <option>Asked to convince customer wrongly</option>
+    <option>Manager misconduct</option>
+    <option>Other</option>
+  </select>
+
+  <label>Order ID</label>
+  <input id="oid" placeholder="auto-filled from screenshot">
+
+  <label>Store name</label>
+  <input id="store" placeholder="auto-filled from screenshot">
+
+  <label>Short note (optional)</label>
+  <textarea id="desc" rows="2"></textarea>
+
+  <label>Extra evidence photo (optional)</label>
+  <input id="extra" type="file" accept="image/*" capture="environment">
+
+  <button onclick="save()">💾 Save Record</button>
+</div>
+
+<div class="card">
+  <b>Records: <span id="count">0</span></b>
+  <div id="list"></div>
+  <button class="sec" onclick="exportData()">📤 Export All (JSON)</button>
+  <button class="sec" onclick="clearAll()" style="background:#a00">🗑 Clear All</button>
+</div>
+
+<script>
+let DB = JSON.parse(localStorage.getItem('evidenceDB') || '[]');
+
+document.getElementById('shot').addEventListener('change', async e=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  setStatus('⏳ Reading screenshot… (5–15 seconds, first time may download language data)');
+  try{
+    const res = await Tesseract.recognize(f, 'eng');
+    const text = res.data.text;
+
+    const oid = extractOrderId(text);
+    const store = extractStore(text);
+
+    if(oid){ document.getElementById('oid').value = oid; }
+    if(store){ document.getElementById('store').value = store; }
+
+    document.getElementById('autoBox').style.display='block';
+    document.getElementById('autoInfo').textContent =
+      '✅ Auto-detected:' + (oid?'\nOrder ID: '+oid:'') + (store?'\nStore: '+store:'') +
+      (oid||store ? '\n⏰ '+new Date().toLocaleString() : '\n⚠️ Could not read clearly — please type manually');
+    setStatus('Done. Check the auto-filled fields, then press Save.');
+  }catch(err){
+    setStatus('❌ Could not read image: '+err.message+'\nPlease type Order ID and Store manually.');
+  }
+});
+
+function extractOrderId(text){
+  let m = text.match(/(?:order\s*(?:id|no|#)?|ord|#)\s*[:#-]?\s*([A-Z0-9][A-Z0-9-]{5,})/i);
+  if(m) return m[1].replace(/[^A-Z0-9-]/gi,'');
+  m = text.match(/\b(\d{6,})\b/);
+  if(m) return m[1];
+  return '';
+}
+
+function extractStore(text){
+  const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
+  for(let i=0;i<lines.length;i++){
+    let m = lines[i].match(/(?:store|outlet|branch|hub|warehouse)\s*[:.\-]?\s*(.+)/i);
+    if(m && m[1].trim()) return m[1].trim().slice(0,60);
+    m = lines[i].match(/^(?:store|outlet|branch|hub)$/i);
+    if(m && lines[i+1]) return lines[i+1].slice(0,60);
+  }
+  if(lines.length) return lines[0].slice(0,60);
+  return '';
+}
+
+function setStatus(t){ document.getElementById('status').textContent = t; }
+
+function save(){
+  const oid = document.getElementById('oid').value.trim();
+  const store = document.getElementById('store').value.trim();
+  if(!oid && !store){ alert('Please type Order ID or Store name'); return; }
+  const extraFile = document.getElementById('extra').files[0];
+  const shotFile = document.getElementById('shot').files[0];
+
+  const entry = {
+    date: new Date().toLocaleString(),
+    category: document.getElementById('cat').value,
+    oid, store,
+    desc: document.getElementById('desc').value.trim(),
+    shot: null, extra: null
+  };
+
+  let pending = (shotFile?1:0)+(extraFile?1:0);
+  if(!pending) return commit();
+  if(shotFile) readFile(shotFile, d=>entry.shot=d, done);
+  if(extraFile) readFile(extraFile, d=>entry.extra=d, done);
+
+  function done(){ if(--pending===0) commit(); }
+  function readFile(f, cb, fin){ const r=new FileReader(); r.onload=e=>{cb(e.target.result);fin();}; r.readAsDataURL(f); }
+  function commit(){
+    DB.push(entry);
+    localStorage.setItem('evidenceDB', JSON.stringify(DB));
+    ['oid','store','desc'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('shot').value='';
+    document.getElementById('extra').value='';
+    document.getElementById('autoBox').style.display='none';
+    render();
+    setStatus('✅ Saved: '+new Date().toLocaleTimeString());
+  }
+}
+
+function shareRecord(i){
+  const r = DB[i];
+  const text =
+    '📋 *Evidence Report*\n' +
+    'Issue: ' + r.category + '\n' +
+    'Order ID: ' + (r.oid||'-') + '\n' +
+    'Store: ' + (r.store||'-') + '\n' +
+    'Date/Time: ' + r.date + '\n' +
+    'Details: ' + (r.desc||'-') + '\n' +
+    '_(photos attached separately — please check)_';
+
+  // Prepare image files if possible
+  const files = [];
+  [r.shot, r.extra].forEach((dataUrl, idx)=>{
+    if(!dataUrl) return;
+    try{
+      const blob = dataURLtoBlob(dataUrl);
+      files.push(new File([blob], 'evidence-'+(idx===0?'screenshot':'photo')+'.jpg', {type:'image/jpeg'}));
+    }catch(e){}
+  });
+
+  if(navigator.canShare && files.length && navigator.canShare({files})){
+    navigator.share({text, files}).catch(()=>{});
+  } else if(navigator.share){
+    navigator.share({text}).catch(()=>{});
+  } else {
+    // Fallback: WhatsApp with text only
+    window.open('https://wa.me/?text='+encodeURIComponent(text), '_blank');
+  }
+}
+
+function dataURLtoBlob(dataUrl){
+  const parts = dataUrl.split(';base64,');
+  const mime = parts[0].split(':')[1];
+  const raw = atob(parts[1]);
+  const arr = new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) arr[i]=raw.charCodeAt(i);
+  return new Blob([arr], {type:mime});
+}
+
+function render(){
+  document.getElementById('count').textContent = DB.length;
+  document.getElementById('list').innerHTML = DB.slice().reverse().map((r,i)=>{
+    const idx = DB.length-1-i;
+    return `<div class="rec">
+      <b>${r.category}</b><br>
+      <small>🆔 ${r.oid||'-'} | 🏪 ${r.store||'-'}<br>🕐 ${r.date}<br>${(r.desc||'').replace(/</g,'&lt;')}</small><br>
+      ${r.shot?`<img src="${r.shot}">`:''}${r.extra?`<img src="${r.extra}">`:''}
+      <div class="btnrow">
+        <button class="share" onclick="shareRecord(${idx})">📤 Share</button>
+        <button class="sec" onclick="del(${idx})">❌ Delete</button>
+      </div>
+    </div>`;
+  }).join('') || '<small>No records yet</small>';
+}
+
+function del(i){ if(confirm('Delete this record?')){ DB.splice(i,1); localStorage.setItem('evidenceDB',JSON.stringify(DB)); render(); } }
+function clearAll(){ if(confirm('Delete ALL records permanently?')){ DB=[]; localStorage.removeItem('evidenceDB'); render(); } }
+function exportData(){
+  const blob = new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'evidence-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+render();
+</script>
+</body>
+</html>
