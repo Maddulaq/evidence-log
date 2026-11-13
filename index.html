@@ -60,6 +60,7 @@ button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:8px;fle
 <div class="grid" style="align-items:center"><div><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
 <div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
 </section>
+<p class="hint" style="text-align:center;margin:18px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
 </main>
 <script>
 const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
@@ -401,7 +402,7 @@ function reportHtml(rows){
   return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Delivery Evidence Report</title><style>'+REPORT_CSS+'</style></head><body>'
     +'<div class="bar"><span>Delivery Partner \u2014 Evidence Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
-    +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.</p>'
+    +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
     +'</main><script>function printEvidenceReport(){const b=document.getElementById("printReportBtn");if(b){b.disabled=true;b.textContent="Preparing report…";}const imgs=Array.from(document.images);Promise.all(imgs.map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;}))).then(()=>{if(b){b.disabled=false;b.textContent="Print / Save as PDF";}setTimeout(()=>window.print(),250);});}</'+ '/script></body></html>';
 }
 function printRecords(rows){
