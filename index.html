@@ -977,7 +977,7 @@ function reportHtml(rows){
       +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
       +'</div></article>';
   }).join('');
-  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Proof Hub — Incident Evidence Report</title><style>'+REPORT_CSS+'</style></head><body>'
+  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+'</style></head><body>'
     +'<div class="bar"><span>SOP & Evidence Hub \u2014 Incident Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
@@ -1105,7 +1105,7 @@ function printRecords(rows){
   actions.append(download,print,close);
   tools.append(label,actions);
   const frame=document.createElement('iframe');
-  frame.title='SOP & Proof Hub incident evidence report preview';
+  frame.title='SOP & Evidence Hub incident report preview';
   frame.style.cssText='display:block;flex:1;width:100%;height:100%;border:0;background:#fff';
   frame.setAttribute('sandbox','allow-scripts allow-modals allow-same-origin');
   frame.srcdoc=reportHtml(rows);
