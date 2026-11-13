@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123d32">
+<title>Delivery Evidence Hub</title>
+<style>
+:root{--ink:#172b25;--muted:#66756e;--green:#174b3b;--green2:#e7f1ec;--line:#dce5df;--paper:#f5f7f5;--red:#a63232}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:var(--green);color:#fff;padding:22px max(18px,calc((100% - 900px)/2))}header h1{font-size:22px;margin:0}header p{margin:4px 0 0;color:#d8e7df;font-size:13px}
+main{max-width:900px;margin:20px auto;padding:0 14px 48px}.notice{background:#fff7e7;border:1px solid #ead6a9;color:#624c20;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:13px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px #18382b08}
+h2{font-size:17px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+label{display:block;font-weight:650;font-size:13px;margin:10px 0 5px}
+input,select,textarea{width:100%;border:1px solid #cbd7d0;border-radius:9px;padding:11px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid #8ab6a2;outline-offset:1px}
+input[type=file]{padding:9px;font-size:13px}small,.hint{color:var(--muted);font-size:12px}.hint{display:block;margin-top:4px}
+button{border:0;border-radius:9px;padding:11px 15px;font:650 14px system-ui;cursor:pointer;background:var(--green);color:#fff}
+button.secondary{background:#edf2ef;color:var(--ink);border:1px solid var(--line)}button.danger{background:#fff0f0;color:var(--red);border:1px solid #f0caca}
+button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.status{min-height:20px;color:var(--green);font-size:13px;margin-top:10px;white-space:pre-line}.error{color:var(--red)}
+.preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.preview img{width:76px;height:76px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.record{border-top:1px solid var(--line);padding:13px 0}.record:first-child{border-top:0}.record h3{font-size:14px;margin:0 0 4px}.record p{margin:3px 0;color:var(--muted);font-size:12px}
+.pill{display:inline-block;background:var(--green2);color:var(--green);border-radius:30px;padding:2px 8px;font-size:11px;font-weight:700}
+@media(max-width:600px){.grid{grid-template-columns:1fr}header{padding:18px}.card{padding:14px}}
+@media print{body{background:#fff}.no-print,header .sub,.notice{display:none!important}main{margin:0;max-width:none}.card{box-shadow:none;border:0;padding:0}.record{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><h1>Delivery Evidence Hub</h1><p class="sub">Incident records • Order screenshot • Supporting evidence</p></header>
+<main>
+<div class="notice"><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
+<section class="card">
+<h2>Submit an incident</h2>
+<form id="incidentForm">
+<label for="orderShot">1. Order screenshot <span class="pill">Required</span></label>
+<input id="orderShot" type="file" accept="image/*" required>
+<span class="hint">Upload the order screenshot. Store is prefilled as Banjara Hills 150 and the Order ID is read automatically. If it is not detected, use "Re-read from screenshot" or type it in.</span>
+<div class="preview" id="orderPreview"></div>
+<div class="grid">
+<div><label for="category">Issue category *</label><select id="category" required>
+<option value="">Select an issue</option>
+<option>Reusable bag not given</option><option>Frozen items not packed separately</option><option>Wrong item given</option><option>Asked to convince customer wrongly</option><option>Manager misconduct</option><option>Other</option>
+</select></div>
+<div><label for="orderId">Order ID *</label><input id="orderId" required maxlength="80" placeholder="Enter or verify Order ID"><button class="secondary" id="rereadBtn" type="button" style="margin-top:8px;padding:8px 12px;font-size:13px">Re-read from screenshot</button><div class="status" id="ocrInline" role="status" aria-live="polite" style="margin-top:6px;font-size:12px"></div><details id="ocrDebug" hidden style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:#66756e">What the OCR saw</summary><pre id="ocrText" style="white-space:pre-wrap;font-size:11px;color:#66756e;background:#f5f7f5;border:1px solid #dce5df;border-radius:8px;padding:8px;margin:6px 0 0;max-height:180px;overflow:auto"></pre></details></div>
+<div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" value="Banjara Hills 150" placeholder="Store name"></div>
+<div><label for="incidentAt">Incident date and time *</label><input id="incidentAt" type="datetime-local" required></div>
+</div>
+<label for="supporting">2. Supporting evidence photos <span class="pill">1 or 2 required</span></label>
+<input id="supporting" type="file" accept="image/*" multiple required>
+<span class="hint">Add 1–2 clear photos showing the issue. Maximum 8 MB per image.</span>
+<div class="preview" id="supportPreview"></div>
+<label for="notes">Short description (optional)</label><textarea id="notes" rows="3" maxlength="600" placeholder="Briefly explain what happened..."></textarea>
+<div class="actions"><button id="saveBtn" type="submit">Save incident</button><button class="secondary" type="reset">Reset form</button></div>
+<div class="status" id="formStatus" role="status" aria-live="polite"></div>
+</form>
+</section>
+<section class="card">
+<div class="grid" style="align-items:center"><div><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
+<div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
+</section>
+</main>
+<script>
+const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
+const $=id=>document.getElementById(id);
+let db;
+function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+function allRecords(){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly'),req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result.sort((a,b)=>b.submittedAt.localeCompare(a.submittedAt)));req.onerror=()=>reject(req.error);});}
+function putRecord(record){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
+function deleteRecord(id){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
+function readFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file);});}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function setStatus(msg,isError=false){$('formStatus').textContent=msg;$('formStatus').className='status'+(isError?' error':'');}
+function localDateTime(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());}
+$('incidentAt').value=localDateTime(new Date());
+const OCR_DIGIT_MAP={O:'0',Q:'0',D:'0',U:'0',I:'1',L:'1','|':'1','!':'1','[':'1',']':'1',S:'5',B:'8',Z:'2',G:'6',T:'7'};
+function ocrRunToDigits(run){
+  let digits='';const ambiguous=[];
+  for(const ch of run.toUpperCase()){
+    if(ch>='0'&&ch<='9'){digits+=ch;ambiguous.push(false);}
+    else if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous.push(true);}
+    else if(ch===' '||ch==='\t'||ch==='\n'||ch==='-')continue;
+    else return null;
+  }
+  return {digits,ambiguous};
+}
+function ocrVariants(digits,ambiguous){
+  const out=[{d:digits,b:0}],n=digits.length;
+  if(n===19){
+    if(ambiguous[n-1]||ambiguous[n-2])out.push({d:digits.slice(0,18),b:6});
+    if(ambiguous[0]||ambiguous[1])out.push({d:digits.slice(-18),b:6});
+  }else if(n===20&&digits.startsWith('00')){
+    out.push({d:digits.slice(2),b:12});
+  }
+  return out;
+}
+function scoreOrderId(digits,text,index,bonus){
+  const n=digits.length;
+  if(n<14||n>22)return -999;
+  let score=bonus||0;
+  if(n>=18&&n<=20)score+=40;else if(n===16||n===17)score+=25;else score+=5;
+  const before=text.slice(Math.max(0,index-40),index);
+  const tight=before.replace(/[\s:.#-]+$/,'');
+  const keyword=/ORDER\s*(?:ID|NO\.?|NUMBER|#)/.test(before);
+  const prefix=/[O0]D$/.test(tight);
+  if(keyword)score+=30;
+  if(prefix)score+=30;
+  if(!keyword&&!prefix)score-=35;
+  if(/[A-Z]/.test(text.charAt(index-1)))score-=25;
+  if(!/[A-Z0-9]/.test(text.charAt(index+n)))score+=10;
+  if(index<text.length*0.3)score+=8;
+  return score;
+}
+function extractOrderId(rawText){
+  if(!rawText)return null;
+  const text=String(rawText).toUpperCase().replace(/[\u2010-\u2015\u2212]/g,'-').replace(/\u00A0/g,' ');
+  const RUN=/[0-9OQIL|!SBZG][ \t\n-]?[0-9OQIL|!SBZG](?:[ \t\n-]?[0-9OQIL|!SBZG])*/g;
+  const cands=[];let m;
+  while((m=RUN.exec(text))!==null){
+    const parsed=ocrRunToDigits(m[0]);
+    if(!parsed)continue;
+    for(const v of ocrVariants(parsed.digits,parsed.ambiguous))cands.push({id:v.d,score:scoreOrderId(v.d,text,m.index,v.b)});
+  }
+  cands.sort((a,b)=>b.score-a.score||b.id.length-a.id.length);
+  const best=cands[0];
+  if(!best||best.score<45)return null;
+  return 'OD'+best.id;
+}
+/* ---------- Order ID OCR (rewritten) ---------- */
+const OCR_MAX_AREA=4.2e6,OCR_MAX_SIDE=3800,OCR_DEADLINE=45000;
+const OCR_LANG_SOURCES=['https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0','https://unpkg.com/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://tessdata.projectnaptha.com/4.0.0_best_int'];
+const OCR_LIB_SOURCES=['https://unpkg.com/tesseract.js@5/dist/tesseract.min.js','https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js'];
+let ocrWorkerPromise=null,ocrToken=0,lastAutoId='',ocrState='loading';
+
+window.loadOcrLibFallback=function(index){
+  const i=index||0;
+  if(i>=OCR_LIB_SOURCES.length)return;
+  const script=document.createElement('script');
+  script.src=OCR_LIB_SOURCES[i];
+  script.defer=true;
+  script.onerror=()=>window.loadOcrLibFallback(i+1);
+  script.onload=()=>{if(ocrState==='loading')warmOcr();};
+  document.head.appendChild(script);
+};
+
+function setOcrState(state,detail){
+  ocrState=state;
+  const el=document.getElementById('ocrState');
+  if(!el)return;
+  const map={loading:['Loading OCR engine…','#624c20'],ready:['OCR engine ready','#174b3b'],offline:['OCR engine unavailable — type the Order ID','#a63232']};
+  const picked=map[state]||map.loading;
+  el.textContent=detail||picked[0];
+  el.style.color=picked[1];
+}
+
+function loadImageEl(file){return new Promise((resolve,reject)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('This image could not be opened. Use a PNG or JPG screenshot.'));};img.src=url;});}
+function newCanvas(w,h){const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));return c;}
+function fitScale(w,h,desired,maxSide){let s=desired;s=Math.min(s,Math.sqrt(OCR_MAX_AREA/(w*h)));s=Math.min(s,(maxSide||OCR_MAX_SIDE)/Math.max(w,h));return Math.max(0.2,s);}
+function drawRegion(img,rect,desired,maxSide){const sx=rect?rect.x:0,sy=rect?rect.y:0,sw=rect?rect.w:img.naturalWidth,sh=rect?rect.h:img.naturalHeight;const s=fitScale(sw,sh,desired,maxSide);const cv=newCanvas(sw*s,sh*s);const ctx=cv.getContext('2d',{willReadFrequently:true});ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(img,sx,sy,sw,sh,0,0,cv.width,cv.height);cv._scale=s;return cv;}
+
+function preprocess(cv,mode){
+  if(mode==='raw')return cv;
+  const ctx=cv.getContext('2d',{willReadFrequently:true});
+  const frame=ctx.getImageData(0,0,cv.width,cv.height),d=frame.data;
+  const px=d.length>>2,gray=new Uint8ClampedArray(px);
+  let min=255,max=0,sum=0;
+  for(let i=0,p=0;p<px;i+=4,p++){const g=(d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114)|0;gray[p]=g;sum+=g;if(g<min)min=g;if(g>max)max=g;}
+  const mean=px?sum/px:0, invert=mean<110;
+  if(mode==='binary'){
+    const hist=new Uint32Array(256);
+    for(let p=0;p<px;p++)hist[gray[p]]++;
+    let totalSum=0;for(let t=0;t<256;t++)totalSum+=t*hist[t];
+    let sumB=0,wB=0,best=-1,thr=127;
+    for(let t=0;t<256;t++){wB+=hist[t];if(!wB)continue;const wF=px-wB;if(!wF)break;sumB+=t*hist[t];const mB=sumB/wB,mF=(totalSum-sumB)/wF;const between=wB*wF*(mB-mF)*(mB-mF);if(between>best){best=between;thr=t;}}
+    for(let p=0;p<px;p++){let v=gray[p]>thr?255:0;if(invert)v=255-v;const o=p<<2;d[o]=d[o+1]=d[o+2]=v;}
+  }else{
+    const span=Math.max(1,max-min);
+    for(let p=0;p<px;p++){let v=Math.round((gray[p]-min)*255/span);if(invert)v=255-v;const o=p<<2;d[o]=d[o+1]=d[o+2]=v;}
+  }
+  ctx.putImageData(frame,0,0);
+  return cv;
+}
+
+function bandRects(w,h){const out=[],bh=Math.round(h*0.42),step=Math.max(1,Math.round(h*0.29));for(let y=0;y+bh<=h;y+=step)out.push({x:0,y,w,h:bh});if(!out.length)out.push({x:0,y:0,w,h});return out.slice(0,3);}
+
+function findLabelBox(words,w,h){
+  if(!words||!words.length)return null;
+  let best=null;
+  for(const word of words){
+    const t=(word.text||'').toUpperCase().replace(/[^A-Z]/g,'');
+    if(!/^(ORDER|ORDERID|ID|OD|ORDERNO)$/.test(t))continue;
+    if(!word.bbox)continue;
+    const nearTop=1-(word.bbox.y0/Math.max(1,h));
+    const weight=nearTop+(t==='ORDERID'||t==='ORDER'?1:0);
+    if(!best||weight>best.weight)best={weight,box:word.bbox};
+  }
+  return best?best.box:null;
+}
+
+function zoomOnOriginal(img,box,canvasScale){
+  const s=canvasScale||1;
+  const sy=box.y0/s, sh=Math.max(1,(box.y1-box.y0)/s);
+  const y=Math.max(0,sy-sh*1.4);
+  const h=Math.min(img.naturalHeight-y,sh*3.8);
+  return drawRegion(img,{x:0,y,w:img.naturalWidth,h},3.0);
+}
+
+async function getOcrWorker(onStatus){
+  if(ocrWorkerPromise)return ocrWorkerPromise;
+  ocrWorkerPromise=(async()=>{
+    if(!window.Tesseract)throw new Error('the OCR engine did not load (check your internet connection)');
+    let lastErr=null;
+    for(const langPath of OCR_LANG_SOURCES){
+      try{
+        if(onStatus)onStatus('Loading the OCR engine (first time only)…');
+        const worker=await Tesseract.createWorker('eng',1,{langPath,gzip:true,logger:()=>{}});
+        await worker.setParameters({preserve_interword_spaces:'1'});
+        setOcrState('ready');
+        return worker;
+      }catch(e){lastErr=e;}
+    }
+    ocrWorkerPromise=null;
+    setOcrState('offline');
+    throw lastErr||new Error('the OCR engine could not be started');
+  })();
+  return ocrWorkerPromise;
+}
+
+async function warmOcr(){
+  if(ocrState==='ready')return;
+  if(!window.Tesseract){setTimeout(()=>{if(ocrState==='loading'&&!window.Tesseract)setOcrState('offline');},20000);return;}
+  setOcrState('loading');
+  const timer=setTimeout(()=>{if(ocrState==='loading')setOcrState('offline');},25000);
+  try{await getOcrWorker();setOcrState('ready');}catch(e){setOcrState('offline');}finally{clearTimeout(timer);}
+}
+
+async function recognize(cv,worker,psm){
+  await worker.setParameters({tessedit_pageseg_mode:psm});
+  const res=await worker.recognize(cv);
+  return {text:res.data.text||'',words:res.data.words||[]};
+}
+
+async function readOrderIdFromImage(file,onStatus){
+  const note=(msg)=>{if(onStatus)onStatus(msg);};
+  const img=await loadImageEl(file);
+  if(!img.naturalWidth||!img.naturalHeight)throw new Error('the image is empty');
+  note('Starting the OCR engine…');
+  const worker=await getOcrWorker(onStatus);
+  const t0=Date.now(),seen=[];
+  const budget=()=>Date.now()-t0<OCR_DEADLINE;
+  const done=(id)=>id?{id,text:seen.join('\n---\n')}:null;
+
+  // Fast pass: a small copy of the whole screenshot, only to locate things.
+  note('Reading the screenshot…');
+  const base=preprocess(drawRegion(img,null,1.2,1400),'grey');
+  let res=await recognize(base,worker,'6');
+  seen.push(res.text);
+  const coarse=extractOrderId(res.text);
+
+  // Zoom pass: crop the "Order ID" line out of the ORIGINAL image at full
+  // resolution. This is the trustworthy read; the small preview copy above
+  // can misread digits, so it is only used if this pass finds nothing.
+  const label=findLabelBox(res.words,base.width,base.height);
+  if(budget()){
+    note('Zooming in on the Order ID line…');
+    const target=label?zoomOnOriginal(img,label,base._scale):drawRegion(img,{x:0,y:0,w:img.naturalWidth,h:Math.round(img.naturalHeight*0.45)},3.0);
+    res=await recognize(preprocess(target,'grey'),worker,'6');
+    seen.push(res.text);
+    const sharp=extractOrderId(res.text);
+    if(sharp)return {id:sharp,text:seen.join('\n---\n')};
+  }
+  if(coarse)return {id:coarse,text:seen.join('\n---\n')};
+
+  if(budget()){
+    note('Trying a sharper pass…');
+    const bin=preprocess(drawRegion(img,null,1.6,1800),'binary');
+    res=await recognize(bin,worker,'6');
+    seen.push(res.text);
+    hit=done(extractOrderId(res.text));
+    if(hit)return hit;
+  }
+
+  if(budget()){
+    const bands=bandRects(img.naturalWidth,img.naturalHeight);
+    for(let i=0;i<bands.length;i++){
+      if(!budget())break;
+      note('Scanning section '+(i+1)+' of '+bands.length+'…');
+      const cv=preprocess(drawRegion(img,bands[i],2.6),'grey');
+      res=await recognize(cv,worker,'6');
+      seen.push(res.text);
+      hit=done(extractOrderId(res.text));
+      if(hit)return hit;
+    }
+  }
+  return {id:null,text:seen.join('\n---\n')};
+}
+
+function setOcrStatus(msg,isError){
+  const el=$('ocrInline');
+  if(el){el.textContent=msg;el.className='status'+(isError?' error':'');}
+  setStatus(msg,!!isError);
+}
+async function runOrderOcr(file){
+  if(!file)return;
+  const token=++ocrToken;
+  $('ocrDebug').hidden=true;
+  setOcrStatus('Reading the Order ID from this screenshot…');
+  try{
+    const result=await readOrderIdFromImage(file,(msg)=>{if(token===ocrToken)setOcrStatus(msg);});
+    if(token!==ocrToken)return;
+    $('ocrText').textContent=(result.text||'').slice(0,6000)||'(no text recognised)';
+    $('ocrDebug').hidden=false;
+    if(result.id){
+      const field=$('orderId');
+      if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;}
+      setOcrStatus('Order ID detected: '+result.id+'. Please compare it with the screenshot before saving.');
+    }else{
+      setOcrStatus('Could not read the Order ID from this screenshot. Type it in, or upload a clearer screenshot of the order details screen.',true);
+    }
+  }catch(err){
+    if(token!==ocrToken)return;
+    setOcrStatus('OCR could not run: '+(err&&err.message?err.message:'unknown error')+'. Please enter the Order ID manually.',true);
+  }
+}
+$('store').value='Banjara Hills 150';
+$('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';if(!$('store').value.trim())$('store').value='Banjara Hills 150';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{if(window.Tesseract)warmOcr();else window.loadOcrLibFallback(0);});
+$('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
+$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving record on this device…');try{const record={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(16).slice(2),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:$('incidentAt').value,submittedAt:new Date().toISOString(),notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus('Incident saved on this device. Download a backup to preserve it.');await render();}catch(err){setStatus('Could not save. Device storage may be full. Download/export existing records and try again.',true);}finally{btn.disabled=false;}});
+async function render(){const rows=await allRecords();$('count').textContent=rows.length;const host=$('records');host.innerHTML='';if(!rows.length){host.innerHTML='<p class="hint">No records saved yet.</p>';return;}for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();div.innerHTML='<h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>Incident: '+esc(new Date(r.incidentAt).toLocaleString())+' · Submitted: '+esc(date)+'</p><p>'+esc(r.notes||'No description')+' · '+(1+r.supportingEvidence.length)+' image(s)</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">Export this record</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">Delete</button></div>';host.append(div);}}
+$('records').addEventListener('click',async e=>{const id=e.target.dataset.delete||e.target.dataset.export;if(!id)return;const rows=await allRecords(),r=rows.find(x=>x.id===id);if(!r)return;if(e.target.dataset.delete){if(confirm('Delete this saved record from this device?')){await deleteRecord(id);await render();}}else printRecords([r]);});
+const REPORT_CSS='@page{size:A4;margin:13mm}*{box-sizing:border-box}html,body{margin:0;padding:0}body{font:13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#172b25;background:#fff}.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;background:#174b3b;color:#fff}.bar span{font-weight:700;font-size:15px}.bar button{border:0;border-radius:8px;padding:9px 14px;font-weight:700;font-size:13px;background:#fff;color:#174b3b;cursor:pointer}.wrap{max-width:780px;margin:0 auto;padding:18px 16px 48px}.gen{color:#66756e;font-size:12px;margin:0 0 16px}.rec{border:1px solid #d9e3dd;border-radius:10px;padding:14px 16px;margin:0 0 18px;break-inside:avoid;page-break-inside:avoid}.rec h2{font-size:14px;margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid #eef2ef;color:#174b3b}table.kv{width:100%;border-collapse:collapse;margin:0 0 14px}table.kv td{padding:3px 0;font-size:12px;vertical-align:top}table.kv td.k{width:32%;color:#66756e;padding-right:10px}.shots{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shots figure{margin:0;border:1px solid #e3ebe6;border-radius:8px;overflow:hidden;background:#fff}.shots figure:first-child{grid-column:1 / -1}.shots img{display:block;width:100%;height:200px;object-fit:contain;background:#fff}.shots figure:first-child img{height:430px;background:#f7f9f8}.shots figcaption{font-size:10px;color:#66756e;padding:5px 6px;text-align:center;border-top:1px solid #eef2ef;background:#fafbfa}.sign{margin:24px 0 0;padding-top:10px;border-top:1px solid #dce5df;font-size:11px;color:#66756e}@media print{.bar{display:none}.wrap{max-width:none;padding:0}.rec{border-color:#cfd8d3}.shots img{height:190px}.shots figure:first-child img{height:390px;background:#f7f9f8}}';
+function reportHtml(rows){
+  const when=new Date().toLocaleString();
+  const recs=rows.map((r,i)=>{
+    const shots=[{src:r.orderScreenshot.data,cap:'Order screenshot'}].concat((r.supportingEvidence||[]).map((x,j)=>({src:x.data,cap:'Supporting evidence '+(j+1)})));
+    return '<article class="rec"><h2>#'+(i+1)+' &mdash; '+esc(r.category)+'</h2>'
+      +'<table class="kv">'
+      +'<tr><td class="k">Order ID</td><td><strong>'+esc(r.orderId)+'</strong></td></tr>'
+      +'<tr><td class="k">Store / hub</td><td>'+esc(r.store)+'</td></tr>'
+      +'<tr><td class="k">Incident date &amp; time</td><td>'+esc(new Date(r.incidentAt).toLocaleString())+'</td></tr>'
+      +'<tr><td class="k">Submitted</td><td>'+esc(new Date(r.submittedAt).toLocaleString())+'</td></tr>'
+      +'<tr><td class="k">Description</td><td>'+esc(r.notes||'\u2014')+'</td></tr>'
+      +'</table><div class="shots">'
+      +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
+      +'</div></article>';
+  }).join('');
+  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Delivery Evidence Report</title><style>'+REPORT_CSS+'</style></head><body>'
+    +'<div class="bar"><span>Delivery Partner \u2014 Evidence Report</span><button type="button" onclick="window.print()">Print / Save as PDF</button></div>'
+    +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
+    +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.</p>'
+    +'</main></body></html>';
+}
+function printRecords(rows){
+  const html=reportHtml(rows);
+  const win=window.open('','_blank');
+  if(win){win.document.open();win.document.write(html);win.document.close();return;}
+  const frame=document.createElement('iframe');
+  frame.style.cssText='position:fixed;left:0;bottom:0;width:0;height:0;border:0';
+  document.body.appendChild(frame);
+  frame.contentDocument.open();frame.contentDocument.write(html);frame.contentDocument.close();
+  setTimeout(()=>{try{frame.contentWindow.focus();frame.contentWindow.print();}catch(e){alert('Allow pop-ups to open the printable report.');}},400);
+}
+$('exportBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to export.');return;}printRecords(rows);});
+$('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to back up.');return;}const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),records:rows},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='delivery-evidence-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);});
+(async()=>{try{db=await openDB();await render();}catch(e){setStatus('This browser does not support local evidence storage. Please use a modern browser.',true);$('saveBtn').disabled=true;}})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer onerror="window.loadOcrLibFallback(0)"></script>
+</body></html>
