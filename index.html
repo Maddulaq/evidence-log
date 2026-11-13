@@ -541,7 +541,7 @@ body[data-theme="dark"] .error{color:var(--danger)}
 <input id="supporting" type="file" accept="image/*" multiple required>
 <span class="hint">Add 1–2 clear photos showing the issue. Maximum 8 MB per image.</span>
 <div class="preview" id="supportPreview"></div>
-<label for="notes">Short description (optional)</label><textarea id="notes" rows="3" maxlength="600" placeholder="Briefly explain what happened..."></textarea>
+<label for="notes">Short description (optional)</label><textarea id="notes" rows="3" maxlength="600" placeholder="Select an issue to get a suggested description. You can edit it..."></textarea><span class="hint">A suggested description appears when you select an issue. Review it and edit it to match exactly what happened.</span>
 <div class="actions"><button id="saveBtn" type="submit">Save incident</button><button class="secondary" type="reset">Reset form</button></div>
 <div class="status" id="formStatus" role="status" aria-live="polite"></div>
 </form>
@@ -909,6 +909,38 @@ async function runOrderOcr(file){
     setOcrStatus('OCR could not run: '+(err&&err.message?err.message:'unknown error')+'. Please enter the Order ID manually.',true);
   }
 }
+
+// Issue-specific suggested descriptions. Partners can edit these before saving.
+const issueDescriptions={
+  'Reusable bag not given':"The delivery partner arrived at the store to collect the order. However, the store team did not provide the required reusable bag and instead handed over the order in a paper bag.",
+  'Frozen items not packed separately':"The delivery partner collected the order, but the frozen items were not packed separately from the other items.",
+  'Wrong item given':"At order collection, the item provided by the store did not match the item shown in the order details. The mismatch was noticed during the handover.",
+  'Asked to convince customer wrongly':"During the order handover, the store team asked the delivery partner to communicate information to the customer that the partner believed did not match the actual order or situation.",
+  'Manager misconduct':"The delivery partner experienced an incident involving the store manager. Add the specific words or actions, along with the date, time, and any witnesses, so the report records exactly what happened.",
+  'Other':""
+};
+let lastAutoDescription='';
+function updateSuggestedDescription(){
+  const category=$('category').value;
+  const suggested=issueDescriptions[category]||'';
+  const notes=$('notes');
+  if(!notes)return;
+  // Replace only a previous suggestion (or an empty field); preserve text the
+  // partner has manually written when they switch issue categories.
+  if(!notes.value.trim()||notes.value===lastAutoDescription){
+    notes.value=suggested;
+    lastAutoDescription=suggested;
+  }
+}
+$('category').addEventListener('change',updateSuggestedDescription);
+$('notes').addEventListener('input',()=>{
+  if($('notes').value!==lastAutoDescription)lastAutoDescription='';
+});
+$('incidentForm').addEventListener('reset',()=>{
+  lastAutoDescription='';
+  setTimeout(()=>{if($('category').value)updateSuggestedDescription();},0);
+});
+
 $('store').value='Banjara Hills 150';
 $('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';if(!$('store').value.trim())$('store').value='Banjara Hills 150';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{if(window.Tesseract)warmOcr();else window.loadOcrLibFallback(0);});
 $('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
