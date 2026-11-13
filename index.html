@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#123d32">
-<title>Delivery Evidence Hub</title>
+<title>SOP &amp; Proof Hub</title>
 <style>
 :root{--ink:#172b25;--muted:#66756e;--green:#174b3b;--green2:#e7f1ec;--line:#dce5df;--paper:#f5f7f5;--red:#a63232}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -366,10 +366,10 @@ body[data-theme="dark"] #records>.record,body[data-theme="dark"] #records>div.re
 </style>
 </head>
 <body>
-<header><h1>Delivery Evidence Hub</h1><p class="sub">A simple, organised place to document delivery issues and keep evidence together.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
+<header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
 <main>
 <section class="command-center" aria-label="Workspace overview">
-  <div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> DELIVERY OPERATIONS · PERSONAL WORKSPACE</span><h2>Every issue.<br><em>Properly documented.</em></h2><p>Capture clear evidence, verify the order details, and keep a report ready when you need it.</p>
+  <div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span><h2>Every issue.<br><em>Properly documented.</em></h2><p>Capture clear evidence, verify the order details, and keep a report ready when you need it.</p>
     <div class="command-actions"><a class="command-primary" href="#incidentSection">＋ New incident</a><a class="command-secondary" href="#recordsSection">Browse records <span aria-hidden="true">↗</span></a></div>
   </div>
   <div class="overview-panel"><div class="overview-top"><span>YOUR WORKSPACE</span><span class="storage-indicator">● On this device</span></div>
@@ -778,8 +778,8 @@ function reportHtml(rows){
       +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
       +'</div></article>';
   }).join('');
-  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Delivery Evidence Report</title><style>'+REPORT_CSS+'</style></head><body>'
-    +'<div class="bar"><span>Delivery Partner \u2014 Evidence Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
+  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Proof Hub — Incident Evidence Report</title><style>'+REPORT_CSS+'</style></head><body>'
+    +'<div class="bar"><span>SOP & Proof Hub \u2014 Incident Evidence Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
     +'</main><script>function printEvidenceReport(){const b=document.getElementById("printReportBtn");if(b){b.disabled=true;b.textContent="Preparing report…";}const imgs=Array.from(document.images);Promise.all(imgs.map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;}))).then(()=>{if(b){b.disabled=false;b.textContent="Print / Save as PDF";}setTimeout(()=>window.print(),250);});}</'+ '/script></body></html>';
@@ -868,7 +868,7 @@ async function downloadEvidencePdf(rows){
   const blob=new Blob([bytes],{type:'application/pdf'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;a.download='delivery-evidence-report-'+new Date().toISOString().slice(0,10)+'.pdf';
+  a.href=url;a.download='sop-proof-hub-report-'+new Date().toISOString().slice(0,10)+'.pdf';
   a.style.display='none';document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),120000);
 }
@@ -906,7 +906,7 @@ function printRecords(rows){
   actions.append(download,print,close);
   tools.append(label,actions);
   const frame=document.createElement('iframe');
-  frame.title='Delivery evidence report preview';
+  frame.title='SOP & Proof Hub incident evidence report preview';
   frame.style.cssText='display:block;flex:1;width:100%;height:100%;border:0;background:#fff';
   frame.setAttribute('sandbox','allow-scripts allow-modals allow-same-origin');
   frame.srcdoc=reportHtml(rows);
@@ -914,7 +914,7 @@ function printRecords(rows){
   document.body.appendChild(layer);
 }
 $('exportBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to export.');return;}printRecords(rows);});
-$('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to back up.');return;}const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),records:rows},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='delivery-evidence-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);});
+$('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to back up.');return;}const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),records:rows},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='sop-proof-hub-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);});
 
 const themeToggle=document.getElementById('themeToggle');
 function applyTheme(theme){
