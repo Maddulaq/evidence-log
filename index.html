@@ -25,16 +25,89 @@ button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:8px;fle
 .pill{display:inline-block;background:var(--green2);color:var(--green);border-radius:30px;padding:2px 8px;font-size:11px;font-weight:700}
 @media(max-width:600px){.grid{grid-template-columns:1fr}header{padding:18px}.card{padding:14px}}
 @media print{body{background:#fff}.no-print,header .sub,.notice{display:none!important}main{margin:0;max-width:none}.card{box-shadow:none;border:0;padding:0}.record{break-inside:avoid}}
+
+/* --- Mobile-first visual refresh --- */
+:root{--ink:#18352b;--muted:#718078;--green:#174b3b;--green-deep:#10392d;--green2:#e8f2ec;--line:#e0e9e3;--paper:#f3f7f4;--red:#a63232;--gold:#d9a441}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{background:linear-gradient(180deg,#eaf2ed 0,#f5f8f5 270px);color:var(--ink);font-size:15px}
+header{position:relative;background:linear-gradient(120deg,#10392d,#1c5b45);padding:24px max(18px,calc((100% - 900px)/2)) 30px;box-shadow:0 8px 24px #123d3218}
+header:after{content:"";position:absolute;right:8%;top:-52px;width:190px;height:190px;border:1px solid #ffffff20;border-radius:50%;box-shadow:0 0 0 22px #ffffff08,0 0 0 44px #ffffff06;pointer-events:none}
+header h1{font-size:clamp(23px,4vw,30px);letter-spacing:-.7px;font-weight:760}
+header p{font-size:13px;color:#d8e8df;margin-top:6px}
+main{max-width:900px;margin:20px auto;padding:0 16px 90px}
+.notice{border:1px solid #eadbb9;background:#fffaf0;color:#6c5426;border-radius:14px;padding:13px 15px;line-height:1.55;box-shadow:0 3px 12px #6b54200a}
+.card{border:1px solid #e2eae4;border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:0 8px 24px #173c2b0a;background:#fff}
+h2{font-size:19px;letter-spacing:-.3px;margin:0 0 16px}
+label{font-size:13px;color:#29483b;margin:13px 0 6px}
+input,select,textarea{border:1px solid #d4dfd8;border-radius:11px;padding:12px 13px;min-height:46px;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:0;border-color:#5c9b7b;box-shadow:0 0 0 3px #5c9b7b20}
+input[type=file]{background:#f8fbf9;border:1px dashed #b9cbbf;padding:13px;min-height:auto}
+input[type=file]::file-selector-button{border:0;border-radius:8px;background:#e5f0e9;color:#174b3b;font-weight:700;padding:8px 11px;margin-right:10px}
+button{border-radius:11px;padding:12px 17px;min-height:44px;background:var(--green);box-shadow:0 3px 8px #174b3b18;transition:transform .12s,background .12s}
+button:active{transform:scale(.98)}
+button.secondary{background:#f0f5f1;color:#244638;border:1px solid #dce7df;box-shadow:none}
+button.danger{box-shadow:none}
+.actions{gap:10px}
+.actions button{flex:0 0 auto}
+.status{font-size:13px;line-height:1.5}
+.preview img{width:84px;height:84px;border-radius:11px}
+.pill{background:#e9f3ed;color:#205b40;padding:4px 9px}
+.record{padding:16px 0}
+.record h3{font-size:15px;color:#214a38}
+.record p{font-size:12px;line-height:1.5}
+#records .record:first-child{border-top:0}
+#exportBtn,#backupBtn{font-size:12px;padding:10px 12px;min-height:40px}
+.workspace-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:0 0 16px;padding:0 2px}
+.workspace-intro h2{margin:0 0 3px;font-size:21px}
+.workspace-intro p{margin:0;color:#63766c;font-size:13px}
+.workspace-tag{display:inline-flex;align-items:center;gap:6px;background:#e2eee6;color:#24563e;border-radius:30px;padding:6px 10px;font-size:11px;font-weight:750;white-space:nowrap}
+.top-actions{display:flex;gap:10px;margin-top:17px;flex-wrap:wrap}
+.top-actions a{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:11px;padding:11px 15px;font-size:13px;font-weight:750;background:#fff;color:#174b3b}
+.top-actions a.outline{background:#ffffff16;color:#fff;border:1px solid #ffffff45}
+.section-heading{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.section-number{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:#e8f2ec;color:#205b40;font-size:12px;font-weight:800;flex:0 0 auto}
+.section-subtitle{font-size:12px;color:#748279;margin:-8px 0 14px 38px}
+.form-divider{height:1px;background:#edf1ee;margin:18px 0}
+#incidentForm .actions{padding-top:6px}
+#saveBtn{min-width:150px}
+#records{border-top:1px solid #edf1ee}
+.records-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:600px){
+ header{padding:20px 18px 24px}
+ header:after{right:-55px;top:-70px}
+ main{margin:14px auto;padding:0 12px 100px}
+ .card{padding:16px;border-radius:16px;margin-bottom:14px}
+ .grid{grid-template-columns:1fr;gap:4px}
+ h2{font-size:18px}
+ .workspace-intro{align-items:flex-start;flex-direction:column}
+ .top-actions a{flex:1}
+ .actions{display:grid;grid-template-columns:1fr 1fr}
+ .actions button{width:100%;padding:11px 8px;font-size:13px}
+ #incidentForm .actions{grid-template-columns:1fr 1fr}
+ #saveBtn{min-width:0}
+ #rereadBtn{width:100%}
+ .records-head .actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+ .record .actions{display:flex}
+ .record .actions button{width:auto;flex:1}
+ .bottom-nav{position:fixed;z-index:999;left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:7px;background:#ffffffed;border:1px solid #dce7df;border-radius:16px;box-shadow:0 8px 28px #153d2a24;backdrop-filter:blur(12px)}
+ .bottom-nav a{display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;color:#345746;font-size:12px;font-weight:750;padding:10px;border-radius:10px}
+ .bottom-nav a.primary{background:#174b3b;color:white}
+}
+@media(min-width:601px){.bottom-nav{display:none}}
+@media print{.bottom-nav,.top-actions{display:none!important}}
+
 </style>
 </head>
 <body>
-<header><h1>Delivery Evidence Hub</h1><p class="sub">Incident records • Order screenshot • Supporting evidence</p></header>
+<header><h1>Delivery Evidence Hub</h1><p class="sub">A simple, organised place to document delivery issues and keep evidence together.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a></div></header>
 <main>
+<div class="workspace-intro"><div><h2>Your evidence workspace</h2><p>Capture the issue, attach proof, and save a clear record.</p></div><span class="workspace-tag">● Device storage</span></div>
 <div class="notice"><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
-<section class="card">
-<h2>Submit an incident</h2>
+<section class="card" id="incidentSection">
+<div class="section-heading"><span class="section-number">01</span><h2>Submit an incident</h2></div>
+<p class="section-subtitle">Complete the details below. Check the Order ID and time before saving.</p>
 <form id="incidentForm">
-<label for="orderShot">1. Order screenshot <span class="pill">Required</span></label>
+<div class="form-divider"></div><label for="orderShot">Order screenshot <span class="pill">Required</span></label>
 <input id="orderShot" type="file" accept="image/*" required>
 <span class="hint">Upload the order screenshot. Store is prefilled as Banjara Hills 150 and the Order ID is read automatically. If it is not detected, use "Re-read from screenshot" or type it in.</span>
 <div class="preview" id="orderPreview"></div>
@@ -47,7 +120,7 @@ button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:8px;fle
 <div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" value="Banjara Hills 150" placeholder="Store name"></div>
 <div><label for="incidentAt">Incident date and time *</label><input id="incidentAt" type="datetime-local" required></div>
 </div>
-<label for="supporting">2. Supporting evidence photos <span class="pill">1 or 2 required</span></label>
+<div class="form-divider"></div><label for="supporting">Supporting evidence photos <span class="pill">1 or 2 required</span></label>
 <input id="supporting" type="file" accept="image/*" multiple required>
 <span class="hint">Add 1–2 clear photos showing the issue. Maximum 8 MB per image.</span>
 <div class="preview" id="supportPreview"></div>
@@ -56,12 +129,13 @@ button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:8px;fle
 <div class="status" id="formStatus" role="status" aria-live="polite"></div>
 </form>
 </section>
-<section class="card">
-<div class="grid" style="align-items:center"><div><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
+<section class="card" id="recordsSection">
+<div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
 <div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
 </section>
-<p class="hint" style="text-align:center;margin:18px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
+<p class="hint" style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
 </main>
+<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a></nav>
 <script>
 const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
 const $=id=>document.getElementById(id);
