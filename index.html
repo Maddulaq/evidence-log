@@ -470,12 +470,11 @@ async function downloadEvidencePdf(rows){
     const shots=[{name:'Order screenshot',data:r.orderScreenshot&&r.orderScreenshot.data}].concat((r.supportingEvidence||[]).map((x,j)=>({name:'Supporting evidence '+(j+1),data:x.data}))).filter(x=>x.data);
     for(let j=0;j<shots.length;j++){
       const sh=shots[j];
-      const col=j===0?0:(j-1)%2;
-      const row=j===0?0:Math.floor((j-1)/2);
+      const col=j===0?0:j-1;
       const bw=j===0?W-2*margin:(W-2*margin-14)/2;
       const bh=j===0?245:150;
       const x=j===0?margin:margin+col*(bw+14);
-      const top=y-row*(bh+30);
+      const top=j===0?y:y-275;
       page.drawText(sh.name,{x,y:top-11,size:9,font:bold,color:green});
       const jpeg=await imageAsJpeg(sh.data);
       const bytes=Uint8Array.from(atob(jpeg.split(',')[1]),c=>c.charCodeAt(0));
