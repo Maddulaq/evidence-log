@@ -80,7 +80,7 @@ function ocrRunToDigits(run){
   for(const ch of String(run||'').toUpperCase()){
     if(ch>='0'&&ch<='9'){digits+=ch;ambiguous.push(false);}
     else if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous.push(true);}
-    else if(/\\s/.test(ch)||ch==='-'||ch===':'||ch==='#')continue;
+    else if(/\s/.test(ch)||ch==='-'||ch===':'||ch==='#')continue;
     else return null;
   }
   return {digits,ambiguous};
@@ -88,9 +88,9 @@ function ocrRunToDigits(run){
 function extractOrderId(rawText){
   if(!rawText)return null;
   const text=String(rawText).toUpperCase()
-    .replace(/[\\u2010-\\u2015\\u2212]/g,'-')
-    .replace(/\\u00A0/g,' ');
-  const prefix=/[O0][D0][\\s:#-]*/g;
+    .replace(/[\u2010-\u2015\u2212]/g,'-')
+    .replace(/\u00A0/g,' ');
+  const prefix=/[O0][D0][\s:#-]*/g;
   const candidates=[];
   let match;
   while((match=prefix.exec(text))!==null){
@@ -100,7 +100,7 @@ function extractOrderId(rawText){
       if(/[0-9OQIL|!SBZGUDT]/.test(ch)){
         raw+=ch;started=true;spaces=0;
         if(raw.length>=22)break;
-      }else if(/[\\s:#-]/.test(ch)){
+      }else if(/[\s:#-]/.test(ch)){
         if(started){spaces++;if(spaces>3)break;}
       }else{
         break;
