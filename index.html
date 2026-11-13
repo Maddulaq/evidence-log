@@ -144,6 +144,62 @@ body[data-theme="dark"] .bottom-nav a.primary{background:#2b7654;color:#fff}
   .theme-toggle{margin-left:0;width:auto;min-width:0;padding:5px 9px}
 }
 
+
+/* Mobile viewport and horizontal-drag fixes */
+html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:clip;
+}
+body{overscroll-behavior-x:none}
+header{
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+}
+main{
+  width:100%;
+  min-width:0;
+}
+main,header,.card,.notice,section,form,.grid,.records-head,.workspace-intro{
+  min-width:0;
+}
+.grid>*{min-width:0}
+input,select,textarea,button{
+  max-width:100%;
+}
+input[type=file]{
+  min-width:0;
+  width:100%;
+}
+.top-actions{
+  min-width:0;
+  align-items:center;
+}
+.top-actions a{
+  min-width:0;
+  max-width:100%;
+}
+.record p,.record h3,#ocrText{
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+@media(max-width:600px){
+  html{scroll-padding-top:16px}
+  header{padding:18px 14px 20px}
+  header:after{right:-85px;top:-75px}
+  header h1,.sub{max-width:100%;overflow-wrap:anywhere}
+  .top-actions{gap:7px}
+  .top-actions a{padding:9px 10px;font-size:12px}
+  .theme-toggle{flex:0 0 auto;height:32px;min-height:32px;padding:5px 9px;font-size:11px}
+  main{padding-left:10px;padding-right:10px}
+  .card{width:100%;padding:14px}
+  .records-head>div{min-width:0;max-width:100%}
+  .records-head .actions{min-width:0}
+  .records-head .actions button{min-width:0;white-space:normal;overflow-wrap:anywhere}
+  .bottom-nav{max-width:calc(100% - 24px)}
+}
+
 </style>
 </head>
 <body>
