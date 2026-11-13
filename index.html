@@ -151,18 +151,34 @@ function scoreOrderId(digits,text,index,bonus){
 }
 function extractOrderId(rawText){
   if(!rawText)return null;
-  const text=String(rawText).toUpperCase().replace(/[\u2010-\u2015\u2212]/g,'-').replace(/\u00A0/g,' ');
-  const RUN=/[0-9OQIL|!SBZG][ \t\n-]?[0-9OQIL|!SBZG](?:[ \t\n-]?[0-9OQIL|!SBZG])*/g;
-  const cands=[];let m;
-  while((m=RUN.exec(text))!==null){
-    const parsed=ocrRunToDigits(m[0]);
-    if(!parsed)continue;
-    for(const v of ocrVariants(parsed.digits,parsed.ambiguous))cands.push({id:v.d,score:scoreOrderId(v.d,text,m.index,v.b)});
+  const text=String(rawText).toUpperCase()
+    .replace(/[\\u2010-\\u2015\\u2212]/g,'-')
+    .replace(/\\u00A0/g,' ');
+  // Start at the OD prefix, then collect the ID across OCR line breaks.
+  // Tesseract sometimes inserts tiny header fragments (for example "NY")
+  // between the two halves of an otherwise continuous 18-digit order number.
+  const prefix=/[O0][D0][\\s:#-]*/g;
+  const candidates=[];
+  let match;
+  while((match=prefix.exec(text))!==null){
+    let digits='',ambiguous=0,noise=0;
+    for(let i=prefix.lastIndex;i<text.length&&digits.length<22;i++){
+      const ch=text[i];
+      if(/[0-9]/.test(ch)){digits+=ch;noise=0;continue;}
+      if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;noise=0;continue;}
+      if(/[\\s:#=\\-]/.test(ch)){continue;}
+      // Ignore at most two non-numeric OCR letters in the order-header band.
+      if(/[A-Z]/.test(ch)&&!/[OQD UILSBZGT]/.test(ch)&&noise<2){noise++;continue;}
+      break;
+    }
+    if(digits.length<16||digits.length>22)continue;
+    const near=text.slice(Math.max(0,match.index-45),match.index+12);
+    const keyword=/ORDER|SHIPMENT|DELIVERY/.test(near)?25:0;
+    const lengthScore=digits.length===18?50:(digits.length>=16&&digits.length<=20?25:0);
+    candidates.push({id:'OD'+digits,score:keyword+lengthScore-ambiguous*2,length:digits.length});
   }
-  cands.sort((a,b)=>b.score-a.score||b.id.length-a.id.length);
-  const best=cands[0];
-  if(!best||best.score<45)return null;
-  return 'OD'+best.id;
+  candidates.sort((a,b)=>b.score-a.score||Math.abs(a.length-18)-Math.abs(b.length-18));
+  return candidates[0]?.id||null;
 }
 /* ---------- Order ID OCR (rewritten) ---------- */
 const OCR_MAX_AREA=4.2e6,OCR_MAX_SIDE=3800,OCR_DEADLINE=45000;
