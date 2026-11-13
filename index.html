@@ -1015,7 +1015,7 @@ function imageAsJpeg(dataUrl){
     img.src=dataUrl;
   });
 }
-async function downloadEvidencePdf(rows){
+async function createEvidencePdfBlob(rows){
   const lib=await loadPdfLibrary();
   const {PDFDocument,StandardFonts,rgb}=lib;
   const pdf=await PDFDocument.create();
@@ -1065,11 +1065,24 @@ async function downloadEvidencePdf(rows){
   }
   const bytes=await pdf.save();
   const blob=new Blob([bytes],{type:'application/pdf'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='sop-proof-hub-report-'+new Date().toISOString().slice(0,10)+'.pdf';
-  a.style.display='none';document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),120000);
+  return blob;
+
+}
+function downloadPdfBlob(blob){
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='sop-proof-hub-report-'+new Date().toISOString().slice(0,10)+'.pdf';
+ a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),120000);
+}
+async function sharePdf(rows){
+ const blob=await createEvidencePdfBlob(rows);
+ const file=new File([blob],'sop-proof-hub-report-'+new Date().toISOString().slice(0,10)+'.pdf',{type:'application/pdf'});
+ if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+  await navigator.share({title:'SOP & Evidence Hub incident report',text:'Incident report and supporting evidence.',files:[file]});
+ }else{
+  downloadPdfBlob(blob);
+  alert('Direct PDF sharing is not supported by this browser. The PDF has been downloaded. Attach it from your Downloads folder in WhatsApp, Email or Google Drive.');
+ }
 }
 function printRecords(rows){
   // Keep the report inside the current page: Android in-app browsers often
@@ -1090,7 +1103,7 @@ function printRecords(rows){
   download.style.cssText='border:0;border-radius:7px;padding:9px 14px;font-weight:700;background:#fff;color:#174b3b';
   download.addEventListener('click',async()=>{
     download.disabled=true;download.textContent='Creating PDF…';
-    try{await downloadEvidencePdf(rows);}
+    try{const blob=await createEvidencePdfBlob(rows);downloadPdfBlob(blob);}
     catch(err){alert('PDF could not be created. Please check your internet connection and try again. You can still use Print / Save as PDF.');}
     finally{download.disabled=false;download.textContent='Download PDF';}
   });
@@ -1102,7 +1115,11 @@ function printRecords(rows){
   close.type='button';close.textContent='Close';
   close.style.cssText='border:0;border-radius:7px;padding:9px 12px;font-weight:700;background:#e8eee9;color:#174b3b';
   close.addEventListener('click',()=>layer.remove());
-  actions.append(download,print,close);
+  const share=document.createElement('button');
+  share.type='button';share.textContent='Share PDF';
+  share.style.cssText='border:0;border-radius:7px;padding:9px 12px;font-weight:700;background:#dff2e7;color:#174b3b';
+  share.addEventListener('click',async()=>{share.disabled=true;share.textContent='Preparing…';try{await sharePdf(rows);}catch(err){if(err.name!=='AbortError')alert('Sharing failed. Please download the PDF and share it manually.');}finally{share.disabled=false;share.textContent='Share PDF';}});
+  actions.append(download,share,print,close);
   tools.append(label,actions);
   const frame=document.createElement('iframe');
   frame.title='SOP & Evidence Hub incident report preview';
