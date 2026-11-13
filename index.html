@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#123d32">
+<meta name="theme-color" content="#12283f">
 <title>SOP &amp; Proof Hub</title>
 <style>
 :root{--ink:#172b25;--muted:#66756e;--green:#174b3b;--green2:#e7f1ec;--line:#dce5df;--paper:#f5f7f5;--red:#a63232}
@@ -778,7 +778,54 @@ function reportHtml(rows){
       +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
       +'</div></article>';
   }).join('');
-  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Proof Hub — Incident Evidence Report</title><style>'+REPORT_CSS+'</style></head><body>'
+  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Proof Hub — Incident Evidence Report</title><style>'+REPORT_CSS+'
+/* SOP & Proof Hub — navy, teal and amber identity */
+:root{--ink:#18283b;--muted:#68788a;--green:#176f78;--green-deep:#123b50;--green2:#e5f1f2;--line:#dce4eb;--paper:#f3f6f9;--surface:#fff;--accent:#e5ad4d;--soft-shadow:0 12px 34px rgba(20,43,66,.07)}
+body{background:linear-gradient(180deg,#eaf0f5 0,#f5f7fa 360px,var(--paper) 100%);color:var(--ink)}
+header{background:radial-gradient(ellipse at 92% 8%,rgba(71,157,164,.22),transparent 36%),linear-gradient(125deg,#12283f 0%,#173f59 62%,#176f78 100%);box-shadow:0 10px 28px rgba(18,40,63,.16)}
+header .sub{color:#d8e6ee}
+.top-actions a:first-child{color:#153b50;background:#f8fbfd}
+.workspace-intro{border-color:#d9e3eb;background:linear-gradient(115deg,#fff 0%,#f1f6f9 100%)}
+.workspace-intro h2{color:#173b54}
+.workspace-tag{background:#e5f1f2;color:#17636b;border-color:#cfe2e5}
+.card{border-color:#dce5ec}
+.section-number{background:#e5f1f2;color:#17636b}
+label{color:#30475b}
+input,select,textarea{border-color:#d2dce5;background:#fbfcfe}
+input:focus,select:focus,textarea:focus{border-color:#438f98;box-shadow:0 0 0 3px #438f9822}
+input[type=file]{border-color:#a9c6cc;background:#f5fafb}
+input[type=file]::file-selector-button{background:#e3f0f1;color:#155c65}
+button{background:#176f78;box-shadow:0 3px 9px #176f781c}
+button.secondary{background:#edf2f6;color:#263e53;border-color:#dce4eb}
+#saveBtn{background:linear-gradient(135deg,#155a70,#16838a)}
+.pill{background:#e5f1f2;color:#17636b}
+.bottom-nav{border-color:#dce4eb;box-shadow:0 -8px 28px rgba(20,43,66,.10)}
+.bottom-nav a{color:#36556a}
+.bottom-nav a.primary{background:#176f78;color:#fff}
+.command-center{background:radial-gradient(ellipse at 90% 0%,rgba(84,169,173,.2),transparent 38%),linear-gradient(125deg,#12283f 0%,#173f59 60%,#176f78 100%);box-shadow:0 18px 40px rgba(18,40,63,.20)}
+.command-copy h2 em{color:#f0c777}
+.eyebrow{color:#c1dce2}
+.live-dot{background:#f0c777;box-shadow:0 0 0 4px #f0c77722}
+.overview-bottom b{color:#f0c777}
+.command-primary{color:#153b50;background:#f7fbfd}
+.command-secondary{border-color:#ffffff55}
+#records>.record,#records>div.record{box-shadow:0 4px 14px rgba(20,43,66,.07)}
+body[data-theme="dark"]{--ink:#e7edf4;--muted:#a8b7c6;--line:#34485a;--paper:#101a27;--surface:#182636;--green2:#203b49;background:linear-gradient(180deg,#14283a 0,#101a27 390px,#101a27 100%);color:var(--ink)}
+body[data-theme="dark"] .workspace-intro{background:linear-gradient(115deg,#1b2b3b,#1c3545);border-color:#344b5d}
+body[data-theme="dark"] .workspace-intro h2,body[data-theme="dark"] label{color:#e4edf5}
+body[data-theme="dark"] .workspace-intro p,body[data-theme="dark"] .section-subtitle{color:#adbdca}
+body[data-theme="dark"] .workspace-tag{background:#244552;color:#c8e9eb;border-color:#365c67}
+body[data-theme="dark"] .section-number{background:#244552;color:#c8e9eb}
+body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{background:#111f2d;color:#e7edf4;border-color:#40566a}
+body[data-theme="dark"] input[type=file]{background:#1b2c3b;border-color:#496977}
+body[data-theme="dark"] input[type=file]::file-selector-button{background:#294653;color:#d9eff0}
+body[data-theme="dark"] button.secondary{background:#293b4c;color:#e4edf5;border-color:#40566a}
+body[data-theme="dark"] .bottom-nav{background:rgba(24,38,54,.95);border-color:#34485a}
+body[data-theme="dark"] .bottom-nav a{color:#d7e4ee}
+body[data-theme="dark"] .bottom-nav a.primary{background:#177b83;color:#fff}
+body[data-theme="dark"] .record-tools,body[data-theme="dark"] #records>.record,body[data-theme="dark"] #records>div.record{background:#182636;border-color:#34485a}
+
+</style></head><body>'
     +'<div class="bar"><span>SOP & Proof Hub \u2014 Incident Evidence Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
