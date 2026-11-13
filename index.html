@@ -1,288 +1,89 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Evidence Log</title>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123d32">
+<title>Delivery Evidence Hub</title>
 <style>
-  body{font-family:system-ui,sans-serif;max-width:600px;margin:auto;padding:16px;background:#f4f5f7}
-  h1{font-size:1.3rem}
-  .card{background:#fff;border-radius:10px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-  label{font-weight:600;display:block;margin-top:10px}
-  input,textarea,select{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;margin-top:4px;font-size:1rem}
-  button{background:#0a66c2;color:#fff;border:0;padding:12px;border-radius:8px;font-size:1rem;width:100%;margin-top:12px;cursor:pointer}
-  button.sec{background:#444}
-  .rec{border-bottom:1px solid #eee;padding:10px 0}
-  .rec small{color:#666}
-  .rec img{max-width:80px;border-radius:6px;margin:4px 4px 0 0}
-  #status{font-size:.9rem;color:#060;margin:8px 0;white-space:pre-line}
-  .auto{background:#e8f5e9;border:1px dashed #4caf50;padding:6px;border-radius:6px;font-size:.85rem;color:#2e7d32;margin-top:4px}
-  .btnrow button{width:auto;padding:6px 12px;font-size:.85rem;margin:4px 4px 0 0}
-  .share{background:#25d366}
+:root{--ink:#172b25;--muted:#66756e;--green:#174b3b;--green2:#e7f1ec;--line:#dce5df;--paper:#f5f7f5;--red:#a63232}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:var(--green);color:#fff;padding:22px max(18px,calc((100% - 900px)/2))}header h1{font-size:22px;margin:0}header p{margin:4px 0 0;color:#d8e7df;font-size:13px}
+main{max-width:900px;margin:20px auto;padding:0 14px 48px}.notice{background:#fff7e7;border:1px solid #ead6a9;color:#624c20;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:13px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px #18382b08}
+h2{font-size:17px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+label{display:block;font-weight:650;font-size:13px;margin:10px 0 5px}
+input,select,textarea{width:100%;border:1px solid #cbd7d0;border-radius:9px;padding:11px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid #8ab6a2;outline-offset:1px}
+input[type=file]{padding:9px;font-size:13px}small,.hint{color:var(--muted);font-size:12px}.hint{display:block;margin-top:4px}
+button{border:0;border-radius:9px;padding:11px 15px;font:650 14px system-ui;cursor:pointer;background:var(--green);color:#fff}
+button.secondary{background:#edf2ef;color:var(--ink);border:1px solid var(--line)}button.danger{background:#fff0f0;color:var(--red);border:1px solid #f0caca}
+button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.status{min-height:20px;color:var(--green);font-size:13px;margin-top:10px;white-space:pre-line}.error{color:var(--red)}
+.preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.preview img{width:76px;height:76px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.record{border-top:1px solid var(--line);padding:13px 0}.record:first-child{border-top:0}.record h3{font-size:14px;margin:0 0 4px}.record p{margin:3px 0;color:var(--muted);font-size:12px}
+.pill{display:inline-block;background:var(--green2);color:var(--green);border-radius:30px;padding:2px 8px;font-size:11px;font-weight:700}
+@media(max-width:600px){.grid{grid-template-columns:1fr}header{padding:18px}.card{padding:14px}}
+@media print{body{background:#fff}.no-print,header .sub,.notice{display:none!important}main{margin:0;max-width:none}.card{box-shadow:none;border:0;padding:0}.record{break-inside:avoid}}
 </style>
 </head>
 <body>
-<h1>📋 Evidence Log</h1>
-
-<div class="card">
-  <div id="status">Ready. Upload order screenshot — Order ID &amp; Store auto-read.</div>
-
-  <label>📸 Order screenshot</label>
-  <input id="shot" type="file" accept="image/*">
-
-  <div id="autoBox" style="display:none">
-    <div class="auto" id="autoInfo"></div>
-  </div>
-
-  <label>Category</label>
-  <select id="cat">
-    <option>Reusable bag not given</option>
-    <option>Frozen items not packed separately</option>
-    <option>Wrong item given</option>
-    <option>Asked to convince customer wrongly</option>
-    <option>Manager misconduct</option>
-    <option>Other</option>
-  </select>
-
-  <label>Order ID</label>
-  <input id="oid" placeholder="auto-filled from screenshot">
-
-  <label>Store name</label>
-  <input id="store" placeholder="auto-filled from screenshot">
-
-  <label>Short note (optional)</label>
-  <textarea id="desc" rows="2"></textarea>
-
-  <label>Extra evidence photo (optional)</label>
-  <input id="extra" type="file" accept="image/*" capture="environment">
-
-  <button onclick="save()">💾 Save Record</button>
+<header><h1>Delivery Evidence Hub</h1><p class="sub">Incident records • Order screenshot • Supporting evidence</p></header>
+<main>
+<div class="notice"><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.</div>
+<section class="card">
+<h2>Submit an incident</h2>
+<form id="incidentForm">
+<label for="orderShot">1. Order screenshot <span class="pill">Required</span></label>
+<input id="orderShot" type="file" accept="image/*" required>
+<span class="hint">Upload the order screenshot first. OCR may suggest the Order ID; always verify it.</span>
+<div class="preview" id="orderPreview"></div>
+<div class="grid">
+<div><label for="category">Issue category *</label><select id="category" required>
+<option value="">Select an issue</option>
+<option>Reusable bag not given</option><option>Frozen items not packed separately</option><option>Wrong item given</option><option>Asked to convince customer wrongly</option><option>Manager misconduct</option><option>Other</option>
+</select></div>
+<div><label for="orderId">Order ID *</label><input id="orderId" required maxlength="80" placeholder="Enter or verify Order ID"></div>
+<div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" placeholder="Enter store name"></div>
+<div><label for="incidentAt">Incident date and time *</label><input id="incidentAt" type="datetime-local" required></div>
 </div>
-
-<div class="card">
-  <b>Records: <span id="count">0</span></b>
-  <div id="list"></div>
-  <button class="sec" onclick="exportReport()">📄 Export Report (readable, with photos)</button>
-  <button class="sec" onclick="exportData()">📤 Export Raw Data (JSON)</button>
-  <button class="sec" onclick="clearAll()" style="background:#a00">🗑 Clear All</button>
-</div>
-
+<label for="supporting">2. Supporting evidence photos <span class="pill">1 or 2 required</span></label>
+<input id="supporting" type="file" accept="image/*" multiple required>
+<span class="hint">Add 1–2 clear photos showing the issue. Maximum 8 MB per image.</span>
+<div class="preview" id="supportPreview"></div>
+<label for="notes">Short description (optional)</label><textarea id="notes" rows="3" maxlength="600" placeholder="Briefly explain what happened..."></textarea>
+<div class="actions"><button id="saveBtn" type="submit">Save incident</button><button class="secondary" type="reset">Reset form</button></div>
+<div class="status" id="formStatus" role="status" aria-live="polite"></div>
+</form>
+</section>
+<section class="card">
+<div class="grid" style="align-items:center"><div><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
+<div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
+</section>
+</main>
 <script>
-let DB = JSON.parse(localStorage.getItem('evidenceDB') || '[]');
-
-/* ---- OCR: remove phone status-bar junk (time, battery, network) ---- */
-function cleanLines(text){
-  return text.split('\n').map(l=>l.trim()).filter(l=>{
-    if(!l) return false;
-    if(/^\d{1,2}:\d{2}/.test(l)) return false;                  // clock "8:30"
-    if(/KB\/s|Vo ?LTE|LTE\b|%$|5G|4G/.test(l)) return false;     // network/battery
-    if(!/[A-Za-z0-9]/.test(l)) return false;                     // pure symbols
-    return true;
-  });
-}
-
-function normalizeOid(t){
-  t = t.toUpperCase().replace(/[^A-Z0-9]/g,'');
-  t = t.replace(/^0(?=D)/,'O');      // 0D439... -> OD439...
-  t = t.replace(/^(?:00|OO)/,'O');    // 00439 -> O? keep simple
-  return t;
-}
-
-function extractOrderId(text, lines){
-  // 1) keyword line: "Order ID: ...", "ORD-...", "#..."
-  for(const l of lines){
-    let m = l.match(/(?:order\s*(?:id|no|number)?|ord)\s*[:.#\-]?\s*([A-Z0-9][A-Z0-9\-]{5,})/i);
-    if(m) return normalizeOid(m[1]);
-  }
-  // 2) OD + 9+ digits anywhere (Clipkart/Flipkart style)
-  let m = text.toUpperCase().replace(/[^A-Z0-9\n ]/g,' ').match(/\bO[0D][0-9]{9,}\b/);
-  if(m) return m[0].replace(/^0(?=D)/,'O');
-  // 3) any long digit run 8+
-  m = text.match(/\b\d{8,}\b/);
-  if(m) return m[0];
-  return '';
-}
-
-function cleanName(s){
-  return s.replace(/["'©®™*|#@]/g,' ').replace(/\s+/g,' ').trim().slice(0,60);
-}
-
-function extractStore(lines){
-  // 1) explicit keyword: "Store: XYZ"
-  for(let i=0;i<lines.length;i++){
-    let m = lines[i].match(/(?:store|outlet|branch|hub|warehouse|dark\s*store)\s*[:.\-]\s*(.+)/i);
-    if(m && m[1].trim().length>2) return cleanName(m[1]);
-    if(/^(?:store|outlet|branch|hub)$/i.test(lines[i]) && lines[i+1]) return cleanName(lines[i+1]);
-  }
-  // 2) fallback: first line with 3+ letters (likely store name header)
-  for(const l of lines){
-    if((l.match(/[A-Za-z]/g)||[]).length>=3 && l.length>=4 && l.length<=60) return cleanName(l);
-  }
-  return '';
-}
-
-document.getElementById('shot').addEventListener('change', async e=>{
-  const f = e.target.files[0];
-  if(!f) return;
-  setStatus('⏳ Reading screenshot… (5–15 seconds)');
-  try{
-    const res = await Tesseract.recognize(f, 'eng');
-    const raw = res.data.text;
-    console.log('OCR RAW:', raw);
-    const lines = cleanLines(raw);
-
-    const oid = extractOrderId(raw, lines);
-    const store = extractStore(lines);
-
-    if(oid) document.getElementById('oid').value = oid;
-    if(store) document.getElementById('store').value = store;
-
-    document.getElementById('autoBox').style.display='block';
-    document.getElementById('autoInfo').textContent =
-      '✅ Auto-detected:' + (oid?'\nOrder ID: '+oid:'') + (store?'\nStore: '+store:'') +
-      '\n⏰ '+new Date().toLocaleString() +
-      ((oid&&store)?'':'\n⚠️ Something unclear — please correct the fields manually');
-    setStatus('Done. Check fields, then press Save.');
-  }catch(err){
-    setStatus('❌ Could not read image: '+err.message+'\nPlease type Order ID / Store manually.');
-  }
-});
-
-function setStatus(t){ document.getElementById('status').textContent = t; }
-
-function save(){
-  const oid = document.getElementById('oid').value.trim();
-  const store = document.getElementById('store').value.trim();
-  if(!oid && !store){ alert('Please type Order ID or Store name'); return; }
-  const extraFile = document.getElementById('extra').files[0];
-  const shotFile = document.getElementById('shot').files[0];
-
-  const entry = {
-    date: new Date().toLocaleString(),
-    category: document.getElementById('cat').value,
-    oid, store,
-    desc: document.getElementById('desc').value.trim(),
-    shot: null, extra: null
-  };
-
-  let pending = (shotFile?1:0)+(extraFile?1:0);
-  if(!pending) return commit();
-  if(shotFile) readFile(shotFile, d=>entry.shot=d, done);
-  if(extraFile) readFile(extraFile, d=>entry.extra=d, done);
-
-  function done(){ if(--pending===0) commit(); }
-  function readFile(f, cb, fin){ const r=new FileReader(); r.onload=e=>{cb(e.target.result);fin();}; r.readAsDataURL(f); }
-  function commit(){
-    DB.push(entry);
-    localStorage.setItem('evidenceDB', JSON.stringify(DB));
-    ['oid','store','desc'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('shot').value='';
-    document.getElementById('extra').value='';
-    document.getElementById('autoBox').style.display='none';
-    render();
-    setStatus('✅ Saved: '+new Date().toLocaleTimeString());
-  }
-}
-
-/* ---- readable report with photos ---- */
-function exportReport(){
-  if(!DB.length){ alert('No records to export'); return; }
-  const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');
-  let h = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Evidence Report</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body{font-family:Arial,sans-serif;max-width:700px;margin:auto;padding:16px;color:#111}
-    .r{border:1px solid #ccc;border-radius:8px;padding:14px;margin:14px 0;page-break-inside:avoid}
-    .r b{font-size:1.05rem}
-    .meta{color:#444;font-size:.9rem;margin:6px 0}
-    .r img{max-width:100%;border-radius:6px;margin-top:8px}
-    h1{font-size:1.3rem} h2{font-size:1rem;margin-top:20px}
-    @media print{ .noprint{display:none} }
-  </style></head><body>
-  <button class="noprint" onclick="window.print()" style="padding:10px 16px;font-size:1rem">🖨️ Print / Save as PDF</button>
-  <h1>📋 Evidence Report — Delivery Partner</h1>
-  <div class="meta">Generated: ${new Date().toLocaleString()} | Total records: ${DB.length}</div>`;
-
-  DB.forEach((r,i)=>{
-    h += `<div class="r">
-      <b>#${i+1} — ${esc(r.category)}</b>
-      <div class="meta">🆔 Order ID: <b>${esc(r.oid)||'-'}</b> &nbsp;|&nbsp; 🏪 Store: <b>${esc(r.store)||'-'}</b><br>
-      🕐 ${esc(r.date)}</div>
-      ${r.desc?`<div>📝 ${esc(r.desc)}</div>`:''}
-      ${r.shot?`<div>📸 Order screenshot:<br><img src="${r.shot}"></div>`:''}
-      ${r.extra?`<div>📷 Evidence photo:<br><img src="${r.extra}"></div>`:''}
-    </div>`;
-  });
-
-  h += `</body></html>`;
-  const w = window.open('','_blank');
-  w.document.write(h);
-  w.document.close();
-}
-
-function shareRecord(i){
-  const r = DB[i];
-  const text =
-    '📋 *Evidence Report*\n' +
-    'Issue: ' + r.category + '\n' +
-    'Order ID: ' + (r.oid||'-') + '\n' +
-    'Store: ' + (r.store||'-') + '\n' +
-    'Date/Time: ' + r.date + '\n' +
-    'Details: ' + (r.desc||'-') + '\n' +
-    '_(photos attached separately — please check)_';
-  const files = [];
-  [r.shot, r.extra].forEach((dataUrl, idx)=>{
-    if(!dataUrl) return;
-    try{
-      const blob = dataURLtoBlob(dataUrl);
-      files.push(new File([blob], 'evidence-'+(idx===0?'screenshot':'photo')+'.jpg', {type:'image/jpeg'}));
-    }catch(e){}
-  });
-  if(navigator.canShare && files.length && navigator.canShare({files})){
-    navigator.share({text, files}).catch(()=>{});
-  } else if(navigator.share){
-    navigator.share({text}).catch(()=>{});
-  } else {
-    window.open('https://wa.me/?text='+encodeURIComponent(text), '_blank');
-  }
-}
-
-function dataURLtoBlob(dataUrl){
-  const parts = dataUrl.split(';base64,');
-  const mime = parts[0].split(':')[1];
-  const raw = atob(parts[1]);
-  const arr = new Uint8Array(raw.length);
-  for(let i=0;i<raw.length;i++) arr[i]=raw.charCodeAt(i);
-  return new Blob([arr], {type:mime});
-}
-
-function render(){
-  document.getElementById('count').textContent = DB.length;
-  document.getElementById('list').innerHTML = DB.slice().reverse().map((r,i)=>{
-    const idx = DB.length-1-i;
-    return `<div class="rec">
-      <b>${r.category}</b><br>
-      <small>🆔 ${r.oid||'-'} | 🏪 ${r.store||'-'}<br>🕐 ${r.date}<br>${(r.desc||'').replace(/</g,'&lt;')}</small><br>
-      ${r.shot?`<img src="${r.shot}">`:''}${r.extra?`<img src="${r.extra}">`:''}
-      <div class="btnrow">
-        <button class="share" onclick="shareRecord(${idx})">📤 Share</button>
-        <button class="sec" onclick="del(${idx})">❌ Delete</button>
-      </div>
-    </div>`;
-  }).join('') || '<small>No records yet</small>';
-}
-
-function del(i){ if(confirm('Delete this record?')){ DB.splice(i,1); localStorage.setItem('evidenceDB',JSON.stringify(DB)); render(); } }
-function clearAll(){ if(confirm('Delete ALL records permanently?')){ DB=[]; localStorage.removeItem('evidenceDB'); render(); } }
-function exportData(){
-  const blob = new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'evidence-'+new Date().toISOString().slice(0,10)+'.json';
-  a.click();
-}
-render();
+const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
+const $=id=>document.getElementById(id);
+let db;
+function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+function allRecords(){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly'),req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result.sort((a,b)=>b.submittedAt.localeCompare(a.submittedAt)));req.onerror=()=>reject(req.error);});}
+function putRecord(record){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
+function deleteRecord(id){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
+function readFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file);});}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function setStatus(msg,isError=false){$('formStatus').textContent=msg;$('formStatus').className='status'+(isError?' error':'');}
+function localDateTime(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());}
+$('incidentAt').value=localDateTime(new Date());
+$('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';try{if(window.Tesseract){setStatus('Reading screenshot for a possible Order ID…');const worker=await Tesseract.createWorker('eng');const result=await worker.recognize(f);await worker.terminate();const text=result.data.text||'';const match=text.match(/\b(?:OD|O0|0D)[A-Z0-9]{8,}\b/i)||text.match(/\b\d{10,}\b/);if(match&&!$('orderId').value)$('orderId').value=match[0].toUpperCase();setStatus(match?'OCR suggestion added. Please verify the Order ID.':'Screenshot selected. Enter the Order ID manually.');}else setStatus('Screenshot selected. OCR is unavailable; enter Order ID manually.');}catch(e){setStatus('Screenshot selected. OCR could not read it; enter Order ID manually.');}});
+$('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
+$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving record on this device…');try{const record={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(16).slice(2),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:$('incidentAt').value,submittedAt:new Date().toISOString(),notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus('Incident saved on this device. Download a backup to preserve it.');await render();}catch(err){setStatus('Could not save. Device storage may be full. Download/export existing records and try again.',true);}finally{btn.disabled=false;}});
+async function render(){const rows=await allRecords();$('count').textContent=rows.length;const host=$('records');host.innerHTML='';if(!rows.length){host.innerHTML='<p class="hint">No records saved yet.</p>';return;}for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();div.innerHTML='<h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>Incident: '+esc(new Date(r.incidentAt).toLocaleString())+' · Submitted: '+esc(date)+'</p><p>'+esc(r.notes||'No description')+' · '+(1+r.supportingEvidence.length)+' image(s)</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">Export this record</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">Delete</button></div>';host.append(div);}}
+$('records').addEventListener('click',async e=>{const id=e.target.dataset.delete||e.target.dataset.export;if(!id)return;const rows=await allRecords(),r=rows.find(x=>x.id===id);if(!r)return;if(e.target.dataset.delete){if(confirm('Delete this saved record from this device?')){await deleteRecord(id);await render();}}else printRecords([r]);});
+function reportHtml(rows){return '<!doctype html><html><head><meta charset="utf-8"><title>Delivery Evidence Report</title><style>body{font:14px Arial,sans-serif;max-width:760px;margin:24px auto;color:#172b25}h1{font-size:21px}.item{border:1px solid #ccc;border-radius:8px;padding:14px;margin:14px 0;break-inside:avoid}.meta{font-size:12px;color:#555;line-height:1.7}.photos{display:flex;gap:10px;flex-wrap:wrap}.photos img{max-width:48%;max-height:360px;object-fit:contain;border:1px solid #ddd;margin-top:8px}@media print{.noprint{display:none}}</style></head><body><button class="noprint" onclick="window.print()">Print / Save as PDF</button><h1>Delivery Partner — Evidence Report</h1><p class="meta">Generated: '+esc(new Date().toLocaleString())+' · Records: '+rows.length+'</p>'+rows.map((r,i)=>'<section class="item"><strong>#'+(i+1)+' — '+esc(r.category)+'</strong><div class="meta">Order ID: '+esc(r.orderId)+'<br>Store: '+esc(r.store)+'<br>Incident date/time: '+esc(new Date(r.incidentAt).toLocaleString())+'<br>Submitted: '+esc(new Date(r.submittedAt).toLocaleString())+'<br>Description: '+esc(r.notes||'—')+'</div><div class="photos"><img src="'+r.orderScreenshot.data+'" alt="Order screenshot">'+r.supportingEvidence.map(x=>'<img src="'+x.data+'" alt="Supporting evidence">').join('')+'</div></section>').join('')+'</body></html>';}
+function printRecords(rows){const w=window.open('','_blank');if(!w){alert('Allow pop-ups to open the printable report.');return;}w.document.write(reportHtml(rows));w.document.close();}
+$('exportBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to export.');return;}printRecords(rows);});
+$('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to back up.');return;}const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),records:rows},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='delivery-evidence-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);});
+(async()=>{try{db=await openDB();await render();}catch(e){setStatus('This browser does not support local evidence storage. Please use a modern browser.',true);$('saveBtn').disabled=true;}})();
 </script>
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+</body></html>
