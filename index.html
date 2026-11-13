@@ -526,7 +526,7 @@ body[data-theme="dark"] .error{color:var(--danger)}
 <form id="incidentForm">
 <div class="form-divider"></div><label for="orderShot">Order screenshot <span class="pill">Required</span></label>
 <input id="orderShot" type="file" accept="image/*" required>
-<span class="hint">Upload the order screenshot. Store is prefilled as Banjara Hills 150 and the Order ID is read automatically. If it is not detected, use "Re-read from screenshot" or type it in.</span>
+<span class="hint">Upload the order screenshot. The app reads the Order ID and the time shown near the top of the screenshot automatically. Verify both before saving; if the time is unclear, enter it manually.</span>
 <div class="preview" id="orderPreview"></div>
 <div class="grid">
 <div><label for="category">Issue category *</label><select id="category" required>
@@ -843,23 +843,32 @@ async function readOrderIdFromImage(file,onStatus){
 
 function extractScreenshotTime(rawText){
   if(!rawText)return null;
-  const text=String(rawText).replace(/\\u00A0/g,' ');
-  const re=/\\b(0?[1-9]|1[0-2]|[01]?\\d|2[0-3])\\s*[:.]\\s*([0-5]\\d)\\s*(a\\.?m\\.?|p\\.?m\\.?)?\\b/gi;
+  const text=String(rawText).replace(/\u00A0/g,' ');
+  const re=/\b(0?[1-9]|1[0-2]|[01]?\d|2[0-3])\s*[:.]\s*([0-5]\d)\s*(a\.?m\.?|p\.?m\.?)?\b/gi;
   const hits=[];let m;
   while((m=re.exec(text))!==null){
-    let hour=Number(m[1]),minute=Number(m[2]),ampm=(m[3]||'').toLowerCase().replace(/\\./g,'');
+    let hour=Number(m[1]),minute=Number(m[2]),ampm=(m[3]||'').toLowerCase().replace(/\./g,'');
     if(ampm){if(hour<1||hour>12)continue;if(ampm==='pm'&&hour!==12)hour+=12;if(ampm==='am'&&hour===12)hour=0;}
     else if(hour>23)continue;
-    const before=text.slice(Math.max(0,m.index-55),m.index).toLowerCase();
-    const after=text.slice(m.index+m[0].length,m.index+m[0].length+35).toLowerCase();
+    const before=text.slice(Math.max(0,m.index-70),m.index).toLowerCase();
+    const after=text.slice(m.index+m[0].length,m.index+m[0].length+45).toLowerCase();
     let score=ampm?5:0;
     if(/placed|order time|ordered|created|confirmed|picked|packed|delivered|scheduled|time/i.test(before+' '+after))score+=12;
-    if(/\\b(today|yesterday|date)\\b/i.test(before+' '+after))score+=2;
+    if(/\b(today|yesterday|date)\b/i.test(before+' '+after))score+=2;
     if(/battery|status|network|wifi|wi-fi/i.test(before+' '+after))score-=10;
     hits.push({hour,minute,score});
   }
   hits.sort((a,b)=>b.score-a.score);
   return hits.length?{hour:hits[0].hour,minute:hits[0].minute}:null;
+}
+async function readScreenshotTimeFromImage(file){
+  const img=await loadImageEl(file);
+  if(!img.naturalWidth||!img.naturalHeight)return {time:null,text:''};
+  const worker=await getOcrWorker();
+  const topHeight=Math.max(1,Math.round(img.naturalHeight*0.38));
+  const top=preprocess(drawRegion(img,{x:0,y:0,w:img.naturalWidth,h:topHeight},2.6,2400),'grey');
+  const result=await recognize(top,worker,'6');
+  return {time:extractScreenshotTime(result.text),text:result.text||''};
 }
 function applyScreenshotTime(time){
   if(!time)return false;
@@ -883,12 +892,15 @@ async function runOrderOcr(file){
     if(token!==ocrToken)return;
     $('ocrText').textContent=(result.text||'').slice(0,6000)||'(no text recognised)';
     $('ocrDebug').hidden=false;
-    const screenshotTime=extractScreenshotTime(result.text||'');
+    let timeRead={time:null,text:''};
+    try{timeRead=await readScreenshotTimeFromImage(file);}catch(timeErr){/* Keep Order ID capture available if time OCR fails. */}
+    if(token!==ocrToken)return;
+    const screenshotTime=timeRead.time||extractScreenshotTime(result.text||'');
     const timeApplied=applyScreenshotTime(screenshotTime);
     if(result.id){
       const field=$('orderId');
       if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;}
-      setOcrStatus('Order ID detected: '+result.id+'. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Please verify the details before saving.');
+      setOcrStatus('Order ID detected: '+result.id+'. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'Time not detected clearly — please enter it manually. ')+'Please verify the details before saving.');
     }else{
       setOcrStatus('Could not read the Order ID from this screenshot. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Type the Order ID in and verify the time before saving.',true);
     }
