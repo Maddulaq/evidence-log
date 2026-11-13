@@ -405,6 +405,95 @@ function reportHtml(rows){
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
     +'</main><script>function printEvidenceReport(){const b=document.getElementById("printReportBtn");if(b){b.disabled=true;b.textContent="Preparing report…";}const imgs=Array.from(document.images);Promise.all(imgs.map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;}))).then(()=>{if(b){b.disabled=false;b.textContent="Print / Save as PDF";}setTimeout(()=>window.print(),250);});}</'+ '/script></body></html>';
 }
+let pdfLibPromise=null;
+function loadPdfLibrary(){
+  if(window.PDFLib)return Promise.resolve(window.PDFLib);
+  if(pdfLibPromise)return pdfLibPromise;
+  pdfLibPromise=new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.src='https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+    script.onload=()=>window.PDFLib?resolve(window.PDFLib):reject(new Error('PDF library unavailable'));
+    script.onerror=()=>reject(new Error('Could not load PDF library'));
+    document.head.appendChild(script);
+  });
+  return pdfLibPromise;
+}
+function imageAsJpeg(dataUrl){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const scale=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+        canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+        const ctx=canvas.getContext('2d');
+        ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',0.84));
+      }catch(e){reject(e);}
+    };
+    img.onerror=()=>reject(new Error('An evidence image could not be read'));
+    img.src=dataUrl;
+  });
+}
+async function downloadEvidencePdf(rows){
+  const lib=await loadPdfLibrary();
+  const {PDFDocument,StandardFonts,rgb}=lib;
+  const pdf=await PDFDocument.create();
+  const font=await pdf.embedFont(StandardFonts.Helvetica);
+  const bold=await pdf.embedFont(StandardFonts.HelveticaBold);
+  const W=595.28,H=841.89,margin=38,green=rgb(0.09,0.29,0.23),muted=rgb(0.39,0.46,0.43),line=rgb(0.86,0.90,0.87);
+  const fit=(w,h,bw,bh)=>{const scale=Math.min(bw/w,bh/h);return {width:w*scale,height:h*scale};};
+  for(let i=0;i<rows.length;i++){
+    const r=rows[i],page=pdf.addPage([W,H]);
+    page.drawRectangle({x:0,y:H-58,width:W,height:58,color:green});
+    page.drawText('DELIVERY PARTNER — EVIDENCE REPORT',{x:margin,y:H-36,size:14,font:bold,color:rgb(1,1,1)});
+    page.drawText('Record '+(i+1)+' of '+rows.length,{x:W-130,y:H-36,size:9,font,color:rgb(1,1,1)});
+    let y=H-82;
+    const field=(label,value)=>{
+      page.drawText(label,{x:margin,y:y-11,size:9,font:bold,color:muted});
+      const text=String(value||'—').replace(/[\r\n]+/g,' ').slice(0,160);
+      const lines=font.widthOfTextAtSize(text,10)>W-2*margin-118? [text.slice(0,75),text.slice(75,150)]:[text];
+      lines.forEach((t,j)=>page.drawText(t,{x:margin+118,y:y-11-j*13,size:10,font,color:rgb(0.10,0.16,0.13)}));
+      y-=Math.max(22,lines.length*13+8);
+    };
+    field('Issue category',r.category);
+    field('Order ID',r.orderId);
+    field('Store / hub',r.store);
+    field('Incident date & time',new Date(r.incidentAt).toLocaleString());
+    field('Submitted',new Date(r.submittedAt).toLocaleString());
+    field('Description',r.notes||'—');
+    y-=4;
+    page.drawLine({start:{x:margin,y},end:{x:W-margin,y},thickness:1,color:line});
+    y-=18;
+    const shots=[{name:'Order screenshot',data:r.orderScreenshot&&r.orderScreenshot.data}].concat((r.supportingEvidence||[]).map((x,j)=>({name:'Supporting evidence '+(j+1),data:x.data}))).filter(x=>x.data);
+    for(let j=0;j<shots.length;j++){
+      const sh=shots[j];
+      const col=j===0?0:(j-1)%2;
+      const row=j===0?0:Math.floor((j-1)/2);
+      const bw=j===0?W-2*margin:(W-2*margin-14)/2;
+      const bh=j===0?245:150;
+      const x=j===0?margin:margin+col*(bw+14);
+      const top=y-row*(bh+30);
+      page.drawText(sh.name,{x,y:top-11,size:9,font:bold,color:green});
+      const jpeg=await imageAsJpeg(sh.data);
+      const bytes=Uint8Array.from(atob(jpeg.split(',')[1]),c=>c.charCodeAt(0));
+      const embedded=await pdf.embedJpg(bytes);
+      const dims=fit(embedded.width,embedded.height,bw,bh-18);
+      page.drawImage(embedded,{x:x+(bw-dims.width)/2,y:top-18-dims.height,width:dims.width,height:dims.height});
+    }
+    page.drawLine({start:{x:margin,y:26},end:{x:W-margin,y:26},thickness:0.7,color:line});
+    page.drawText('Prepared by: Maddula Venkata Ramana',{x:margin,y:13,size:8,font:bold,color:muted});
+  }
+  const bytes=await pdf.save();
+  const blob=new Blob([bytes],{type:'application/pdf'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='delivery-evidence-report-'+new Date().toISOString().slice(0,10)+'.pdf';
+  a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),120000);
+}
 function printRecords(rows){
   // Keep the report inside the current page: Android in-app browsers often
   // block window.open() and leave the user on an empty about:blank tab.
@@ -414,14 +503,30 @@ function printRecords(rows){
   layer.id='reportPreviewLayer';
   layer.style.cssText='position:fixed;inset:0;z-index:99999;background:#fff;display:flex;flex-direction:column';
   const tools=document.createElement('div');
-  tools.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;background:#174b3b;color:#fff;font:14px Arial,sans-serif';
+  tools.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;background:#174b3b;color:#fff;font:14px Arial,sans-serif;flex-wrap:wrap';
   const label=document.createElement('strong');
   label.textContent='Evidence report preview';
+  const actions=document.createElement('div');
+  actions.style.cssText='display:flex;gap:8px;align-items:center';
+  const download=document.createElement('button');
+  download.type='button';download.textContent='Download PDF';
+  download.style.cssText='border:0;border-radius:7px;padding:9px 14px;font-weight:700;background:#fff;color:#174b3b';
+  download.addEventListener('click',async()=>{
+    download.disabled=true;download.textContent='Creating PDF…';
+    try{await downloadEvidencePdf(rows);}
+    catch(err){alert('PDF could not be created. Please check your internet connection and try again. You can still use Print / Save as PDF.');}
+    finally{download.disabled=false;download.textContent='Download PDF';}
+  });
+  const print=document.createElement('button');
+  print.type='button';print.textContent='Print';
+  print.style.cssText='border:1px solid #fff;border-radius:7px;padding:9px 12px;font-weight:700;background:transparent;color:#fff';
+  print.addEventListener('click',()=>{try{frame.contentWindow.focus();frame.contentWindow.print();}catch(e){alert('Use the Download PDF button instead.');}});
   const close=document.createElement('button');
   close.type='button';close.textContent='Close';
-  close.style.cssText='border:0;border-radius:7px;padding:9px 14px;font-weight:700;background:#fff;color:#174b3b';
+  close.style.cssText='border:0;border-radius:7px;padding:9px 12px;font-weight:700;background:#e8eee9;color:#174b3b';
   close.addEventListener('click',()=>layer.remove());
-  tools.append(label,close);
+  actions.append(download,print,close);
+  tools.append(label,actions);
   const frame=document.createElement('iframe');
   frame.title='Delivery evidence report preview';
   frame.style.cssText='display:block;flex:1;width:100%;height:100%;border:0;background:#fff';
