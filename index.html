@@ -96,10 +96,36 @@ button.danger{box-shadow:none}
 @media(min-width:601px){.bottom-nav{display:none}}
 @media print{.bottom-nav,.top-actions{display:none!important}}
 
+
+/* Light / dark appearance */
+body[data-theme="dark"]{--ink:#e7eee9;--muted:#aab8b0;--green2:#203b30;--line:#34483d;--paper:#111a16;background:linear-gradient(180deg,#172820 0,#111a16 300px);color:var(--ink)}
+body[data-theme="dark"] .card{background:#1b2922;border-color:#34483d;box-shadow:0 8px 24px #0005}
+body[data-theme="dark"] h2,body[data-theme="dark"] .record h3{color:#e4eee7}
+body[data-theme="dark"] label{color:#d0dfd5}
+body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{background:#111c16;color:#edf4ef;border-color:#43574b}
+body[data-theme="dark"] input::placeholder,body[data-theme="dark"] textarea::placeholder{color:#91a197}
+body[data-theme="dark"] input[type=file]{background:#15231b;border-color:#53695b}
+body[data-theme="dark"] input[type=file]::file-selector-button{background:#294638;color:#e4f1e8}
+body[data-theme="dark"] button.secondary{background:#293a30;color:#e4eee7;border-color:#465b4d}
+body[data-theme="dark"] button.danger{background:#422626;color:#ffdede;border-color:#704343}
+body[data-theme="dark"] .notice{background:#352e1d;border-color:#62502b;color:#f0dfb4;box-shadow:none}
+body[data-theme="dark"] .notice strong{color:#f0dfb4!important}
+body[data-theme="dark"] .workspace-intro p,body[data-theme="dark"] .section-subtitle{color:#aab8b0}
+body[data-theme="dark"] .workspace-tag{background:#294638;color:#d6eadc}
+body[data-theme="dark"] .section-number{background:#294638;color:#d6eadc}
+body[data-theme="dark"] .pill{background:#294638;color:#d6eadc}
+body[data-theme="dark"] .form-divider,body[data-theme="dark"] #records{border-color:#34483d;background-color:#34483d}
+body[data-theme="dark"] .record{border-color:#34483d}
+body[data-theme="dark"] .bottom-nav{background:#1b2922ed;border-color:#405447}
+body[data-theme="dark"] .bottom-nav a{color:#d5e5da}
+body[data-theme="dark"] .bottom-nav a.primary{background:#2b7654;color:#fff}
+.theme-toggle{margin-left:auto;white-space:nowrap}
+@media(max-width:600px){.theme-toggle{margin-left:0}}
+
 </style>
 </head>
 <body>
-<header><h1>Delivery Evidence Hub</h1><p class="sub">A simple, organised place to document delivery issues and keep evidence together.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a></div></header>
+<header><h1>Delivery Evidence Hub</h1><p class="sub">A simple, organised place to document delivery issues and keep evidence together.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
 <main>
 <div class="workspace-intro"><div><h2>Your evidence workspace</h2><p>Capture the issue, attach proof, and save a clear record.</p></div><span class="workspace-tag">● Device storage</span></div>
 <div class="notice"><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
@@ -639,6 +665,28 @@ function printRecords(rows){
 }
 $('exportBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to export.');return;}printRecords(rows);});
 $('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to back up.');return;}const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),records:rows},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='delivery-evidence-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);});
+
+const themeToggle=document.getElementById('themeToggle');
+function applyTheme(theme){
+  const dark=theme==='dark';
+  document.body.dataset.theme=dark?'dark':'light';
+  if(themeToggle){
+    themeToggle.textContent=dark?'☀ Light mode':'☾ Dark mode';
+    themeToggle.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+    themeToggle.setAttribute('aria-pressed',String(dark));
+  }
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.content=dark?'#172820':'#123d32';
+}
+let savedTheme='light';
+try{savedTheme=localStorage.getItem('deliveryEvidenceTheme')||'light';}catch(e){}
+applyTheme(savedTheme);
+themeToggle?.addEventListener('click',()=>{
+  const next=document.body.dataset.theme==='dark'?'light':'dark';
+  applyTheme(next);
+  try{localStorage.setItem('deliveryEvidenceTheme',next);}catch(e){}
+});
+
 (async()=>{try{db=await openDB();await render();}catch(e){setStatus('This browser does not support local evidence storage. Please use a modern browser.',true);$('saveBtn').disabled=true;}})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer onerror="window.loadOcrLibFallback(0)"></script>
