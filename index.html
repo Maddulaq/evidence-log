@@ -350,6 +350,33 @@ async function readOrderIdFromImage(file,onStatus){
   return {id:null,text:seen.join('\n---\n')};
 }
 
+function extractScreenshotTime(rawText){
+  if(!rawText)return null;
+  const text=String(rawText).replace(/\\u00A0/g,' ');
+  const re=/\\b(0?[1-9]|1[0-2]|[01]?\\d|2[0-3])\\s*[:.]\\s*([0-5]\\d)\\s*(a\\.?m\\.?|p\\.?m\\.?)?\\b/gi;
+  const hits=[];let m;
+  while((m=re.exec(text))!==null){
+    let hour=Number(m[1]),minute=Number(m[2]),ampm=(m[3]||'').toLowerCase().replace(/\\./g,'');
+    if(ampm){if(hour<1||hour>12)continue;if(ampm==='pm'&&hour!==12)hour+=12;if(ampm==='am'&&hour===12)hour=0;}
+    else if(hour>23)continue;
+    const before=text.slice(Math.max(0,m.index-55),m.index).toLowerCase();
+    const after=text.slice(m.index+m[0].length,m.index+m[0].length+35).toLowerCase();
+    let score=ampm?5:0;
+    if(/placed|order time|ordered|created|confirmed|picked|packed|delivered|scheduled|time/i.test(before+' '+after))score+=12;
+    if(/\\b(today|yesterday|date)\\b/i.test(before+' '+after))score+=2;
+    if(/battery|status|network|wifi|wi-fi/i.test(before+' '+after))score-=10;
+    hits.push({hour,minute,score});
+  }
+  hits.sort((a,b)=>b.score-a.score);
+  return hits.length?{hour:hits[0].hour,minute:hits[0].minute}:null;
+}
+function applyScreenshotTime(time){
+  if(!time)return false;
+  const field=$('incidentAt'),current=field.value||localDateTime(new Date());
+  const date=current.slice(0,10);
+  field.value=date+'T'+String(time.hour).padStart(2,'0')+':'+String(time.minute).padStart(2,'0');
+  return true;
+}
 function setOcrStatus(msg,isError){
   const el=$('ocrInline');
   if(el){el.textContent=msg;el.className='status'+(isError?' error':'');}
@@ -365,12 +392,14 @@ async function runOrderOcr(file){
     if(token!==ocrToken)return;
     $('ocrText').textContent=(result.text||'').slice(0,6000)||'(no text recognised)';
     $('ocrDebug').hidden=false;
+    const screenshotTime=extractScreenshotTime(result.text||'');
+    const timeApplied=applyScreenshotTime(screenshotTime);
     if(result.id){
       const field=$('orderId');
       if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;}
-      setOcrStatus('Order ID detected: '+result.id+'. Please compare it with the screenshot before saving.');
+      setOcrStatus('Order ID detected: '+result.id+'. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Please verify the details before saving.');
     }else{
-      setOcrStatus('Could not read the Order ID from this screenshot. Type it in, or upload a clearer screenshot of the order details screen.',true);
+      setOcrStatus('Could not read the Order ID from this screenshot. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Type the Order ID in and verify the time before saving.',true);
     }
   }catch(err){
     if(token!==ocrToken)return;
