@@ -310,12 +310,74 @@ body[data-theme="dark"] .section-number{background:#294433;color:#c8ead1}
 body[data-theme="dark"] button.secondary{background:#293a30;color:#e1eee5;border-color:#405548}
 body[data-theme="dark"] .bottom-nav{background:rgba(24,37,30,.94);border-color:#34483e}
 
+
+/* Command-centre dashboard and searchable evidence archive */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.command-center{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch;margin:0 0 18px;padding:26px;border-radius:22px;overflow:hidden;position:relative;background:linear-gradient(125deg,#102f27 0%,#174b3b 58%,#23684b 100%);color:#f4faf5;box-shadow:0 18px 40px #153e2c22}
+.command-center:after{content:"";position:absolute;width:300px;height:300px;border:1px solid #ffffff18;border-radius:50%;right:23%;top:-220px;box-shadow:0 0 0 32px #ffffff08,0 0 0 66px #ffffff06;pointer-events:none}
+.command-copy,.overview-panel{position:relative;z-index:1}
+.eyebrow{display:flex;align-items:center;gap:8px;color:#b9d9c5;font-size:9px;font-weight:850;letter-spacing:1.4px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#9de0a9;box-shadow:0 0 0 4px #9de0a922}
+.command-copy h2{margin:17px 0 9px;font-size:clamp(27px,4vw,39px);line-height:1.06;letter-spacing:-1.2px;color:#fff}
+.command-copy h2 em{font-style:normal;color:#b5e1c1}
+.command-copy p{max-width:440px;margin:0;color:#d3e5d9;font-size:13px;line-height:1.65}
+.command-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:21px}
+.command-actions a{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;border-radius:999px;padding:11px 16px;font-size:12px;font-weight:800;transition:transform .18s ease,background .18s ease}
+.command-primary{background:#f3faf4;color:#174b3b;box-shadow:0 5px 14px #071b1330}
+.command-secondary{color:#f3faf4;border:1px solid #ffffff50;background:#ffffff0c}
+.command-actions a:active{transform:scale(.97)}
+.overview-panel{align-self:stretch;padding:17px 18px;border-radius:16px;background:linear-gradient(145deg,#ffffff18,#ffffff0b);border:1px solid #ffffff26;backdrop-filter:blur(8px);display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.overview-top{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#c7e0d0;font-size:9px;font-weight:850;letter-spacing:1px}
+.storage-indicator{font-size:9px;letter-spacing:0;color:#d9f1df;white-space:nowrap}
+.overview-stat{display:flex;flex-direction:column;gap:0;margin:16px 0}
+.overview-stat strong{font-size:43px;line-height:1;font-weight:850;letter-spacing:-1.5px;color:#fff}
+.overview-stat span{margin-top:6px;color:#d2e6d9;font-size:11px}
+.overview-rule{height:1px;background:#ffffff25;margin-bottom:13px}
+.overview-bottom{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.overview-bottom span{font-size:9px;line-height:1.4;color:#e0eee4}
+.overview-bottom b{display:block;color:#aee0bd;font-size:10px;margin-bottom:3px}
+.record-tools{position:relative;display:flex;align-items:center;gap:10px;margin:17px 0 10px;padding:0 12px;border:1px solid var(--line);border-radius:13px;background:var(--surface);min-width:0}
+.record-tools .search-symbol{font-size:23px;color:var(--muted);line-height:1}
+.record-tools input{flex:1;min-width:0;border:0!important;box-shadow:none!important;background:transparent!important;padding:12px 0;min-height:44px}
+.record-tools input:focus{outline:none}
+.search-count{white-space:nowrap;color:var(--muted);font-size:10px}
+#records>.record,#records>div.record{border:1px solid var(--line);background:var(--surface);padding:14px;border-radius:14px;margin-bottom:10px;box-shadow:0 4px 14px #143d2910}
+#records .record button{min-height:36px}
+body[data-theme="dark"] .command-center{background:linear-gradient(125deg,#0b211a,#123d2d 58%,#1b5237)}
+body[data-theme="dark"] .overview-panel{background:#ffffff0b;border-color:#ffffff20}
+body[data-theme="dark"] .record-tools{background:#18251e;border-color:#34483e}
+body[data-theme="dark"] #records>.record,body[data-theme="dark"] #records>div.record{background:#18251e;border-color:#34483e}
+@media(max-width:680px){
+ .command-center{grid-template-columns:1fr;gap:15px;padding:20px 17px;border-radius:18px}
+ .command-center:after{right:-150px;top:-220px}
+ .command-copy h2{font-size:29px;margin-top:13px}
+ .command-copy p{font-size:12px}
+ .command-actions{margin-top:16px}
+ .command-actions a{padding:10px 13px;font-size:11px}
+ .overview-panel{padding:14px}
+ .overview-stat{margin:11px 0}
+ .overview-stat strong{font-size:36px}
+ .overview-bottom span{font-size:9px}
+ .record-tools{gap:7px;padding:0 9px}
+ .record-tools input{font-size:12px}
+ .search-count{font-size:9px}
+}
+
 </style>
 </head>
 <body>
 <header><h1>Delivery Evidence Hub</h1><p class="sub">A simple, organised place to document delivery issues and keep evidence together.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
 <main>
-<div class="workspace-intro"><div><h2>Your evidence workspace</h2><p>Capture the issue, attach proof, and save a clear record.</p></div><span class="workspace-tag">● Device storage</span></div>
+<section class="command-center" aria-label="Workspace overview">
+  <div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> DELIVERY OPERATIONS · PERSONAL WORKSPACE</span><h2>Every issue.<br><em>Properly documented.</em></h2><p>Capture clear evidence, verify the order details, and keep a report ready when you need it.</p>
+    <div class="command-actions"><a class="command-primary" href="#incidentSection">＋ New incident</a><a class="command-secondary" href="#recordsSection">Browse records <span aria-hidden="true">↗</span></a></div>
+  </div>
+  <div class="overview-panel"><div class="overview-top"><span>YOUR WORKSPACE</span><span class="storage-indicator">● On this device</span></div>
+    <div class="overview-stat"><strong id="dashboardCount">0</strong><span>Saved incident records</span></div>
+    <div class="overview-rule"></div>
+    <div class="overview-bottom"><span><b>01</b> Capture screenshot</span><span><b>02</b> Add evidence</span><span><b>03</b> Save report</span></div>
+  </div>
+</section>
 <div class="notice"><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
 <section class="card" id="incidentSection">
 <div class="section-heading"><span class="section-number">01</span><h2>Submit an incident</h2></div>
@@ -345,7 +407,7 @@ body[data-theme="dark"] .bottom-nav{background:rgba(24,37,30,.94);border-color:#
 </section>
 <section class="card" id="recordsSection">
 <div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
-<div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
+<div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
 </section>
 <p class="hint" style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
 </main>
@@ -876,6 +938,35 @@ themeToggle?.addEventListener('click',()=>{
 });
 
 (async()=>{try{db=await openDB();await render();}catch(e){setStatus('This browser does not support local evidence storage. Please use a modern browser.',true);$('saveBtn').disabled=true;}})();
+
+/* Dashboard count and instant record search */
+const dashboardCount=document.getElementById('dashboardCount');
+const countNode=document.getElementById('count');
+const searchInput=document.getElementById('recordSearch');
+const searchCount=document.getElementById('searchCount');
+function syncDashboardCount(){
+ if(dashboardCount&&countNode)dashboardCount.textContent=countNode.textContent||'0';
+}
+if(countNode&&dashboardCount){
+ new MutationObserver(syncDashboardCount).observe(countNode,{childList:true,characterData:true,subtree:true});
+ syncDashboardCount();
+}
+if(searchInput){
+ searchInput.addEventListener('input',()=>{
+  const q=searchInput.value.trim().toLowerCase();
+  const list=document.getElementById('records');
+  if(!list)return;
+  const cards=[...list.children].filter(el=>el.matches('.record')||el.classList.contains('record'));
+  let shown=0;
+  cards.forEach(card=>{const match=!q||card.textContent.toLowerCase().includes(q);card.hidden=!match;if(match)shown++;});
+  if(searchCount)searchCount.textContent=q?(shown+' match'+(shown===1?'':'es')):'All records';
+  let empty=list.querySelector('.search-empty');
+  if(q&&cards.length&&shown===0){
+   if(!empty){empty=document.createElement('p');empty.className='hint search-empty';empty.textContent='No matching records. Try another Order ID or keyword.';list.appendChild(empty);}
+  }else if(empty)empty.remove();
+ });
+}
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer onerror="window.loadOcrLibFallback(0)"></script>
 </body></html>
