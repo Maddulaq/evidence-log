@@ -77,13 +77,50 @@ $('incidentAt').value=localDateTime(new Date());
 const OCR_DIGIT_MAP={O:'0',Q:'0',D:'0',U:'0',I:'1',L:'1','|':'1','!':'1','[':'1',']':'1',S:'5',B:'8',Z:'2',G:'6',T:'7'};
 function ocrRunToDigits(run){
   let digits='';const ambiguous=[];
-  for(const ch of run.toUpperCase()){
+  for(const ch of String(run||'').toUpperCase()){
     if(ch>='0'&&ch<='9'){digits+=ch;ambiguous.push(false);}
     else if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous.push(true);}
-    else if(ch===' '||ch==='\t'||ch==='\n'||ch==='-')continue;
+    else if(/\\s/.test(ch)||ch==='-'||ch===':'||ch==='#')continue;
     else return null;
   }
   return {digits,ambiguous};
+}
+function extractOrderId(rawText){
+  if(!rawText)return null;
+  const text=String(rawText).toUpperCase()
+    .replace(/[\\u2010-\\u2015\\u2212]/g,'-')
+    .replace(/\\u00A0/g,' ');
+  const prefix=/[O0][D0][\\s:#-]*/g;
+  const candidates=[];
+  let match;
+  while((match=prefix.exec(text))!==null){
+    let raw='',started=false,spaces=0;
+    for(let i=prefix.lastIndex;i<text.length;i++){
+      const ch=text[i];
+      if(/[0-9OQIL|!SBZGUDT]/.test(ch)){
+        raw+=ch;started=true;spaces=0;
+        if(raw.length>=22)break;
+      }else if(/[\\s:#-]/.test(ch)){
+        if(started){spaces++;if(spaces>3)break;}
+      }else{
+        break;
+      }
+    }
+    const parsed=ocrRunToDigits(raw);
+    if(!parsed||parsed.digits.length<16||parsed.digits.length>22)continue;
+    const near=text.slice(Math.max(0,match.index-45),match.index+12);
+    const keyword=/ORDER|SHIPMENT|DELIVERY/.test(near)?25:0;
+    const lengthScore=parsed.digits.length===18?50:
+      (parsed.digits.length>=16&&parsed.digits.length<=20?25:0);
+    const ambiguityPenalty=parsed.ambiguous.filter(Boolean).length*2;
+    candidates.push({
+      id:'OD'+parsed.digits,
+      score:keyword+lengthScore-ambiguityPenalty,
+      length:parsed.digits.length
+    });
+  }
+  candidates.sort((a,b)=>b.score-a.score||Math.abs(a.length-18)-Math.abs(b.length-18));
+  return candidates[0]?.id||null;
 }
 function ocrVariants(digits,ambiguous){
   const out=[{d:digits,b:0}],n=digits.length;
