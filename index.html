@@ -152,12 +152,12 @@ function scoreOrderId(digits,text,index,bonus){
 function extractOrderId(rawText){
   if(!rawText)return null;
   const text=String(rawText).toUpperCase()
-    .replace(/[\\u2010-\\u2015\\u2212]/g,'-')
-    .replace(/\\u00A0/g,' ');
+    .replace(/[\u2010-\u2015\u2212]/g,'-')
+    .replace(/\u00A0/g,' ');
   // Start at the OD prefix, then collect the ID across OCR line breaks.
   // Tesseract sometimes inserts tiny header fragments (for example "NY")
   // between the two halves of an otherwise continuous 18-digit order number.
-  const prefix=/[O0][D0][\\s:#-]*/g;
+  const prefix=/[O0][D0][\s:#-]*/g;
   const candidates=[];
   let match;
   while((match=prefix.exec(text))!==null){
@@ -166,7 +166,7 @@ function extractOrderId(rawText){
       const ch=text[i];
       if(/[0-9]/.test(ch)){digits+=ch;noise=0;continue;}
       if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;noise=0;continue;}
-      if(/[\\s:#=\\-]/.test(ch)){continue;}
+      if(/[\s:#=\-]/.test(ch)){continue;}
       // Ignore at most two non-numeric OCR letters in the order-header band.
       if(/[A-Z]/.test(ch)&&!/[OQD UILSBZGT]/.test(ch)&&noise<2){noise++;continue;}
       break;
