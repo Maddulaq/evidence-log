@@ -164,8 +164,8 @@ function extractOrderId(rawText){
     let digits='',ambiguous=0,noise=0;
     for(let i=prefix.lastIndex;i<text.length&&digits.length<22;i++){
       const ch=text[i];
-      if(/[0-9]/.test(ch)){digits+=ch;noise=0;continue;}
-      if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;noise=0;continue;}
+      if(/[0-9]/.test(ch)){digits+=ch;noise=0;if(digits.length===18)break;continue;}
+      if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;noise=0;if(digits.length===18)break;continue;}
       if(/[\s:#=\-]/.test(ch)){continue;}
       // Ignore at most two non-numeric OCR letters in the order-header band.
       if(/[A-Z]/.test(ch)&&!/[OQD UILSBZGT]/.test(ch)&&noise<2){noise++;continue;}
