@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Evidence Log — Auto OCR + Share</title>
+<title>Evidence Log</title>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
   body{font-family:system-ui,sans-serif;max-width:600px;margin:auto;padding:16px;background:#f4f5f7}
@@ -23,12 +23,12 @@
 </style>
 </head>
 <body>
-<h1>📋 Evidence Log (Auto-Read + Share)</h1>
+<h1>📋 Evidence Log</h1>
 
 <div class="card">
-  <div id="status">Ready. Take a screenshot of the order — Order ID & Store name will be read automatically.</div>
+  <div id="status">Ready. Upload order screenshot — Order ID &amp; Store auto-read.</div>
 
-  <label>📸 Order screenshot — auto-reads Order ID + Store name</label>
+  <label>📸 Order screenshot</label>
   <input id="shot" type="file" accept="image/*">
 
   <div id="autoBox" style="display:none">
@@ -63,56 +63,91 @@
 <div class="card">
   <b>Records: <span id="count">0</span></b>
   <div id="list"></div>
-  <button class="sec" onclick="exportData()">📤 Export All (JSON)</button>
+  <button class="sec" onclick="exportReport()">📄 Export Report (readable, with photos)</button>
+  <button class="sec" onclick="exportData()">📤 Export Raw Data (JSON)</button>
   <button class="sec" onclick="clearAll()" style="background:#a00">🗑 Clear All</button>
 </div>
 
 <script>
 let DB = JSON.parse(localStorage.getItem('evidenceDB') || '[]');
 
+/* ---- OCR: remove phone status-bar junk (time, battery, network) ---- */
+function cleanLines(text){
+  return text.split('\n').map(l=>l.trim()).filter(l=>{
+    if(!l) return false;
+    if(/^\d{1,2}:\d{2}/.test(l)) return false;                  // clock "8:30"
+    if(/KB\/s|Vo ?LTE|LTE\b|%$|5G|4G/.test(l)) return false;     // network/battery
+    if(!/[A-Za-z0-9]/.test(l)) return false;                     // pure symbols
+    return true;
+  });
+}
+
+function normalizeOid(t){
+  t = t.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  t = t.replace(/^0(?=D)/,'O');      // 0D439... -> OD439...
+  t = t.replace(/^(?:00|OO)/,'O');    // 00439 -> O? keep simple
+  return t;
+}
+
+function extractOrderId(text, lines){
+  // 1) keyword line: "Order ID: ...", "ORD-...", "#..."
+  for(const l of lines){
+    let m = l.match(/(?:order\s*(?:id|no|number)?|ord)\s*[:.#\-]?\s*([A-Z0-9][A-Z0-9\-]{5,})/i);
+    if(m) return normalizeOid(m[1]);
+  }
+  // 2) OD + 9+ digits anywhere (Clipkart/Flipkart style)
+  let m = text.toUpperCase().replace(/[^A-Z0-9\n ]/g,' ').match(/\bO[0D][0-9]{9,}\b/);
+  if(m) return m[0].replace(/^0(?=D)/,'O');
+  // 3) any long digit run 8+
+  m = text.match(/\b\d{8,}\b/);
+  if(m) return m[0];
+  return '';
+}
+
+function cleanName(s){
+  return s.replace(/["'©®™*|#@]/g,' ').replace(/\s+/g,' ').trim().slice(0,60);
+}
+
+function extractStore(lines){
+  // 1) explicit keyword: "Store: XYZ"
+  for(let i=0;i<lines.length;i++){
+    let m = lines[i].match(/(?:store|outlet|branch|hub|warehouse|dark\s*store)\s*[:.\-]\s*(.+)/i);
+    if(m && m[1].trim().length>2) return cleanName(m[1]);
+    if(/^(?:store|outlet|branch|hub)$/i.test(lines[i]) && lines[i+1]) return cleanName(lines[i+1]);
+  }
+  // 2) fallback: first line with 3+ letters (likely store name header)
+  for(const l of lines){
+    if((l.match(/[A-Za-z]/g)||[]).length>=3 && l.length>=4 && l.length<=60) return cleanName(l);
+  }
+  return '';
+}
+
 document.getElementById('shot').addEventListener('change', async e=>{
   const f = e.target.files[0];
   if(!f) return;
-  setStatus('⏳ Reading screenshot… (5–15 seconds, first time may download language data)');
+  setStatus('⏳ Reading screenshot… (5–15 seconds)');
   try{
     const res = await Tesseract.recognize(f, 'eng');
-    const text = res.data.text;
+    const raw = res.data.text;
+    console.log('OCR RAW:', raw);
+    const lines = cleanLines(raw);
 
-    const oid = extractOrderId(text);
-    const store = extractStore(text);
+    const oid = extractOrderId(raw, lines);
+    const store = extractStore(lines);
 
-    if(oid){ document.getElementById('oid').value = oid; }
-    if(store){ document.getElementById('store').value = store; }
+    if(oid) document.getElementById('oid').value = oid;
+    if(store) document.getElementById('store').value = store;
 
     document.getElementById('autoBox').style.display='block';
     document.getElementById('autoInfo').textContent =
       '✅ Auto-detected:' + (oid?'\nOrder ID: '+oid:'') + (store?'\nStore: '+store:'') +
-      (oid||store ? '\n⏰ '+new Date().toLocaleString() : '\n⚠️ Could not read clearly — please type manually');
-    setStatus('Done. Check the auto-filled fields, then press Save.');
+      '\n⏰ '+new Date().toLocaleString() +
+      ((oid&&store)?'':'\n⚠️ Something unclear — please correct the fields manually');
+    setStatus('Done. Check fields, then press Save.');
   }catch(err){
-    setStatus('❌ Could not read image: '+err.message+'\nPlease type Order ID and Store manually.');
+    setStatus('❌ Could not read image: '+err.message+'\nPlease type Order ID / Store manually.');
   }
 });
-
-function extractOrderId(text){
-  let m = text.match(/(?:order\s*(?:id|no|#)?|ord|#)\s*[:#-]?\s*([A-Z0-9][A-Z0-9-]{5,})/i);
-  if(m) return m[1].replace(/[^A-Z0-9-]/gi,'');
-  m = text.match(/\b(\d{6,})\b/);
-  if(m) return m[1];
-  return '';
-}
-
-function extractStore(text){
-  const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
-  for(let i=0;i<lines.length;i++){
-    let m = lines[i].match(/(?:store|outlet|branch|hub|warehouse)\s*[:.\-]?\s*(.+)/i);
-    if(m && m[1].trim()) return m[1].trim().slice(0,60);
-    m = lines[i].match(/^(?:store|outlet|branch|hub)$/i);
-    if(m && lines[i+1]) return lines[i+1].slice(0,60);
-  }
-  if(lines.length) return lines[0].slice(0,60);
-  return '';
-}
 
 function setStatus(t){ document.getElementById('status').textContent = t; }
 
@@ -150,6 +185,42 @@ function save(){
   }
 }
 
+/* ---- readable report with photos ---- */
+function exportReport(){
+  if(!DB.length){ alert('No records to export'); return; }
+  const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');
+  let h = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Evidence Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body{font-family:Arial,sans-serif;max-width:700px;margin:auto;padding:16px;color:#111}
+    .r{border:1px solid #ccc;border-radius:8px;padding:14px;margin:14px 0;page-break-inside:avoid}
+    .r b{font-size:1.05rem}
+    .meta{color:#444;font-size:.9rem;margin:6px 0}
+    .r img{max-width:100%;border-radius:6px;margin-top:8px}
+    h1{font-size:1.3rem} h2{font-size:1rem;margin-top:20px}
+    @media print{ .noprint{display:none} }
+  </style></head><body>
+  <button class="noprint" onclick="window.print()" style="padding:10px 16px;font-size:1rem">🖨️ Print / Save as PDF</button>
+  <h1>📋 Evidence Report — Delivery Partner</h1>
+  <div class="meta">Generated: ${new Date().toLocaleString()} | Total records: ${DB.length}</div>`;
+
+  DB.forEach((r,i)=>{
+    h += `<div class="r">
+      <b>#${i+1} — ${esc(r.category)}</b>
+      <div class="meta">🆔 Order ID: <b>${esc(r.oid)||'-'}</b> &nbsp;|&nbsp; 🏪 Store: <b>${esc(r.store)||'-'}</b><br>
+      🕐 ${esc(r.date)}</div>
+      ${r.desc?`<div>📝 ${esc(r.desc)}</div>`:''}
+      ${r.shot?`<div>📸 Order screenshot:<br><img src="${r.shot}"></div>`:''}
+      ${r.extra?`<div>📷 Evidence photo:<br><img src="${r.extra}"></div>`:''}
+    </div>`;
+  });
+
+  h += `</body></html>`;
+  const w = window.open('','_blank');
+  w.document.write(h);
+  w.document.close();
+}
+
 function shareRecord(i){
   const r = DB[i];
   const text =
@@ -160,8 +231,6 @@ function shareRecord(i){
     'Date/Time: ' + r.date + '\n' +
     'Details: ' + (r.desc||'-') + '\n' +
     '_(photos attached separately — please check)_';
-
-  // Prepare image files if possible
   const files = [];
   [r.shot, r.extra].forEach((dataUrl, idx)=>{
     if(!dataUrl) return;
@@ -170,13 +239,11 @@ function shareRecord(i){
       files.push(new File([blob], 'evidence-'+(idx===0?'screenshot':'photo')+'.jpg', {type:'image/jpeg'}));
     }catch(e){}
   });
-
   if(navigator.canShare && files.length && navigator.canShare({files})){
     navigator.share({text, files}).catch(()=>{});
   } else if(navigator.share){
     navigator.share({text}).catch(()=>{});
   } else {
-    // Fallback: WhatsApp with text only
     window.open('https://wa.me/?text='+encodeURIComponent(text), '_blank');
   }
 }
