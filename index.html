@@ -971,7 +971,6 @@ function reportHtml(rows){
       +'<tr><td class="k">Order ID</td><td><strong>'+esc(r.orderId)+'</strong></td></tr>'
       +'<tr><td class="k">Store / hub</td><td>'+esc(r.store)+'</td></tr>'
       +'<tr><td class="k">Incident date &amp; time</td><td>'+esc(new Date(r.incidentAt).toLocaleString())+'</td></tr>'
-      +'<tr><td class="k">Submitted</td><td>'+esc(new Date(r.submittedAt).toLocaleString())+'</td></tr>'
       +'<tr><td class="k">Description</td><td>'+esc(r.notes||'\u2014')+'</td></tr>'
       +'</table><div class="shots">'
       +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
@@ -1040,7 +1039,6 @@ async function createEvidencePdfBlob(rows){
     field('Order ID',r.orderId);
     field('Store / hub',r.store);
     field('Incident date & time',new Date(r.incidentAt).toLocaleString());
-    field('Submitted',new Date(r.submittedAt).toLocaleString());
     field('Description',r.notes||'—');
     y-=4;
     page.drawLine({start:{x:margin,y},end:{x:W-margin,y},thickness:1,color:line});
