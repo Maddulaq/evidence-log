@@ -397,7 +397,9 @@ body[data-theme="dark"] .bottom-nav{backdrop-filter:blur(16px)}
 .admin-person{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:12px;overflow-wrap:anywhere}
 .admin-person strong{display:block;font-size:13px}
 .cloud-protected{display:none}
-body.cloud-authenticated .cloud-protected{display:block}
+body.cloud-authenticated .command-center.cloud-protected{display:grid}
+body.cloud-authenticated .notice.cloud-protected,body.cloud-authenticated section.card.cloud-protected,body.cloud-authenticated p.cloud-protected,body.cloud-authenticated .admin-panel.cloud-protected{display:block}
+body:not(.cloud-authenticated) .bottom-nav{display:none!important}
 @media(max-width:680px){.auth-card{margin:14px 11px;padding:18px}.admin-person{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
