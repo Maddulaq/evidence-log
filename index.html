@@ -1240,7 +1240,8 @@ function applyTheme(theme){
 let savedTheme='light';
 try{savedTheme=localStorage.getItem('deliveryEvidenceTheme')||'light';}catch(e){}
 applyTheme(savedTheme);
-let initialLanguage='en';try{initialLanguage=localStorage.getItem('deliveryEvidenceLanguage')||'en';}catch(e){}\nsetLanguage(initialLanguage);
+let initialLanguage='en';try{initialLanguage=localStorage.getItem('deliveryEvidenceLanguage')||'en';}catch(e){}
+setLanguage(initialLanguage);
 themeToggle?.addEventListener('click',()=>{
   const next=document.body.dataset.theme==='dark'?'light':'dark';
   applyTheme(next);
