@@ -419,7 +419,7 @@ body.cloud-authenticated .cloud-protected{display:block}
   <div class="records-head"><div><h2>Administrator workspace</h2><small id="adminSummary">Loading workspace details…</small></div><div class="actions" style="margin:0"><button class="secondary" id="migrateBtn" type="button" hidden>Import this device’s old reports</button><button class="secondary" id="inviteGuideBtn" type="button">Invite colleagues</button></div></div>
   <div class="admin-list" id="adminPeople"></div>
 </section>
-<section class="command-center cloud-protected" aria-label="Workspace overview" hidden>
+<section class="command-center cloud-protected" aria-label="Workspace overview">
   <div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span><h2>Every issue.<br><em>Properly documented.</em></h2><p>Capture clear evidence, verify the order details, and keep a report ready when you need it.</p>
     <div class="command-actions"><a class="command-primary" href="#incidentSection">＋ New incident</a><a class="command-secondary" href="#recordsSection">Browse records <span aria-hidden="true">↗</span></a></div>
   </div>
@@ -429,8 +429,8 @@ body.cloud-authenticated .cloud-protected{display:block}
     <div class="overview-bottom"><span><b>01</b> Capture screenshot</span><span><b>02</b> Add evidence</span><span><b>03</b> Save report</span></div>
   </div>
 </section>
-<div class="notice cloud-protected" hidden><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
-<section class="card cloud-protected" id="incidentSection" hidden>
+<div class="notice cloud-protected"><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
+<section class="card cloud-protected" id="incidentSection">
 <div class="section-heading"><span class="section-number">01</span><h2>Submit an incident</h2></div>
 <p class="section-subtitle">Complete the details below. Check the Order ID and time before saving.</p>
 <form id="incidentForm">
@@ -456,11 +456,11 @@ body.cloud-authenticated .cloud-protected{display:block}
 <div class="status" id="formStatus" role="status" aria-live="polite"></div>
 </form>
 </section>
-<section class="card cloud-protected" id="recordsSection" hidden>
+<section class="card cloud-protected" id="recordsSection">
 <div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
 <div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div class="selection-tools no-print"><div><strong id="selectionCount">0 complaints selected</strong><small>Select multiple complaints to combine them into one PDF, with a separate section for each complaint.</small></div><div class="actions"><button class="secondary" id="selectAllBtn" type="button">Select all</button><button id="combinedPdfBtn" type="button" disabled>Generate combined PDF</button></div></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
 </section>
-<p class="hint cloud-protected" hidden style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
+<p class="hint cloud-protected" style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
 </main>
 <nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggle" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js"></script>
@@ -473,9 +473,9 @@ const uiText={
   create:'＋ Create a report',saved:'View saved records',share:'Share app',
   eyebrow:'SOP & PROOF · INCIDENT DOCUMENTATION',hero:'Every issue.<br><em>Properly documented.</em>',
   heroSub:'Capture clear evidence, verify the order details, and keep a report ready when you need it.',
-  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● On this device',
+  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● Private cloud workspace',
   savedCount:'Saved incident records',step1:'<b>01</b> Capture screenshot',step2:'<b>02</b> Add evidence',step3:'<b>03</b> Save report',
-  notice:'<strong>Storage notice:</strong> Reports are saved only in this browser on this device. They are not shared with other partners. Download backups regularly. Cloud sharing is not enabled yet.',
+  notice:'<strong>Private cloud storage:</strong> Reports and evidence are stored in your secure workspace. Partners see only their own reports; the administrator can review all reports.',
   incidentTitle:'Submit an incident',incidentSub:'Follow the steps below. Check the Order ID and incident time before saving.',
   orderShot:'Order screenshot <span class="pill">Required</span>',
   orderHint:'Upload the order screenshot. The app tries to read the Order ID and screenshot time automatically. Check the details and correct them if needed.',
@@ -485,7 +485,7 @@ const uiText={
   evidenceHint:'Add 1–2 clear photos showing the issue. Maximum 8 MB per image.',
   description:'Short description (optional)',descriptionPlaceholder:'Describe what happened in a few clear words…',
   descriptionHint:'Choose an issue to see a suggested description. Edit it so it accurately describes what happened.',
-  save:'Save incident',reset:'Reset form',recordsTitle:'Saved records',deviceOnly:'Stored on this device only',
+  save:'Save incident',reset:'Reset form',recordsTitle:'Saved records',deviceOnly:'Stored in private cloud',
   export:'Export report / PDF',backup:'Download backup',search:'Search by Order ID, store or issue…',
   allRecords:'All records',selectCount:'complaints selected',selectHelp:'Select multiple complaints to combine them into one PDF, with a separate section for each complaint.',
   selectAll:'Select all',clear:'Clear selection',combined:'Generate combined PDF',newReport:'＋ New report',
@@ -498,9 +498,9 @@ const uiText={
   create:'＋ రిపోర్ట్ నమోదు',saved:'సేవ్ చేసిన రికార్డులు',share:'యాప్ షేర్ చేయండి',
   eyebrow:'SOP & PROOF · ఘటనల నమోదు',hero:'ప్రతి సమస్యను<br><em>సరిగ్గా నమోదు చేయండి.</em>',
   heroSub:'ఆధారాలను జోడించండి, ఆర్డర్ వివరాలను తనిఖీ చేయండి, అవసరమైనప్పుడు రిపోర్ట్ సిద్ధంగా ఉంచండి.',
-  newIncident:'＋ కొత్త ఘటన',browse:'రికార్డులు చూడండి ↗',workspace:'మీ వర్క్‌స్పేస్',device:'● ఈ ఫోన్‌లో మాత్రమే',
+  newIncident:'＋ కొత్త ఘటన',browse:'రికార్డులు చూడండి ↗',workspace:'మీ వర్క్‌స్పేస్',device:'● ప్రైవేట్ క్లౌడ్ వర్క్‌స్పేస్',
   savedCount:'సేవ్ చేసిన ఘటనలు',step1:'<b>01</b> స్క్రీన్‌షాట్ జోడించండి',step2:'<b>02</b> ఆధారాల ఫోటోలు జోడించండి',step3:'<b>03</b> రిపోర్ట్ సేవ్ చేయండి',
-  notice:'<strong>స్టోరేజ్ సమాచారం:</strong> రిపోర్టులు ఈ ఫోన్‌లోని ఈ బ్రౌజర్‌లో మాత్రమే సేవ్ అవుతాయి. ఇతర పార్ట్‌నర్లకు కనిపించవు. బ్యాకప్‌ను క్రమం తప్పకుండా డౌన్‌లోడ్ చేయండి. క్లౌడ్ షేరింగ్ ఇంకా ప్రారంభించలేదు.',
+  notice:'<strong>ప్రైవేట్ క్లౌడ్ స్టోరేజ్:</strong> రిపోర్టులు మరియు ఆధారాలు మీ సురక్షిత వర్క్‌స్పేస్‌లో భద్రపరచబడతాయి. పార్ట్‌నర్లు తమ రిపోర్టులను మాత్రమే చూడగలరు.',
   incidentTitle:'ఘటనను నమోదు చేయండి',incidentSub:'క్రింది దశలను అనుసరించండి. సేవ్ చేసే ముందు Order ID మరియు ఘటన సమయాన్ని తనిఖీ చేయండి.',
   orderShot:'ఆర్డర్ స్క్రీన్‌షాట్ <span class="pill">తప్పనిసరి</span>',
   orderHint:'ఆర్డర్ స్క్రీన్‌షాట్ అప్‌లోడ్ చేయండి. యాప్ Order ID మరియు స్క్రీన్‌షాట్ సమయాన్ని ఆటోమేటిక్‌గా చదవడానికి ప్రయత్నిస్తుంది. వివరాలు తనిఖీ చేసి అవసరమైతే సరిచేయండి.',
@@ -510,7 +510,7 @@ const uiText={
   evidenceHint:'సమస్యను చూపించే 1–2 స్పష్టమైన ఫోటోలు జోడించండి. ఒక్కో ఫోటో గరిష్ఠ పరిమాణం 8 MB.',
   description:'సంక్షిప్త వివరణ (ఐచ్ఛికం)',descriptionPlaceholder:'ఏం జరిగిందో కొన్ని స్పష్టమైన పదాల్లో రాయండి…',
   descriptionHint:'సమస్య రకాన్ని ఎంచుకుంటే సూచించిన వివరణ కనిపిస్తుంది. జరిగిన విషయానికి సరిపోయేలా సవరించండి.',
-  save:'ఘటనను సేవ్ చేయండి',reset:'ఫారమ్ రీసెట్ చేయండి',recordsTitle:'సేవ్ చేసిన రికార్డులు',deviceOnly:'ఈ ఫోన్‌లో మాత్రమే సేవ్ అవుతాయి',
+  save:'ఘటనను సేవ్ చేయండి',reset:'ఫారమ్ రీసెట్ చేయండి',recordsTitle:'సేవ్ చేసిన రికార్డులు',deviceOnly:'ప్రైవేట్ క్లౌడ్‌లో భద్రపరచబడతాయి',
   export:'రిపోర్ట్ / PDF ఎగుమతి',backup:'బ్యాకప్ డౌన్‌లోడ్',search:'Order ID, స్టోర్ లేదా సమస్యతో వెతకండి…',
   allRecords:'అన్ని రికార్డులు',selectCount:'ఫిర్యాదులు ఎంపికయ్యాయి',selectHelp:'ఒక PDFలో కలపడానికి అనేక ఫిర్యాదులను ఎంచుకోండి. ప్రతి ఫిర్యాదుకు ప్రత్యేక విభాగం ఉంటుంది.',
   selectAll:'అన్నీ ఎంచుకోండి',clear:'ఎంపిక తొలగించండి',combined:'కలిపిన PDF రూపొందించండి',newReport:'＋ కొత్త రిపోర్ట్',
@@ -655,7 +655,7 @@ $('loginForm').addEventListener('submit',async e=>{e.preventDefault();if(!supaba
 $('forgotPasswordBtn').addEventListener('click',async()=>{if(!supabaseClient){authMessage('Sign-in service is still loading.',true);return;}const email=$('loginEmail').value.trim();if(!email){authMessage('Enter your account email first.',true);return;}const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});authMessage(error?error.message:'If this account exists, a password-reset email has been sent.',!!error);});
 $('migrateBtn').addEventListener('click',migrateLocalRecords);
 $('inviteGuideBtn').addEventListener('click',()=>window.open('https://supabase.com/dashboard/project/rihobudcchrgwithvutx/auth/users','_blank','noopener'));
-function openDB()
+function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
 function putRecord(record){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
 function deleteLocalRecord(id){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
 function readFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file);});}
