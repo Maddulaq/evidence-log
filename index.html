@@ -620,6 +620,7 @@ const uiText={
 let currentLanguage='en';
 function setLanguage(lang){
  currentLanguage=lang==='te'?'te':'en';
+ try{localStorage.setItem('deliveryEvidenceLanguage',currentLanguage);}catch(e){}
  const t=uiText[currentLanguage];
  const put=(sel,val,html=false)=>{const el=document.querySelector(sel);if(el){if(html)el.innerHTML=val;else el.textContent=val;}};
  put('header .sub',t.headerSub);put('.top-actions a[href="#incidentSection"]',t.create);put('.top-actions a[href="#recordsSection"]',t.saved);put('#shareAppBtn',t.share);
@@ -630,6 +631,8 @@ function setLanguage(lang){
  put('#incidentSection h2',t.incidentTitle);put('#incidentSection .section-subtitle',t.incidentSub);
  put('label[for="orderShot"]',t.orderShot,true);put('#orderShot + .hint',t.orderHint);
  put('label[for="category"]',t.category);put('#category option[value=""]',t.selectIssue);
+ const categoryLabels=currentLanguage==='te'?['పునర్వినియోగ బ్యాగ్ ఇవ్వలేదు','ఫ్రోజెన్ వస్తువులను వేరుగా ప్యాక్ చేయలేదు','తప్పు వస్తువు ఇచ్చారు','కస్టమర్‌ను తప్పుగా ఒప్పించమన్నారు','మేనేజర్ దుర్వ్యవహారం','ఇతర']:['Reusable bag not given','Frozen items not packed separately','Wrong item given','Asked to convince customer wrongly','Manager misconduct','Other'];
+ [...document.querySelectorAll('#category option')].slice(1).forEach((o,i)=>{if(categoryLabels[i])o.textContent=categoryLabels[i];});
  put('label[for="orderId"]',t.orderId);put('#rereadBtn',t.reread);put('label[for="store"]',t.store);put('label[for="incidentAt"]',t.incidentAt);
  put('label[for="supporting"]',t.evidence,true);put('#supporting + .hint',t.evidenceHint);
  put('label[for="notes"]',t.description);put('#notes',t.descriptionPlaceholder);put('#notes + .hint',t.descriptionHint);
@@ -1237,7 +1240,7 @@ function applyTheme(theme){
 let savedTheme='light';
 try{savedTheme=localStorage.getItem('deliveryEvidenceTheme')||'light';}catch(e){}
 applyTheme(savedTheme);
-setLanguage('en');
+let initialLanguage='en';try{initialLanguage=localStorage.getItem('deliveryEvidenceLanguage')||'en';}catch(e){}\nsetLanguage(initialLanguage);
 themeToggle?.addEventListener('click',()=>{
   const next=document.body.dataset.theme==='dark'?'light':'dark';
   applyTheme(next);
