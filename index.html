@@ -646,8 +646,8 @@ function setLanguage(lang){
  put('#languageToggle',currentLanguage==='en'?'తెలుగు':'English');
  document.documentElement.lang=currentLanguage==='te'?'te':'en';
 }
-$('languageToggle').addEventListener('click',()=>setLanguage(currentLanguage==='en'?'te':'en'));
-$('shareAppBtn').addEventListener('click',async()=>{
+document.getElementById('languageToggle').addEventListener('click',()=>setLanguage(currentLanguage==='en'?'te':'en'));
+document.getElementById('shareAppBtn').addEventListener('click',async()=>{
  const url='https://maddulaq.github.io/evidence-log/';
  const title='SOP & Proof Hub';
  const message='Open SOP & Proof Hub to document store-related incidents: '+url;
