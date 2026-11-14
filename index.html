@@ -271,6 +271,117 @@ body[data-theme="dark"] .pill,body[data-theme="dark"] .section-number{background
 body[data-theme="dark"] .form-divider{background:#2d4650}
 body[data-theme="dark"] .record-tools input{background:#0e1b22}
 
+
+/* Premium product UI refinement: clearer hierarchy, calmer surfaces, precise spacing */
+:root{
+  --bg:#f3f6f8;--surface:#fff;--surface-soft:#f7f9fa;
+  --ink:#142b38;--muted:#657985;--line:#dce5e9;
+  --brand:#087f78;--brand-dark:#06665f;--brand-soft:#e6f4f1;
+  --radius:20px;--shadow:0 14px 38px rgba(17,43,56,.07);
+}
+html{scroll-padding-top:24px}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.6;letter-spacing:-.01em}
+header{padding-top:24px;padding-bottom:23px}
+header h1{font-size:24px;font-weight:760;letter-spacing:-.8px}
+header .sub{font-size:13px;letter-spacing:.005em}
+.top-actions{gap:9px;margin-top:17px}
+.top-actions a,.top-actions button{min-height:42px;padding:9px 15px;border-radius:11px;font-size:12px;letter-spacing:.01em}
+main{width:min(1080px,100%);margin:30px auto;padding-left:22px;padding-right:22px}
+.command-center{min-height:280px;padding:34px 36px;border-radius:24px;gap:34px;margin-bottom:20px}
+.command-copy h2{font-size:clamp(34px,4.5vw,46px);line-height:1.08;letter-spacing:-1.8px;margin:17px 0 13px}
+.command-copy p{font-size:14px;line-height:1.75;max-width:440px}
+.eyebrow{font-size:10px;letter-spacing:1.5px}
+.command-actions{gap:11px;margin-top:24px}
+.command-actions a{min-height:45px;padding:11px 17px;border-radius:11px;font-size:12px}
+.overview-panel{padding:21px;border-radius:18px}
+.overview-top{font-size:10px;letter-spacing:1.1px}
+.overview-stat{margin:25px 0 19px}
+.overview-stat strong{font-size:52px;letter-spacing:-2px}
+.overview-bottom{gap:11px;font-size:12px}
+.notice{padding:15px 18px;border-radius:14px;font-size:12px;line-height:1.75;margin-bottom:21px}
+.card{padding:28px 30px;border-radius:21px;margin-bottom:21px;box-shadow:0 10px 30px rgba(20,48,62,.045)}
+.section-heading{gap:12px;margin-bottom:7px}
+.section-number{width:32px;height:32px;flex-basis:32px;border-radius:10px;font-size:10px}
+.card h2{font-size:20px;font-weight:740;letter-spacing:-.55px}
+.section-subtitle{margin:2px 0 23px 44px;font-size:13px;line-height:1.6}
+.form-divider{margin:22px 0}
+label{font-size:12px;font-weight:720;letter-spacing:.005em;margin:15px 0 7px}
+input,select,textarea{border-radius:12px;border-color:#d3dfe3;padding:12px 14px;font-size:13px;transition:border-color .18s,box-shadow .18s,background .18s}
+input,select{min-height:47px}
+textarea{min-height:112px;line-height:1.65}
+input:focus,select:focus,textarea:focus{outline:0;border-color:#15988c;box-shadow:0 0 0 4px rgba(21,152,140,.12)}
+input[type=file]{padding:11px 12px;border-radius:12px}
+input[type=file]::file-selector-button{border-radius:9px;padding:9px 12px}
+.grid{gap:12px 20px}
+.hint,small{font-size:11px;line-height:1.7}
+.hint{margin-top:7px}
+.pill{padding:4px 9px;border-radius:7px;font-size:9px;letter-spacing:.035em;text-transform:uppercase}
+.preview{gap:10px;margin-top:12px}
+.preview img{width:88px;height:88px;border-radius:12px}
+button{min-height:44px;padding:10px 16px;border-radius:11px;font-size:12px;font-weight:740;letter-spacing:.005em;transition:transform .16s,box-shadow .16s,background .16s}
+button:hover{transform:translateY(-1px);box-shadow:0 7px 16px rgba(8,127,120,.14)}
+button:active{transform:translateY(0)}
+button.secondary{border-radius:11px}
+.actions{gap:10px;margin-top:19px}
+#saveBtn{min-height:48px;padding:12px 21px;border-radius:12px;font-size:13px}
+.status{font-size:12px;margin-top:12px}
+.records-head{align-items:center}
+.records-head .actions{gap:8px}
+.record-tools{margin-top:22px;gap:12px}
+.record-tools input{min-height:48px;border-radius:13px;padding-left:42px}
+.search-symbol{left:15px;font-size:21px}
+.selection-tools{margin-top:16px;padding:16px 18px;border-radius:14px}
+.selection-tools strong{font-size:13px}
+#records{margin-top:16px}
+.record{padding:19px 4px;border-top:1px solid var(--line)}
+.record h3{font-size:14px;font-weight:760;letter-spacing:-.15px}
+.record p{font-size:12px;line-height:1.65}
+.record .actions{margin-top:12px}
+.bottom-nav{backdrop-filter:blur(16px)}
+button:focus-visible,a:focus-visible{outline:3px solid #e5b84f;outline-offset:3px}
+@media(min-width:681px){
+  .card{padding:30px 34px}
+  .grid{column-gap:24px;row-gap:10px}
+}
+@media(max-width:680px){
+  header{padding:18px 16px}
+  header h1{font-size:21px}
+  .top-actions{gap:7px;margin-top:14px}
+  .top-actions a,.top-actions button{min-height:39px;padding:8px 11px;font-size:11px}
+  .theme-toggle{margin-left:0}
+  main{margin:16px auto;padding:0 12px 112px}
+  .command-center{min-height:0;padding:23px 20px;border-radius:19px;gap:19px}
+  .command-copy h2{font-size:34px;letter-spacing:-1.3px;margin:14px 0 10px}
+  .command-copy p{font-size:13px}
+  .command-actions{margin-top:19px}
+  .command-actions a{min-height:43px;padding:10px 13px}
+  .overview-panel{padding:16px;border-radius:14px}
+  .overview-stat{margin:16px 0 14px}
+  .overview-stat strong{font-size:43px}
+  .overview-bottom{font-size:11px}
+  .notice{padding:13px 14px;margin-bottom:14px}
+  .card{padding:20px 16px;border-radius:17px;margin-bottom:14px}
+  .card h2{font-size:18px}
+  .section-subtitle{margin:4px 0 18px;font-size:12px}
+  .form-divider{margin:17px 0}
+  .grid{gap:4px}
+  .record-tools{margin-top:17px}
+  .selection-tools{padding:13px;border-radius:12px}
+  .bottom-nav{left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom));padding:8px;border-radius:16px}
+  .bottom-nav a,.bottom-nav button{min-height:43px;border-radius:10px;font-size:11px}
+}
+body[data-theme="dark"]{
+  --bg:#0d1920;--surface:#14242d;--surface-soft:#1a3039;
+  --ink:#e7f0f1;--muted:#a8bbc0;--line:#2d4650;
+  --brand:#38b7a7;--brand-dark:#5acbbb;--brand-soft:#193f3d;
+  --shadow:0 14px 38px rgba(0,0,0,.24);
+}
+body[data-theme="dark"] .card{box-shadow:0 10px 28px rgba(0,0,0,.16)}
+body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{border-color:#3a5660}
+body[data-theme="dark"] input:focus,body[data-theme="dark"] select:focus,body[data-theme="dark"] textarea:focus{box-shadow:0 0 0 4px rgba(56,183,167,.15)}
+body[data-theme="dark"] .record{border-color:var(--line)}
+body[data-theme="dark"] .bottom-nav{backdrop-filter:blur(16px)}
+
 </style>
 </head>
 <body>
