@@ -89,8 +89,8 @@ button.danger{box-shadow:none}
  .records-head .actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
  .record .actions{display:flex}
  .record .actions button{width:auto;flex:1}
- .bottom-nav{position:fixed;z-index:999;left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:7px;background:#ffffffed;border:1px solid #dce7df;border-radius:16px;box-shadow:0 8px 28px #153d2a24;backdrop-filter:blur(12px)}
- .bottom-nav a{display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;color:#345746;font-size:12px;font-weight:750;padding:10px;border-radius:10px}
+ .bottom-nav{position:fixed;z-index:999;left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:7px;background:#ffffffed;border:1px solid #dce7df;border-radius:16px;box-shadow:0 8px 28px #153d2a24;backdrop-filter:blur(12px)}
+ .bottom-nav a,.bottom-nav button{display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;color:#345746;font-size:12px;font-weight:750;padding:10px;border-radius:10px;min-height:40px;box-shadow:none}.bottom-nav button{border:1px solid #dce7df;background:#f0f5f1}
  .bottom-nav a.primary{background:#174b3b;color:white}
 }
 @media(min-width:601px){.bottom-nav{display:none}}
@@ -117,7 +117,7 @@ body[data-theme="dark"] .pill{background:#294638;color:#d6eadc}
 body[data-theme="dark"] .form-divider,body[data-theme="dark"] #records{border-color:#34483d;background-color:#34483d}
 body[data-theme="dark"] .record{border-color:#34483d}
 body[data-theme="dark"] .bottom-nav{background:#1b2922ed;border-color:#405447}
-body[data-theme="dark"] .bottom-nav a{color:#d5e5da}
+body[data-theme="dark"] .bottom-nav a,body[data-theme="dark"] .bottom-nav button{color:#d5e5da;border-color:#405447;background:#293a30}
 body[data-theme="dark"] .bottom-nav a.primary{background:#2b7654;color:#fff}
 .theme-toggle{margin-left:auto;white-space:nowrap}
 @media(max-width:600px){.theme-toggle{margin-left:0}}
@@ -516,7 +516,7 @@ body[data-theme="dark"] .selection-tools{background:#1b2b22;border-color:#34483e
 </style>
 </head>
 <body>
-<header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
+<header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline" id="shareAppBtn" type="button">Share app</button><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
 <main>
 <section class="command-center" aria-label="Workspace overview">
   <div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span><h2>Every issue.<br><em>Properly documented.</em></h2><p>Capture clear evidence, verify the order details, and keep a report ready when you need it.</p>
@@ -561,8 +561,100 @@ body[data-theme="dark"] .selection-tools{background:#1b2b22;border-color:#34483e
 </section>
 <p class="hint" style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
 </main>
-<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a></nav>
+<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggle" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
 <script>
+
+/* English / Telugu interface language switch */
+const uiText={
+ en:{
+  headerSub:'Document store-related incidents, preserve evidence and review what happened against SOPs and policies.',
+  create:'＋ Create a report',saved:'View saved records',share:'Share app',
+  eyebrow:'SOP & PROOF · INCIDENT DOCUMENTATION',hero:'Every issue.<br><em>Properly documented.</em>',
+  heroSub:'Capture clear evidence, verify the order details, and keep a report ready when you need it.',
+  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● On this device',
+  savedCount:'Saved incident records',step1:'<b>01</b> Capture screenshot',step2:'<b>02</b> Add evidence',step3:'<b>03</b> Save report',
+  notice:'<strong>Storage notice:</strong> Reports are saved only in this browser on this device. They are not shared with other partners. Download backups regularly. Cloud sharing is not enabled yet.',
+  incidentTitle:'Submit an incident',incidentSub:'Follow the steps below. Check the Order ID and incident time before saving.',
+  orderShot:'Order screenshot <span class="pill">Required</span>',
+  orderHint:'Upload the order screenshot. The app tries to read the Order ID and screenshot time automatically. Check the details and correct them if needed.',
+  category:'Issue category *',selectIssue:'Select an issue',orderId:'Order ID *',reread:'Re-read from screenshot',
+  store:'Store / hub name *',incidentAt:'Incident date and time *',
+  evidence:'Supporting evidence photos <span class="pill">1 or 2 required</span>',
+  evidenceHint:'Add 1–2 clear photos showing the issue. Maximum 8 MB per image.',
+  description:'Short description (optional)',descriptionPlaceholder:'Describe what happened in a few clear words…',
+  descriptionHint:'Choose an issue to see a suggested description. Edit it so it accurately describes what happened.',
+  save:'Save incident',reset:'Reset form',recordsTitle:'Saved records',deviceOnly:'Stored on this device only',
+  export:'Export report / PDF',backup:'Download backup',search:'Search by Order ID, store or issue…',
+  allRecords:'All records',selectCount:'complaints selected',selectHelp:'Select multiple complaints to combine them into one PDF, with a separate section for each complaint.',
+  selectAll:'Select all',clear:'Clear selection',combined:'Generate combined PDF',newReport:'＋ New report',
+  noRecords:'No records saved yet.',shareCopied:'App link copied. Send it to your colleagues.',
+  shareFallback:'Copy this app link and send it to your colleagues: ',
+  ocrLoading:'Loading OCR engine…'
+ },
+ te:{
+  headerSub:'స్టోర్‌లో జరిగిన సమస్యలను నమోదు చేయండి. ఆధారాలను భద్రపరచి, SOP మరియు విధానాలతో పరిశీలించండి.',
+  create:'＋ రిపోర్ట్ నమోదు',saved:'సేవ్ చేసిన రికార్డులు',share:'యాప్ షేర్ చేయండి',
+  eyebrow:'SOP & PROOF · ఘటనల నమోదు',hero:'ప్రతి సమస్యను<br><em>సరిగ్గా నమోదు చేయండి.</em>',
+  heroSub:'ఆధారాలను జోడించండి, ఆర్డర్ వివరాలను తనిఖీ చేయండి, అవసరమైనప్పుడు రిపోర్ట్ సిద్ధంగా ఉంచండి.',
+  newIncident:'＋ కొత్త ఘటన',browse:'రికార్డులు చూడండి ↗',workspace:'మీ వర్క్‌స్పేస్',device:'● ఈ ఫోన్‌లో మాత్రమే',
+  savedCount:'సేవ్ చేసిన ఘటనలు',step1:'<b>01</b> స్క్రీన్‌షాట్ జోడించండి',step2:'<b>02</b> ఆధారాల ఫోటోలు జోడించండి',step3:'<b>03</b> రిపోర్ట్ సేవ్ చేయండి',
+  notice:'<strong>స్టోరేజ్ సమాచారం:</strong> రిపోర్టులు ఈ ఫోన్‌లోని ఈ బ్రౌజర్‌లో మాత్రమే సేవ్ అవుతాయి. ఇతర పార్ట్‌నర్లకు కనిపించవు. బ్యాకప్‌ను క్రమం తప్పకుండా డౌన్‌లోడ్ చేయండి. క్లౌడ్ షేరింగ్ ఇంకా ప్రారంభించలేదు.',
+  incidentTitle:'ఘటనను నమోదు చేయండి',incidentSub:'క్రింది దశలను అనుసరించండి. సేవ్ చేసే ముందు Order ID మరియు ఘటన సమయాన్ని తనిఖీ చేయండి.',
+  orderShot:'ఆర్డర్ స్క్రీన్‌షాట్ <span class="pill">తప్పనిసరి</span>',
+  orderHint:'ఆర్డర్ స్క్రీన్‌షాట్ అప్‌లోడ్ చేయండి. యాప్ Order ID మరియు స్క్రీన్‌షాట్ సమయాన్ని ఆటోమేటిక్‌గా చదవడానికి ప్రయత్నిస్తుంది. వివరాలు తనిఖీ చేసి అవసరమైతే సరిచేయండి.',
+  category:'సమస్య రకం *',selectIssue:'సమస్యను ఎంచుకోండి',orderId:'Order ID *',reread:'స్క్రీన్‌షాట్ నుంచి మళ్లీ చదవండి',
+  store:'స్టోర్ / హబ్ పేరు *',incidentAt:'ఘటన తేదీ మరియు సమయం *',
+  evidence:'ఆధారాల ఫోటోలు <span class="pill">1 లేదా 2 తప్పనిసరి</span>',
+  evidenceHint:'సమస్యను చూపించే 1–2 స్పష్టమైన ఫోటోలు జోడించండి. ఒక్కో ఫోటో గరిష్ఠ పరిమాణం 8 MB.',
+  description:'సంక్షిప్త వివరణ (ఐచ్ఛికం)',descriptionPlaceholder:'ఏం జరిగిందో కొన్ని స్పష్టమైన పదాల్లో రాయండి…',
+  descriptionHint:'సమస్య రకాన్ని ఎంచుకుంటే సూచించిన వివరణ కనిపిస్తుంది. జరిగిన విషయానికి సరిపోయేలా సవరించండి.',
+  save:'ఘటనను సేవ్ చేయండి',reset:'ఫారమ్ రీసెట్ చేయండి',recordsTitle:'సేవ్ చేసిన రికార్డులు',deviceOnly:'ఈ ఫోన్‌లో మాత్రమే సేవ్ అవుతాయి',
+  export:'రిపోర్ట్ / PDF ఎగుమతి',backup:'బ్యాకప్ డౌన్‌లోడ్',search:'Order ID, స్టోర్ లేదా సమస్యతో వెతకండి…',
+  allRecords:'అన్ని రికార్డులు',selectCount:'ఫిర్యాదులు ఎంపికయ్యాయి',selectHelp:'ఒక PDFలో కలపడానికి అనేక ఫిర్యాదులను ఎంచుకోండి. ప్రతి ఫిర్యాదుకు ప్రత్యేక విభాగం ఉంటుంది.',
+  selectAll:'అన్నీ ఎంచుకోండి',clear:'ఎంపిక తొలగించండి',combined:'కలిపిన PDF రూపొందించండి',newReport:'＋ కొత్త రిపోర్ట్',
+  noRecords:'ఇంకా రికార్డులు సేవ్ చేయలేదు.',shareCopied:'యాప్ లింక్ కాపీ అయింది. సహచరులకు పంపండి.',
+  shareFallback:'ఈ యాప్ లింక్‌ను కాపీ చేసి సహచరులకు పంపండి: ',
+  ocrLoading:'OCR సదుపాయం లోడ్ అవుతోంది…'
+ }
+};
+let currentLanguage='en';
+function setLanguage(lang){
+ currentLanguage=lang==='te'?'te':'en';
+ const t=uiText[currentLanguage];
+ const put=(sel,val,html=false)=>{const el=document.querySelector(sel);if(el){if(html)el.innerHTML=val;else el.textContent=val;}};
+ put('header .sub',t.headerSub);put('.top-actions a[href="#incidentSection"]',t.create);put('.top-actions a[href="#recordsSection"]',t.saved);put('#shareAppBtn',t.share);
+ put('.eyebrow',t.eyebrow);put('.command-copy h2',t.hero,true);put('.command-copy p',t.heroSub);
+ put('.command-primary',t.newIncident);put('.command-secondary',t.browse);put('.overview-top span:first-child',t.workspace);put('.storage-indicator',t.device);
+ put('.overview-stat span',t.savedCount);put('.overview-bottom span:nth-child(1)',t.step1,true);put('.overview-bottom span:nth-child(2)',t.step2,true);put('.overview-bottom span:nth-child(3)',t.step3,true);
+ const notice=document.querySelector('.notice');if(notice){const ocr=$('ocrState');notice.innerHTML=t.notice+'<br>';if(ocr){ocr.id='ocrState';ocr.style.color='#624c20';ocr.textContent=t.ocrLoading;notice.append(ocr);}}
+ put('#incidentSection h2',t.incidentTitle);put('#incidentSection .section-subtitle',t.incidentSub);
+ put('label[for="orderShot"]',t.orderShot,true);put('#orderShot + .hint',t.orderHint);
+ put('label[for="category"]',t.category);put('#category option[value=""]',t.selectIssue);
+ put('label[for="orderId"]',t.orderId);put('#rereadBtn',t.reread);put('label[for="store"]',t.store);put('label[for="incidentAt"]',t.incidentAt);
+ put('label[for="supporting"]',t.evidence,true);put('#supporting + .hint',t.evidenceHint);
+ put('label[for="notes"]',t.description);put('#notes',t.descriptionPlaceholder);put('#notes + .hint',t.descriptionHint);
+ put('#saveBtn',t.save);put('#incidentForm button[type="reset"]',t.reset);
+ const rh=$('#recordsSection .records-head h2');if(rh){rh.childNodes[0].textContent=t.recordsTitle+' ';}
+ put('#recordsSection .records-head small',t.deviceOnly);put('#exportBtn',t.export);put('#backupBtn',t.backup);
+ put('#recordSearch',t.search);put('#searchCount',t.allRecords);put('#selectionHelp',t.selectHelp);
+ put('#selectAllBtn',selectedRecordIds.size?t.clear:t.selectAll);put('#combinedPdfBtn',t.combined);
+ const empty=$('#records .hint');if(empty&&!$('#records .record'))empty.textContent=t.noRecords;
+ put('.bottom-nav a.primary',t.newReport);put('.bottom-nav a[href="#recordsSection"]','▤ '+t.recordsTitle);
+ put('#languageToggle',currentLanguage==='en'?'తెలుగు':'English');
+ document.documentElement.lang=currentLanguage==='te'?'te':'en';
+}
+$('languageToggle').addEventListener('click',()=>setLanguage(currentLanguage==='en'?'te':'en'));
+$('shareAppBtn').addEventListener('click',async()=>{
+ const url='https://maddulaq.github.io/evidence-log/';
+ const title='SOP & Proof Hub';
+ const message='Open SOP & Proof Hub to document store-related incidents: '+url;
+ try{
+  if(navigator.share){await navigator.share({title,text:message,url});}
+  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(url);alert(uiText[currentLanguage].shareCopied);}
+  else{window.prompt(uiText[currentLanguage].shareFallback,url);}
+ }catch(e){if(e.name!=='AbortError')window.prompt(uiText[currentLanguage].shareFallback,url);}
+});
+
 const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
 const $=id=>document.getElementById(id);
 let db;
@@ -953,10 +1045,10 @@ $('incidentForm').addEventListener('reset',()=>{
 $('store').value='Banjara Hills 150';
 $('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';if(!$('store').value.trim())$('store').value='Banjara Hills 150';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{if(window.Tesseract)warmOcr();else window.loadOcrLibFallback(0);});
 $('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
-$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving record on this device…');try{const record={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(16).slice(2),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:$('incidentAt').value,submittedAt:new Date().toISOString(),notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus('Incident saved on this device. Download a backup to preserve it.');await render();}catch(err){setStatus('Could not save. Device storage may be full. Download/export existing records and try again.',true);}finally{btn.disabled=false;}});
+$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving record on this device…');try{const record={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(16).slice(2),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:$('incidentAt').value,submittedAt:new Date().toISOString(),notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus(currentLanguage==='te'?'ఘటన ఈ ఫోన్‌లో సేవ్ అయింది. భద్రత కోసం బ్యాకప్ డౌన్‌లోడ్ చేయండి.':'Incident saved on this device. Download a backup to preserve it.');await render();}catch(err){setStatus('Could not save. Device storage may be full. Download/export existing records and try again.',true);}finally{btn.disabled=false;}});
 const selectedRecordIds=new Set();
-function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=n+' complaint'+(n===1?'':'s')+' selected';if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=n?'Clear selection':'Select all';}
-async function render(){const rows=await allRecords();$('count').textContent=rows.length;const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">No records saved yet.</p>';updateSelectionUI();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>Select for combined PDF</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>Incident: '+esc(new Date(r.incidentAt).toLocaleString())+' · Submitted: '+esc(date)+'</p><p>'+esc(r.notes||'No description')+' · '+(1+(r.supportingEvidence||[]).length)+' image(s)</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">Export this record</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">Delete</button></div>';host.append(div);}updateSelectionUI();}
+function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' complaint'+(n===1?'':'s')+' selected');if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');}
+async function render(){const rows=await allRecords();$('count').textContent=rows.length;const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';host.append(div);}updateSelectionUI();}
 $('records').addEventListener('change',e=>{const id=e.target.dataset.selectRecord;if(!id)return;if(e.target.checked)selectedRecordIds.add(id);else selectedRecordIds.delete(id);updateSelectionUI();});
 $('selectAllBtn').addEventListener('click',async()=>{const rows=await allRecords();if(selectedRecordIds.size){selectedRecordIds.clear();}else{rows.forEach(r=>selectedRecordIds.add(r.id));}await render();});
 $('combinedPdfBtn').addEventListener('click',async()=>{const rows=await allRecords();const selected=rows.filter(r=>selectedRecordIds.has(r.id)).sort((a,b)=>new Date(a.incidentAt)-new Date(b.incidentAt));if(!selected.length){alert('Select at least one complaint first.');return;}printRecords(selected);});
@@ -1145,6 +1237,7 @@ function applyTheme(theme){
 let savedTheme='light';
 try{savedTheme=localStorage.getItem('deliveryEvidenceTheme')||'light';}catch(e){}
 applyTheme(savedTheme);
+setLanguage('en');
 themeToggle?.addEventListener('click',()=>{
   const next=document.body.dataset.theme==='dark'?'light':'dark';
   applyTheme(next);
