@@ -1019,24 +1019,27 @@ const issueDescriptions={
   'Other':""
 };
 let lastAutoDescription='';
+let notesManuallyEdited=false;
 function updateSuggestedDescription(){
   const category=$('category').value;
   const suggested=issueDescriptions[category]||'';
   const notes=$('notes');
   if(!notes)return;
-  // Replace only a previous suggestion (or an empty field); preserve text the
-  // partner has manually written when they switch issue categories.
-  if(!notes.value.trim()||notes.value===lastAutoDescription){
+  // Always refresh an untouched suggestion when the category changes.
+  // Preserve a description only when the partner has actually edited it.
+  if(!notesManuallyEdited||!notes.value.trim()||notes.value===lastAutoDescription){
     notes.value=suggested;
     lastAutoDescription=suggested;
+    notesManuallyEdited=false;
   }
 }
 $('category').addEventListener('change',updateSuggestedDescription);
 $('notes').addEventListener('input',()=>{
-  if($('notes').value!==lastAutoDescription)lastAutoDescription='';
+  notesManuallyEdited=!!$('notes').value.trim()&&$('notes').value!==lastAutoDescription;
 });
 $('incidentForm').addEventListener('reset',()=>{
   lastAutoDescription='';
+  notesManuallyEdited=false;
   setTimeout(()=>{if($('category').value)updateSuggestedDescription();},0);
 });
 
