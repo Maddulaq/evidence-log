@@ -669,9 +669,9 @@ const OCR_DIGIT_MAP={O:'0',Q:'0',D:'0',U:'0',I:'1',L:'1','|':'1','!':'1','[':'1'
 function extractOrderId(rawText){
   if(!rawText)return null;
   const text=String(rawText).toUpperCase()
-    .replace(/[\\u2010-\\u2015\\u2212]/g,'-')
-    .replace(/\\u00A0/g,' ');
-  const prefix=/[O0][D0][\\s:#-]*/g;
+    .replace(/[\u2010-\u2015\u2212]/g,'-')
+    .replace(/\u00A0/g,' ');
+  const prefix=/[O0][D0][\s:#-]*/g;
   const candidates=[];
   let match;
   while((match=prefix.exec(text))!==null){
@@ -680,14 +680,14 @@ function extractOrderId(rawText){
       const ch=text[i];
       if(/[0-9]/.test(ch)){digits+=ch;continue;}
       if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;continue;}
-      if(/[\\s:#=-]/.test(ch))continue;
+      if(/[\s:#=-]/.test(ch))continue;
       break;
     }
     // A valid Order ID is exactly OD + 18 digits. Never bridge over
     // unrelated letters or combine separate number groups.
     if(digits.length!==18)continue;
     const before=text.slice(Math.max(0,match.index-45),match.index);
-    const keyword=/ORDER\\s*(?:ID|NO\\.?|NUMBER|#)|ORDER|SHIPMENT|DELIVERY/.test(before)?20:0;
+    const keyword=/ORDER\s*(?:ID|NO\.?|NUMBER|#)|ORDER|SHIPMENT|DELIVERY/.test(before)?20:0;
     candidates.push({id:'OD'+digits,score:keyword-ambiguous*3,ambiguous});
   }
   candidates.sort((a,b)=>b.score-a.score);
@@ -874,6 +874,7 @@ async function readOrderIdFromImage(file,onStatus){
   }
 
   if(budget()){
+    let hit=null;
     const bands=bandRects(img.naturalWidth,img.naturalHeight);
     for(let i=0;i<bands.length;i++){
       if(!budget())break;
