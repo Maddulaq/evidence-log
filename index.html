@@ -848,7 +848,8 @@ async function readOrderIdFromImage(file,onStatus){
     target=label?zoomOnOriginal(img,label,base._scale):drawRegion(img,{x:0,y:0,w:img.naturalWidth,h:Math.round(img.naturalHeight*0.62)},3.0);
     for(const psm of ['6','11','7']){
       if(!budget())break;
-      const pass=preprocess(drawRegion(img,{x:0,y:Math.max(0,(label?label.y0/base._scale:0)-Math.round(img.naturalHeight*0.04)),w:img.naturalWidth,h:Math.min(img.naturalHeight,Math.round(img.naturalHeight*0.48))},2.8,3200),'grey');
+      const cropY=Math.max(0,(label?label.y0/base._scale:0)-Math.round(img.naturalHeight*0.04));
+      const pass=preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:Math.min(img.naturalHeight-cropY,Math.round(img.naturalHeight*0.48))},2.8,3200),'grey');
       res=await recognize(pass,worker,psm);
       seen.push(res.text);
       const sharp=extractOrderId(res.text);
