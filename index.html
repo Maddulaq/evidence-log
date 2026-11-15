@@ -754,16 +754,28 @@ function bandRects(w,h){const out=[],bh=Math.round(h*0.42),step=Math.max(1,Math.
 
 function findLabelBox(words,w,h){
   if(!words||!words.length)return null;
-  let best=null;
-  for(const word of words){
-    const t=(word.text||'').toUpperCase().replace(/[^A-Z]/g,'');
-    if(!/^(ORDER|ORDERID|ID|OD|ORDERNO)$/.test(t))continue;
+  const labels=[];
+  for(let i=0;i<words.length;i++){
+    const word=words[i],t=(word.text||'').toUpperCase().replace(/[^A-Z]/g,'');
     if(!word.bbox)continue;
-    const nearTop=1-(word.bbox.y0/Math.max(1,h));
-    const weight=nearTop+(t==='ORDERID'||t==='ORDER'?1:0);
-    if(!best||weight>best.weight)best={weight,box:word.bbox};
+    if(/^(ORDERID|ORDERNO|ORDER|ID|OD)$/.test(t)){
+      let box={...word.bbox},weight=1-(word.bbox.y0/Math.max(1,h));
+      // Join adjacent "ORDER" + "ID" words so the crop includes the full label.
+      if(t==='ORDER'){
+        for(let j=0;j<words.length;j++){
+          const next=words[j],nt=(next.text||'').toUpperCase().replace(/[^A-Z]/g,'');
+          if(nt==='ID'&&next.bbox&&Math.abs(next.bbox.y0-word.bbox.y0)<Math.max(12,(word.bbox.y1-word.bbox.y0)*0.8)&&next.bbox.x0>=word.bbox.x1-4&&next.bbox.x0-word.bbox.x1<Math.max(100,w*0.12)){
+            box={x0:Math.min(box.x0,next.bbox.x0),y0:Math.min(box.y0,next.bbox.y0),x1:Math.max(box.x1,next.bbox.x1),y1:Math.max(box.y1,next.bbox.y1)};
+            weight+=1;
+          }
+        }
+      }
+      if(t==='ORDERID'||t==='ORDERNO')weight+=1;
+      labels.push({box,weight});
+    }
   }
-  return best?best.box:null;
+  labels.sort((a,b)=>b.weight-a.weight);
+  return labels.length?labels[0].box:null;
 }
 
 function zoomOnOriginal(img,box,canvasScale){
@@ -829,21 +841,34 @@ async function readOrderIdFromImage(file,onStatus){
   // resolution. This is the trustworthy read; the small preview copy above
   // can misread digits, so it is never used as an automatic fallback.
   const label=findLabelBox(res.words,base.width,base.height);
+  let target=null;
   if(budget()){
     note('Zooming in on the Order ID line…');
-    const target=label?zoomOnOriginal(img,label,base._scale):drawRegion(img,{x:0,y:0,w:img.naturalWidth,h:Math.round(img.naturalHeight*0.45)},3.0);
-    res=await recognize(preprocess(target,'grey'),worker,'6');
-    seen.push(res.text);
-    const sharp=extractOrderId(res.text);
-    if(sharp)return {id:sharp,text:seen.join('\n---\n')};
+    // Include extra space below the label because the long ID may sit on the next line.
+    target=label?zoomOnOriginal(img,label,base._scale):drawRegion(img,{x:0,y:0,w:img.naturalWidth,h:Math.round(img.naturalHeight*0.62)},3.0);
+    for(const psm of ['6','11','7']){
+      if(!budget())break;
+      const pass=preprocess(drawRegion(img,{x:0,y:Math.max(0,(label?label.y0/base._scale:0)-Math.round(img.naturalHeight*0.04)),w:img.naturalWidth,h:Math.min(img.naturalHeight,Math.round(img.naturalHeight*0.48))},2.8,3200),'grey');
+      res=await recognize(pass,worker,psm);
+      seen.push(res.text);
+      const sharp=extractOrderId(res.text);
+      if(sharp)return {id:sharp,text:seen.join('\n---\n')};
+    }
+    // Also test the label-centred crop with a second page-segmentation mode.
+    if(target&&budget()){
+      res=await recognize(preprocess(target,'binary'),worker,'11');
+      seen.push(res.text);
+      const sharp=extractOrderId(res.text);
+      if(sharp)return {id:sharp,text:seen.join('\n---\n')};
+    }
   }
 
   if(budget()){
     note('Trying a sharper pass…');
     const bin=preprocess(drawRegion(img,null,1.6,1800),'binary');
-    res=await recognize(bin,worker,'6');
+    res=await recognize(bin,worker,'11');
     seen.push(res.text);
-    hit=done(extractOrderId(res.text));
+    const hit=done(extractOrderId(res.text));
     if(hit)return hit;
   }
 
