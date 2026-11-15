@@ -666,110 +666,34 @@ function setStatus(msg,isError=false){$('formStatus').textContent=msg;$('formSta
 function localDateTime(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());}
 $('incidentAt').value=localDateTime(new Date());
 const OCR_DIGIT_MAP={O:'0',Q:'0',D:'0',U:'0',I:'1',L:'1','|':'1','!':'1','[':'1',']':'1',S:'5',B:'8',Z:'2',G:'6',T:'7'};
-function ocrRunToDigits(run){
-  let digits='';const ambiguous=[];
-  for(const ch of String(run||'').toUpperCase()){
-    if(ch>='0'&&ch<='9'){digits+=ch;ambiguous.push(false);}
-    else if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous.push(true);}
-    else if(/\s/.test(ch)||ch==='-'||ch===':'||ch==='#')continue;
-    else return null;
-  }
-  return {digits,ambiguous};
-}
 function extractOrderId(rawText){
   if(!rawText)return null;
   const text=String(rawText).toUpperCase()
-    .replace(/[\u2010-\u2015\u2212]/g,'-')
-    .replace(/\u00A0/g,' ');
-  const prefix=/[O0][D0][\s:#-]*/g;
+    .replace(/[\\u2010-\\u2015\\u2212]/g,'-')
+    .replace(/\\u00A0/g,' ');
+  const prefix=/[O0][D0][\\s:#-]*/g;
   const candidates=[];
   let match;
   while((match=prefix.exec(text))!==null){
-    let raw='',started=false,spaces=0;
+    let digits='',ambiguous=0;
     for(let i=prefix.lastIndex;i<text.length;i++){
       const ch=text[i];
-      if(/[0-9OQIL|!SBZGUDT]/.test(ch)){
-        raw+=ch;started=true;spaces=0;
-        if(raw.length>=22)break;
-      }else if(/[\s:#-]/.test(ch)){
-        if(started){spaces++;if(spaces>3)break;}
-      }else{
-        break;
-      }
-    }
-    const parsed=ocrRunToDigits(raw);
-    if(!parsed||parsed.digits.length<16||parsed.digits.length>22)continue;
-    const near=text.slice(Math.max(0,match.index-45),match.index+12);
-    const keyword=/ORDER|SHIPMENT|DELIVERY/.test(near)?25:0;
-    const lengthScore=parsed.digits.length===18?50:
-      (parsed.digits.length>=16&&parsed.digits.length<=20?25:0);
-    const ambiguityPenalty=parsed.ambiguous.filter(Boolean).length*2;
-    candidates.push({
-      id:'OD'+parsed.digits,
-      score:keyword+lengthScore-ambiguityPenalty,
-      length:parsed.digits.length
-    });
-  }
-  candidates.sort((a,b)=>b.score-a.score||Math.abs(a.length-18)-Math.abs(b.length-18));
-  return candidates[0]?.id||null;
-}
-function ocrVariants(digits,ambiguous){
-  const out=[{d:digits,b:0}],n=digits.length;
-  if(n===19){
-    if(ambiguous[n-1]||ambiguous[n-2])out.push({d:digits.slice(0,18),b:6});
-    if(ambiguous[0]||ambiguous[1])out.push({d:digits.slice(-18),b:6});
-  }else if(n===20&&digits.startsWith('00')){
-    out.push({d:digits.slice(2),b:12});
-  }
-  return out;
-}
-function scoreOrderId(digits,text,index,bonus){
-  const n=digits.length;
-  if(n<14||n>22)return -999;
-  let score=bonus||0;
-  if(n>=18&&n<=20)score+=40;else if(n===16||n===17)score+=25;else score+=5;
-  const before=text.slice(Math.max(0,index-40),index);
-  const tight=before.replace(/[\s:.#-]+$/,'');
-  const keyword=/ORDER\s*(?:ID|NO\.?|NUMBER|#)/.test(before);
-  const prefix=/[O0]D$/.test(tight);
-  if(keyword)score+=30;
-  if(prefix)score+=30;
-  if(!keyword&&!prefix)score-=35;
-  if(/[A-Z]/.test(text.charAt(index-1)))score-=25;
-  if(!/[A-Z0-9]/.test(text.charAt(index+n)))score+=10;
-  if(index<text.length*0.3)score+=8;
-  return score;
-}
-function extractOrderId(rawText){
-  if(!rawText)return null;
-  const text=String(rawText).toUpperCase()
-    .replace(/[\u2010-\u2015\u2212]/g,'-')
-    .replace(/\u00A0/g,' ');
-  // Start at the OD prefix, then collect the ID across OCR line breaks.
-  // Tesseract sometimes inserts tiny header fragments (for example "NY")
-  // between the two halves of an otherwise continuous 18-digit order number.
-  const prefix=/[O0][D0][\s:#-]*/g;
-  const candidates=[];
-  let match;
-  while((match=prefix.exec(text))!==null){
-    let digits='',ambiguous=0,noise=0;
-    for(let i=prefix.lastIndex;i<text.length&&digits.length<22;i++){
-      const ch=text[i];
-      if(/[0-9]/.test(ch)){digits+=ch;noise=0;if(digits.length===18)break;continue;}
-      if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;noise=0;if(digits.length===18)break;continue;}
-      if(/[\s:#=\-]/.test(ch)){continue;}
-      // Ignore at most two non-numeric OCR letters in the order-header band.
-      if(/[A-Z]/.test(ch)&&!/[OQD UILSBZGT]/.test(ch)&&noise<2){noise++;continue;}
+      if(/[0-9]/.test(ch)){digits+=ch;continue;}
+      if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;continue;}
+      if(/[\\s:#=-]/.test(ch))continue;
       break;
     }
-    if(digits.length<16||digits.length>22)continue;
-    const near=text.slice(Math.max(0,match.index-45),match.index+12);
-    const keyword=/ORDER|SHIPMENT|DELIVERY/.test(near)?25:0;
-    const lengthScore=digits.length===18?50:(digits.length>=16&&digits.length<=20?25:0);
-    candidates.push({id:'OD'+digits,score:keyword+lengthScore-ambiguous*2,length:digits.length});
+    // A valid Order ID is exactly OD + 18 digits. Never bridge over
+    // unrelated letters or combine separate number groups.
+    if(digits.length!==18)continue;
+    const before=text.slice(Math.max(0,match.index-45),match.index);
+    const keyword=/ORDER\\s*(?:ID|NO\\.?|NUMBER|#)|ORDER|SHIPMENT|DELIVERY/.test(before)?20:0;
+    candidates.push({id:'OD'+digits,score:keyword-ambiguous*3,ambiguous});
   }
-  candidates.sort((a,b)=>b.score-a.score||Math.abs(a.length-18)-Math.abs(b.length-18));
-  return candidates[0]?.id||null;
+  candidates.sort((a,b)=>b.score-a.score);
+  // OCR-confused characters lower confidence; don't auto-fill heavily guessed IDs.
+  const best=candidates[0];
+  return best&&best.ambiguous<=2?best.id:null;
 }
 /* ---------- Order ID OCR (rewritten) ---------- */
 const OCR_MAX_AREA=4.2e6,OCR_MAX_SIDE=3800,OCR_DEADLINE=45000;
@@ -900,11 +824,10 @@ async function readOrderIdFromImage(file,onStatus){
   const base=preprocess(drawRegion(img,null,1.2,1400),'grey');
   let res=await recognize(base,worker,'6');
   seen.push(res.text);
-  const coarse=extractOrderId(res.text);
 
   // Zoom pass: crop the "Order ID" line out of the ORIGINAL image at full
   // resolution. This is the trustworthy read; the small preview copy above
-  // can misread digits, so it is only used if this pass finds nothing.
+  // can misread digits, so it is never used as an automatic fallback.
   const label=findLabelBox(res.words,base.width,base.height);
   if(budget()){
     note('Zooming in on the Order ID line…');
@@ -914,7 +837,6 @@ async function readOrderIdFromImage(file,onStatus){
     const sharp=extractOrderId(res.text);
     if(sharp)return {id:sharp,text:seen.join('\n---\n')};
   }
-  if(coarse)return {id:coarse,text:seen.join('\n---\n')};
 
   if(budget()){
     note('Trying a sharper pass…');
