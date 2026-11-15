@@ -1,0 +1,19 @@
+{
+  "name": "sop-proof-hub-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Android wrapper build for SOP & Proof Hub",
+  "scripts": {
+    "prepare": "node scripts/prepare-web.mjs",
+    "android:sync": "npx cap sync android",
+    "android:debug": "cd android && ./gradlew assembleDebug",
+    "android:release": "cd android && ./gradlew bundleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.2",
+    "@capacitor/core": "8.6.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.2"
+  }
+}
