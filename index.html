@@ -774,30 +774,47 @@ function preprocess(cv,mode){
 
 function bandRects(w,h){const out=[],bh=Math.round(h*0.42),step=Math.max(1,Math.round(h*0.29));for(let y=0;y+bh<=h;y+=step)out.push({x:0,y,w,h:bh});if(!out.length)out.push({x:0,y:0,w,h});return out.slice(0,3);}
 
+function ocrEditDistance(a,b){
+  if(Math.abs(a.length-b.length)>1)return 2;
+  let prev=Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=1;i<=a.length;i++){
+    const cur=[i];
+    for(let j=1;j<=b.length;j++)cur[j]=Math.min(cur[j-1]+1,prev[j]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    prev=cur;
+  }
+  return prev[b.length];
+}
 function findLabelBox(words,w,h){
   if(!words||!words.length)return null;
-  const labels=[];
-  for(let i=0;i<words.length;i++){
-    const word=words[i],t=(word.text||'').toUpperCase().replace(/[^A-Z]/g,'');
-    if(!word.bbox)continue;
-    if(/^(ORDERID|ORDERNO|ORDER|ID|OD)$/.test(t)){
-      let box={...word.bbox},weight=1-(word.bbox.y0/Math.max(1,h));
-      // Join adjacent "ORDER" + "ID" words so the crop includes the full label.
-      if(t==='ORDER'){
-        for(let j=0;j<words.length;j++){
-          const next=words[j],nt=(next.text||'').toUpperCase().replace(/[^A-Z]/g,'');
-          if(nt==='ID'&&next.bbox&&Math.abs(next.bbox.y0-word.bbox.y0)<Math.max(12,(word.bbox.y1-word.bbox.y0)*0.8)&&next.bbox.x0>=word.bbox.x1-4&&next.bbox.x0-word.bbox.x1<Math.max(100,w*0.12)){
-            box={x0:Math.min(box.x0,next.bbox.x0),y0:Math.min(box.y0,next.bbox.y0),x1:Math.max(box.x1,next.bbox.x1),y1:Math.max(box.y1,next.bbox.y1)};
-            weight+=1;
-          }
+  const tokens=words.map((word,index)=>{
+    const raw=(word.text||'').toUpperCase();
+    const t=raw.replace(/[^A-Z0-9]/g,'');
+    return {word,index,t,b:word.bbox};
+  }).filter(x=>x.b&&x.t);
+  const candidates=[];
+  const add=(box,score)=>candidates.push({box,score});
+  for(const x of tokens){
+    const bh=Math.max(1,x.b.y1-x.b.y0);
+    const isOrder=/^(ORDER|0RDER|ORD[R]?R|ORDERID|ORDERNO|ORDERNUMBER)$/.test(x.t)||ocrEditDistance(x.t,'ORDER')<=1;
+    if(/^(ORDERID|ORDERNO|ORDERNUMBER)$/.test(x.t))add(x.b,100);
+    if(isOrder){
+      for(const y of tokens){
+        if(y===x)continue;
+        const yh=Math.max(1,y.b.y1-y.b.y0);
+        const sameLine=Math.abs(y.b.y0-x.b.y0)<Math.max(14,bh*0.9);
+        const horizontal=y.b.x0>=x.b.x0-5&&y.b.x0-x.b.x1<Math.max(130,w*0.18);
+        const vertical=Math.abs(y.b.y0-x.b.y1)<Math.max(70,bh*4);
+        if((y.t==='ID'||ocrEditDistance(y.t,'ID')<=1)&&(sameLine&&horizontal||vertical)){
+          add({x0:Math.min(x.b.x0,y.b.x0),y0:Math.min(x.b.y0,y.b.y0),x1:Math.max(x.b.x1,y.b.x1),y1:Math.max(x.b.y1,y.b.y1)},120);
         }
       }
-      if(t==='ORDERID'||t==='ORDERNO')weight+=1;
-      labels.push({box,weight});
+      add(x.b,35);
     }
   }
-  labels.sort((a,b)=>b.weight-a.weight);
-  return labels.length?labels[0].box:null;
+  if(!candidates.length)return null;
+  // Prefer an explicit ORDER + ID label; do not simply select the first/topmost "ID".
+  candidates.sort((a,b)=>b.score-a.score);
+  return candidates[0].box;
 }
 
 function zoomOnOriginal(img,box,canvasScale){
@@ -864,12 +881,18 @@ async function readOrderIdFromImage(file,onStatus){
   const budget=()=>Date.now()-t0<OCR_DEADLINE;
   const record=(r)=>{seen.push(r.text||'');return extractOrderId(r.text)||null;};
 
-  // Read the complete screenshot first so the label can be located.
-  note('Reading the complete screenshot…');
-  const base=preprocess(drawRegion(img,null,1.5,2000),'grey');
-  let res=await recognize(base,worker,'6');
-  seen.push(res.text);
-  const label=findLabelBox(res.words,base.width,base.height);
+  // Locate the label using more than one layout mode and scale.
+  // PSM 6 handles regular blocks; PSM 11 handles sparse/mobile UI text.
+  note('Locating the Order ID label…');
+  let base=null,res=null,label=null;
+  for(const pass of [{scale:1.6,psm:'6',mode:'grey'},{scale:2.1,psm:'11',mode:'grey'},{scale:2.1,psm:'12',mode:'grey'}]){
+    if(!budget())break;
+    base=preprocess(drawRegion(img,null,pass.scale,2800),pass.mode);
+    res=await recognize(base,worker,pass.psm);
+    seen.push('[label scan '+pass.psm+' @ '+pass.scale+'x]\\n'+res.text);
+    label=findLabelBox(res.words,base.width,base.height);
+    if(label)break;
+  }
 
   // Critical fix: crop from the Order ID label downwards. The old code used
   // a fixed 48%-of-image crop, which could cut off the ID when the label was
