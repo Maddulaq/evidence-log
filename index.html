@@ -644,7 +644,7 @@ async function activateWorkspace(session){
  await refreshCloudRecords();await showAdminPanel();
  const local=await localRecords();$('migrateBtn').hidden=!(local.length>0);
  document.querySelector('.storage-indicator').textContent='● Private cloud · '+(currentProfile.display_name||currentUser.email);
- const notice=document.querySelector('.notice');notice.innerHTML='<strong>Private cloud storage:</strong> Reports and evidence are stored securely in your Supabase workspace. Partners see only their own reports; the administrator can review all reports.<br><strong id="ocrState" style="color:#087f78">OCR engine status is shown here.</strong>';
+ const notice=document.querySelector('.notice');notice.innerHTML='<strong>Private cloud storage:</strong> Reports and evidence are stored securely in your Supabase workspace. Partners see only their own reports; the administrator can review all reports.<br><strong id="ocrState" style="color:#087f78">Loading OCR engine…</strong>';setOcrState(ocrState);
 }
 async function startCloudWorkspace(){
  if(!window.supabase||!window.supabase.createClient){authMessage('Secure sign-in service did not load. Refresh the page and try again.',true);return;}
