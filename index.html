@@ -671,29 +671,51 @@ function extractOrderId(rawText){
   const text=String(rawText).toUpperCase()
     .replace(/[\u2010-\u2015\u2212]/g,'-')
     .replace(/\u00A0/g,' ');
-  const prefix=/[O0][D0][\s:#-]*/g;
   const candidates=[];
+  const prefix=/[O0][D0][\s:#-]*/g;
   let match;
+  // First pass: explicit OD prefix, allowing OCR to split the digits with spaces.
   while((match=prefix.exec(text))!==null){
     let digits='',ambiguous=0;
     for(let i=prefix.lastIndex;i<text.length;i++){
       const ch=text[i];
       if(/[0-9]/.test(ch)){digits+=ch;continue;}
       if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;continue;}
-      if(/[\s:#=-]/.test(ch))continue;
+      if(/[\s:#=.-]/.test(ch))continue;
       break;
     }
-    // A valid Order ID is exactly OD + 18 digits. Never bridge over
-    // unrelated letters or combine separate number groups.
-    if(digits.length!==18)continue;
-    const before=text.slice(Math.max(0,match.index-45),match.index);
-    const keyword=/ORDER\s*(?:ID|NO\.?|NUMBER|#)|ORDER|SHIPMENT|DELIVERY/.test(before)?20:0;
-    candidates.push({id:'OD'+digits,score:keyword-ambiguous*3,ambiguous});
+    if(digits.length===18){
+      const before=text.slice(Math.max(0,match.index-55),match.index);
+      const keyword=/ORDER\s*(?:ID|NO\.?|NUMBER|#)|ORDER|SHIPMENT|DELIVERY/.test(before)?20:0;
+      candidates.push({id:'OD'+digits,score:keyword-ambiguous*3,ambiguous});
+    }
+  }
+
+  // Second pass: some screenshots put "Order ID" on one line and the
+  // value below it, while OCR drops the leading "OD". Use this only
+  // when nearby OCR text explicitly labels the number as an Order ID.
+  const lines=text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  for(let i=0;i<lines.length;i++){
+    if(!/ORDER\s*(?:ID|NO\.?|NUMBER)\b/.test(lines[i]))continue;
+    let digits='',ambiguous=0;
+    for(let j=i;j<Math.min(lines.length,i+4);j++){
+      let line=lines[j];
+      if(j===i)line=line.replace(/.*?ORDER\s*(?:ID|NO\.?|NUMBER)\b/,'');
+      line=line.replace(/^[\s:#-]*[O0][D0]/,'');
+      for(const ch of line){
+        if(/[0-9]/.test(ch)){digits+=ch;continue;}
+        if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;continue;}
+        if(/[\s:#=.-]/.test(ch))continue;
+        if(/[A-Z]/.test(ch)){digits='';ambiguous=99;break;}
+      }
+      if(digits.length>=18)break;
+      if(ambiguous>4)break;
+    }
+    if(digits.length===18&&ambiguous<=4)candidates.push({id:'OD'+digits,score:30-ambiguous*3,ambiguous});
   }
   candidates.sort((a,b)=>b.score-a.score);
-  // OCR-confused characters lower confidence; don't auto-fill heavily guessed IDs.
   const best=candidates[0];
-  return best&&best.ambiguous<=2?best.id:null;
+  return best&&best.ambiguous<=4?best.id:null;
 }
 /* ---------- Order ID OCR (rewritten) ---------- */
 const OCR_MAX_AREA=4.2e6,OCR_MAX_SIDE=3800,OCR_DEADLINE=45000;
@@ -950,7 +972,8 @@ async function runOrderOcr(file){
       if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;}
       setOcrStatus('Order ID detected: '+result.id+'. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'Time not detected clearly — please enter it manually. ')+'Please verify the details before saving.');
     }else{
-      setOcrStatus('Could not read the Order ID from this screenshot. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Type the Order ID in and verify the time before saving.',true);
+      $('ocrDebug').open=true;
+      setOcrStatus('Could not read the Order ID automatically. The OCR text is expanded below so you can check what was recognised. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Enter the Order ID manually if it is still missing.',true);
     }
   }catch(err){
     if(token!==ocrToken)return;
