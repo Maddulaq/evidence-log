@@ -837,12 +837,23 @@ async function warmOcr(){
   try{await getOcrWorker();setOcrState('ready');}catch(e){setOcrState('offline');}finally{clearTimeout(timer);}
 }
 
-async function recognize(cv,worker,psm){
-  await worker.setParameters({tessedit_pageseg_mode:psm});
+async function recognize(cv,worker,psm,whitelist){
+  const params={tessedit_pageseg_mode:psm};
+  if(whitelist)params.tessedit_char_whitelist=whitelist;
+  else params.tessedit_char_whitelist='';
+  await worker.setParameters(params);
   const res=await worker.recognize(cv);
   return {text:res.data.text||'',words:res.data.words||[]};
 }
-
+function exactOrderIdFromDigits(raw){
+  const lines=String(raw||'').split(/\r?\n/);
+  for(const line of lines){
+    const digits=line.replace(/\D/g,'');
+    if(digits.length===18)return 'OD'+digits;
+  }
+  const all=String(raw||'').replace(/\D/g,'');
+  return all.length===18?'OD'+all:null;
+}
 async function readOrderIdFromImage(file,onStatus){
   const note=(msg)=>{if(onStatus)onStatus(msg);};
   const img=await loadImageEl(file);
@@ -851,61 +862,63 @@ async function readOrderIdFromImage(file,onStatus){
   const worker=await getOcrWorker(onStatus);
   const t0=Date.now(),seen=[];
   const budget=()=>Date.now()-t0<OCR_DEADLINE;
-  const done=(id)=>id?{id,text:seen.join('\n---\n')}:null;
+  const record=(r)=>{seen.push(r.text||'');return extractOrderId(r.text)||null;};
 
-  // Fast pass: a small copy of the whole screenshot, only to locate things.
-  note('Reading the screenshot…');
-  const base=preprocess(drawRegion(img,null,1.2,1400),'grey');
+  // Read the complete screenshot first so the label can be located.
+  note('Reading the complete screenshot…');
+  const base=preprocess(drawRegion(img,null,1.5,2000),'grey');
   let res=await recognize(base,worker,'6');
   seen.push(res.text);
-
-  // Zoom pass: crop the "Order ID" line out of the ORIGINAL image at full
-  // resolution. This is the trustworthy read; the small preview copy above
-  // can misread digits, so it is never used as an automatic fallback.
   const label=findLabelBox(res.words,base.width,base.height);
-  let target=null;
-  if(budget()){
-    note('Zooming in on the Order ID line…');
-    // Include extra space below the label because the long ID may sit on the next line.
-    target=label?zoomOnOriginal(img,label,base._scale):drawRegion(img,{x:0,y:0,w:img.naturalWidth,h:Math.round(img.naturalHeight*0.62)},3.0);
+
+  // Critical fix: crop from the Order ID label downwards. The old code used
+  // a fixed 48%-of-image crop, which could cut off the ID when the label was
+  // lower on a tall phone screenshot.
+  if(label&&budget()){
+    const scale=base._scale||1;
+    const labelY=label.y0/scale;
+    const labelH=Math.max(1,(label.y1-label.y0)/scale);
+    const cropY=Math.max(0,labelY-labelH*1.5);
+    const cropH=Math.min(img.naturalHeight-cropY,Math.max(img.naturalHeight*0.24,labelH*16));
+    const crop=drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600);
+    note('Reading the Order ID area at high resolution…');
     for(const psm of ['6','11','7']){
       if(!budget())break;
-      const cropY=Math.max(0,(label?label.y0/base._scale:0)-Math.round(img.naturalHeight*0.04));
-      const pass=preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:Math.min(img.naturalHeight-cropY,Math.round(img.naturalHeight*0.48))},2.8,3200),'grey');
-      res=await recognize(pass,worker,psm);
-      seen.push(res.text);
-      const sharp=extractOrderId(res.text);
-      if(sharp)return {id:sharp,text:seen.join('\n---\n')};
-    }
-    // Also test the label-centred crop with a second page-segmentation mode.
-    if(target&&budget()){
-      res=await recognize(preprocess(target,'binary'),worker,'11');
-      seen.push(res.text);
-      const sharp=extractOrderId(res.text);
-      if(sharp)return {id:sharp,text:seen.join('\n---\n')};
+      const gray=preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'grey');
+      res=await recognize(gray,worker,psm);
+      const hit=record(res);
+      if(hit)return {id:hit,text:seen.join('\n---\n')};
+      // The ID is numeric; a digits-only pass avoids letter confusions.
+      const digits=await recognize(preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'binary'),worker,psm,'0123456789');
+      seen.push('[digits-only pass]\n'+digits.text);
+      const exact=exactOrderIdFromDigits(digits.text);
+      if(exact)return {id:exact,text:seen.join('\n---\n')};
     }
   }
 
+  // Fallback: scan overlapping horizontal bands across the entire image.
+  // This also covers screenshots where OCR cannot identify the label.
   if(budget()){
-    note('Trying a sharper pass…');
-    const bin=preprocess(drawRegion(img,null,1.6,1800),'binary');
-    res=await recognize(bin,worker,'11');
-    seen.push(res.text);
-    const hit=done(extractOrderId(res.text));
-    if(hit)return hit;
-  }
-
-  if(budget()){
-    let hit=null;
-    const bands=bandRects(img.naturalWidth,img.naturalHeight);
-    for(let i=0;i<bands.length;i++){
+    note('Scanning the screenshot in overlapping sections…');
+    const bandH=Math.max(1,Math.round(img.naturalHeight*0.28));
+    const step=Math.max(1,Math.round(img.naturalHeight*0.16));
+    const starts=[];
+    for(let y=0;y+bandH<img.naturalHeight;y+=step)starts.push(y);
+    starts.push(Math.max(0,img.naturalHeight-bandH));
+    const unique=[...new Set(starts)];
+    for(let i=0;i<unique.length;i++){
       if(!budget())break;
-      note('Scanning section '+(i+1)+' of '+bands.length+'…');
-      const cv=preprocess(drawRegion(img,bands[i],2.6),'grey');
-      res=await recognize(cv,worker,'6');
-      seen.push(res.text);
-      hit=done(extractOrderId(res.text));
-      if(hit)return hit;
+      const y=unique[i];
+      const rect={x:0,y,w:img.naturalWidth,h:Math.min(bandH,img.naturalHeight-y)};
+      const gray=preprocess(drawRegion(img,rect,2.8,3600),'grey');
+      res=await recognize(gray,worker,'6');
+      const hit=record(res);
+      if(hit)return {id:hit,text:seen.join('\n---\n')};
+      const binary=preprocess(drawRegion(img,rect,2.8,3600),'binary');
+      const digits=await recognize(binary,worker,'6','0123456789');
+      seen.push('[section '+(i+1)+' digits-only]\n'+digits.text);
+      const exact=exactOrderIdFromDigits(digits.text);
+      if(exact)return {id:exact,text:seen.join('\n---\n')};
     }
   }
   return {id:null,text:seen.join('\n---\n')};
