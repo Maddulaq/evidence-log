@@ -401,6 +401,54 @@ body.cloud-authenticated .command-center.cloud-protected{display:grid}
 body.cloud-authenticated .notice.cloud-protected,body.cloud-authenticated section.card.cloud-protected,body.cloud-authenticated p.cloud-protected,body.cloud-authenticated .admin-panel.cloud-protected{display:block}
 body:not(.cloud-authenticated) .bottom-nav{display:none!important}
 @media(max-width:680px){.auth-card{margin:14px 11px;padding:18px}.admin-person{align-items:flex-start;flex-direction:column}}
+/* Dashboard and guided-report improvements */
+.dashboard-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:16px}.dashboard-metric{min-width:0;padding:12px;border:1px solid #ffffff24;border-radius:12px;background:#ffffff0d}.dashboard-metric span{display:block;color:#c5d8d9;font-size:10px;line-height:1.4}.dashboard-metric strong{display:block;margin-top:4px;color:#fff;font-size:21px;line-height:1.2;font-weight:800}
+.guided-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 18px;padding:13px 15px;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft)}.guided-intro strong{display:block;font-size:13px;color:var(--ink)}.guided-intro small{display:block;margin-top:2px}
+.guided-progress{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 19px}.guided-progress a{display:flex;align-items:center;gap:7px;min-width:0;padding:9px 8px;border:1px solid var(--line);border-radius:10px;background:var(--surface-soft);color:var(--muted);text-decoration:none;font-size:11px;font-weight:700}.guided-progress a span{display:grid;place-items:center;flex:0 0 22px;width:22px;height:22px;border-radius:7px;background:var(--line);font-size:10px}.guided-progress a.is-complete{border-color:#9bcfc3;background:var(--brand-soft);color:var(--brand-dark)}.guided-progress a.is-complete span{background:var(--brand);color:#fff}.guided-progress a.is-current{border-color:var(--brand);color:var(--ink)}.guided-check{display:flex;align-items:center;gap:8px;margin:0 0 16px;color:var(--muted);font-size:11px}.guided-check strong{color:var(--brand-dark)}.form-stage{scroll-margin-top:18px;padding-top:4px}.form-stage-title{display:flex;align-items:center;gap:9px;margin:0 0 8px;font-size:13px;font-weight:800;color:var(--ink)}.form-stage-title span{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--brand-soft);color:var(--brand);font-size:10px}
+body[data-theme="dark"] .guided-intro,body[data-theme="dark"] .guided-progress a{background:var(--surface-soft);border-color:var(--line)}body[data-theme="dark"] .guided-intro strong,body[data-theme="dark"] .form-stage-title{color:var(--ink)}
+@media(max-width:680px){.dashboard-metrics{gap:7px}.dashboard-metric{padding:10px 8px}.dashboard-metric strong{font-size:19px}.guided-progress{grid-template-columns:repeat(2,minmax(0,1fr))}.guided-progress a{font-size:10px}}
+
+/* Premium dashboard refinement — development branch */
+:root{--brand:#139b8c;--brand-dark:#087d73;--brand-soft:#e7f6f3;--radius:15px;--shadow:0 10px 28px rgba(18,38,54,.07)}
+body{background:#f3f6f8}
+header{background:#111f30;padding:22px max(18px,calc((100% - 1180px)/2));box-shadow:0 5px 20px #10203012}
+header h1{letter-spacing:-.55px}
+header .sub{color:#b9c8d5}
+.top-actions a,.top-actions button{border-radius:10px}
+.command-center{background:linear-gradient(120deg,#111f30 0%,#1b3548 100%);border:1px solid #28465a;border-radius:19px;padding:28px;gap:24px;box-shadow:0 14px 32px #142c3b1c}
+.command-copy h2{font-size:clamp(27px,4vw,37px);letter-spacing:-1.1px}
+.command-copy h2 em{color:#7fe0cf}
+.command-copy p{color:#c5d2dc;line-height:1.65}
+.eyebrow{color:#9fc8c1;letter-spacing:1.35px}
+.live-dot{background:#42d6b8;box-shadow:0 0 0 4px #42d6b820}
+.command-primary{background:#18aa99;color:#062e2a;border-radius:10px}
+.command-secondary{border-color:#ffffff42;border-radius:10px}
+.overview-panel{background:#ffffff0c;border-color:#ffffff24;border-radius:15px;padding:19px}
+.overview-stat strong{font-size:46px}
+.dashboard-metric{background:#ffffff0b;border-color:#ffffff22;border-radius:11px;padding:12px}
+.dashboard-metric span{color:#b8cbd4;font-size:10px}
+.dashboard-metric strong{color:#fff;font-size:23px}
+.overview-bottom{grid-template-columns:1fr 1fr 1fr;gap:7px;font-size:10px}
+.notice{border-radius:12px}
+.card{border-radius:16px;padding:23px;box-shadow:0 8px 26px rgba(18,38,54,.055)}
+.card h2{letter-spacing:-.45px}
+.section-number{border-radius:9px}
+.records-head{align-items:flex-start}
+.selection-tools{border-radius:12px}
+body[data-theme="dark"]{background:#0e1722}
+body[data-theme="dark"] .command-center{background:linear-gradient(120deg,#101d2b,#172e40);border-color:#2a4356}
+body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
+@media(max-width:680px){
+ header{padding:16px 14px}
+ .command-center{grid-template-columns:1fr;padding:19px;gap:18px;border-radius:15px}
+ .command-copy h2{font-size:29px}
+ .overview-stat strong{font-size:39px}
+ .dashboard-metric{padding:10px 8px}
+ .dashboard-metric strong{font-size:20px}
+ .overview-bottom{grid-template-columns:1fr 1fr;gap:9px}
+ .card{padding:17px;border-radius:14px}
+ .records-head{gap:10px}
+}
 </style>
 </head>
 <body>
@@ -427,19 +475,26 @@ body:not(.cloud-authenticated) .bottom-nav{display:none!important}
   </div>
   <div class="overview-panel"><div class="overview-top"><span>YOUR WORKSPACE</span><span class="storage-indicator">● On this device</span></div>
     <div class="overview-stat"><strong id="dashboardCount">0</strong><span>Saved incident records</span></div>
-    <div class="overview-rule"></div>
+    <div class="dashboard-metrics" aria-label="Report summary"><div class="dashboard-metric"><span>Added this week</span><strong id="dashboardWeek">0</strong></div><div class="dashboard-metric"><span>Issue categories</span><strong id="dashboardTypes">0</strong></div><div class="dashboard-metric"><span>Evidence photos</span><strong id="dashboardEvidence">0</strong></div></div>
+    <div class="overview-rule" style="margin-top:15px"></div>
     <div class="overview-bottom"><span><b>01</b> Capture screenshot</span><span><b>02</b> Add evidence</span><span><b>03</b> Save report</span></div>
   </div>
 </section>
 <div class="notice cloud-protected"><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
 <section class="card cloud-protected" id="incidentSection">
 <div class="section-heading"><span class="section-number">01</span><h2>Submit an incident</h2></div>
-<p class="section-subtitle">Complete the details below. Check the Order ID and time before saving.</p>
+<p class="section-subtitle">Follow the guided steps. Review the Order ID and time before saving.</p>
 <form id="incidentForm">
+<div class="guided-intro"><div><strong id="guidedStatus">Step 1 of 4 · Add the order screenshot</strong><small id="guidedHint">Start with the original order screenshot.</small></div><span class="pill" id="guidedPercent">0% complete</span></div>
+<nav class="guided-progress" aria-label="Report creation steps"><a href="#stageScreenshot" data-guide-step="1" class="is-current"><span>1</span> Screenshot</a><a href="#stageDetails" data-guide-step="2"><span>2</span> Details</a><a href="#stageEvidence" data-guide-step="3"><span>3</span> Evidence</a><a href="#stageReview" data-guide-step="4"><span>4</span> Review &amp; save</a></nav>
+<div class="guided-check" id="guidedChecklist" role="status" aria-live="polite"><strong>0 of 4 checks complete</strong> · Add screenshot, details and evidence.</div>
+<div class="form-stage" id="stageScreenshot"><h3 class="form-stage-title"><span>1</span> Add order screenshot</h3>
 <div class="form-divider"></div><label for="orderShot">Order screenshot <span class="pill">Required</span></label>
 <input id="orderShot" type="file" accept="image/*" required>
 <span class="hint">Upload the order screenshot. The app reads the Order ID and the time shown near the top of the screenshot automatically. Verify both before saving; if the time is unclear, enter it manually.</span>
 <div class="preview" id="orderPreview"></div>
+</div>
+<div class="form-stage" id="stageDetails"><h3 class="form-stage-title"><span>2</span> Verify order details</h3>
 <div class="grid">
 <div><label for="category">Issue category *</label><select id="category" required>
 <option value="">Select an issue</option>
@@ -449,13 +504,18 @@ body:not(.cloud-authenticated) .bottom-nav{display:none!important}
 <div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" value="Banjara Hills 150" placeholder="Store name"></div>
 <div><label for="incidentAt">Incident date and time *</label><input id="incidentAt" type="datetime-local" required></div>
 </div>
+</div>
+<div class="form-stage" id="stageEvidence"><h3 class="form-stage-title"><span>3</span> Attach supporting evidence</h3>
 <div class="form-divider"></div><label for="supporting">Supporting evidence photos <span class="pill">1 or 2 required</span></label>
 <input id="supporting" type="file" accept="image/*" multiple required>
 <span class="hint">Add 1–2 clear photos showing the issue. Maximum 8 MB per image.</span>
 <div class="preview" id="supportPreview"></div>
+</div>
+<div class="form-stage" id="stageReview"><h3 class="form-stage-title"><span>4</span> Review and save</h3>
 <label for="notes">Short description (optional)</label><textarea id="notes" rows="3" maxlength="600" placeholder="Select an issue to get a suggested description. You can edit it..."></textarea><span class="hint">A suggested description appears when you select an issue. Review it and edit it to match exactly what happened.</span>
 <div class="actions"><button id="saveBtn" type="submit">Save incident</button><button class="secondary" type="reset">Reset form</button></div>
 <div class="status" id="formStatus" role="status" aria-live="polite"></div>
+</div>
 </form>
 </section>
 <section class="card cloud-protected" id="recordsSection">
@@ -468,6 +528,17 @@ body:not(.cloud-authenticated) .bottom-nav{display:none!important}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script>
 
+(function setupGuidedReport(){
+ const form=$('incidentForm');if(!form)return;const links=[...document.querySelectorAll('[data-guide-step]')],status=$('guidedStatus'),hint=$('guidedHint'),percent=$('guidedPercent'),checklist=$('guidedChecklist');
+ const stages=[['Add the order screenshot','Upload the original screenshot. OCR will try to read the Order ID and time.'],['Verify order details','Check the Order ID, issue category, store and incident date/time.'],['Attach supporting evidence','Add one or two clear photos that support the incident.'],['Review and save','Review the information. The description is optional; save when the required details are correct.']];
+ function update(){const shot=$('orderShot').files.length>0,details=!!($('category').value&&$('orderId').value.trim()&&$('store').value.trim()&&$('incidentAt').value),evidence=$('supporting').files.length>=1&&$('supporting').files.length<=2,done=[shot,details,evidence].filter(Boolean).length,current=!shot?1:!details?2:!evidence?3:4;
+ if(status)status.textContent='Step '+current+' of 4 · '+stages[current-1][0];if(hint)hint.textContent=stages[current-1][1];if(percent)percent.textContent=Math.round(done/3*100)+'% complete';
+ if(checklist)checklist.innerHTML='<strong>'+done+' of 3 required checks complete</strong> · '+(shot?'Screenshot added':'Add screenshot')+' · '+(details?'Details entered':'Verify details')+' · '+(evidence?'Evidence attached':'Add evidence');
+ links.forEach((a,i)=>{a.classList.toggle('is-current',i+1===current);a.classList.toggle('is-complete',[shot,details,evidence,done===3][i]);});}
+ ['orderShot','category','orderId','store','incidentAt','supporting','notes'].forEach(id=>{const el=$(id);if(el){el.addEventListener('change',update);el.addEventListener('input',update);}});
+ form.addEventListener('reset',()=>setTimeout(update,0));links.forEach(a=>a.addEventListener('click',()=>{const target=document.getElementById(a.getAttribute('href').slice(1));if(target)target.scrollIntoView({behavior:'smooth',block:'start'});}));
+ update();window.updateGuidedReport=update;
+})();;
 /* English / Telugu interface language switch */
 const uiText={
  en:{
@@ -654,7 +725,7 @@ async function startCloudWorkspace(){
  supabaseClient.auth.onAuthStateChange((_event,nextSession)=>{if(nextSession){setTimeout(()=>activateWorkspace(nextSession).catch(err=>authMessage('Workspace could not load: '+err.message,true)),0);}else{cloudReady=false;currentUser=null;currentProfile=null;cloudRecords=[];document.body.classList.remove('cloud-authenticated');$('authPanel').hidden=false;$('adminPanel').hidden=true;const b=$('signOutBtn');if(b)b.remove();}});
 }
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();if(!supabaseClient){authMessage('Connecting to secure sign-in…');return;}const btn=$('loginBtn');btn.disabled=true;authMessage('Signing in…');try{const {error}=await supabaseClient.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;authMessage('Signed in. Loading your reports…');}catch(err){authMessage(err.message||'Sign-in failed. Check your email and password.',true);}finally{btn.disabled=false;}});
-$('forgotPasswordBtn').addEventListener('click',async()=>{if(!supabaseClient){authMessage('Sign-in service is still loading.',true);return;}const email=$('loginEmail').value.trim();if(!email){authMessage('Enter your account email first.',true);return;}const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});authMessage(error?error.message:'If this account exists, a password-reset email has been sent.',!!error);});
+$('forgotPasswordBtn').addEventListener('click',async()=>{const btn=$('forgotPasswordBtn');const email=$('loginEmail').value.trim();if(!email){authMessage('Enter your account email first.',true);$('loginEmail').focus();return;}if(!supabaseClient){authMessage('Secure sign-in is not connected yet. Refresh this page and try again.',true);return;}btn.disabled=true;btn.textContent='Sending reset email…';authMessage('Requesting a password-reset email for '+email+'…');try{const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:'https://maddulaq.github.io/evidence-log/'});if(error)throw error;authMessage('Password-reset request submitted. Check your inbox and Spam folder. The reset link will open the main SOP & Proof Hub website.');}catch(err){authMessage('Password reset failed: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;btn.textContent='Forgot password';}});
 $('migrateBtn').addEventListener('click',migrateLocalRecords);
 $('inviteGuideBtn').addEventListener('click',()=>window.open('https://supabase.com/dashboard/project/rihobudcchrgwithvutx/auth/users','_blank','noopener'));
 function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
@@ -1040,6 +1111,7 @@ function updateSuggestedDescription(){
     lastAutoDescription=suggested;
     notesManuallyEdited=false;
   }
+  if(window.updateGuidedReport)window.updateGuidedReport();
 }
 $('category').addEventListener('change',updateSuggestedDescription);
 $('notes').addEventListener('input',()=>{
@@ -1057,7 +1129,14 @@ $('supporting').addEventListener('change',()=>{const fs=[...$('supporting').file
 $('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}if(!cloudReady||!currentUser){setStatus('Please sign in before saving a report.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Uploading evidence securely…');try{await saveCloudIncident([shot,...extras],{category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:$('incidentAt').value,notes:$('notes').value.trim()});$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus(currentLanguage==='te'?'ఘటన ప్రైవేట్ క్లౌడ్‌లో సేవ్ అయింది.':'Incident and evidence saved to your private cloud workspace.');await refreshCloudRecords();await showAdminPanel();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
 const selectedRecordIds=new Set();
 function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' complaint'+(n===1?'':'s')+' selected');if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');}
-async function render(){const rows=await allRecords();$('count').textContent=rows.length;const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=r.userId===currentUser.id;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();}
+function updateDashboardMetrics(rows){
+ const week=document.getElementById('dashboardWeek'),types=document.getElementById('dashboardTypes'),evidence=document.getElementById('dashboardEvidence');
+ const now=new Date(),start=new Date(now);start.setDate(now.getDate()-6);start.setHours(0,0,0,0);
+ if(week)week.textContent=rows.filter(r=>{const d=new Date(r.submittedAt||r.incidentAt);return !Number.isNaN(d.getTime())&&d>=start&&d<=now;}).length;
+ if(types)types.textContent=new Set(rows.map(r=>r.category).filter(Boolean)).size;
+ if(evidence)evidence.textContent=rows.reduce((sum,r)=>sum+1+(Array.isArray(r.supportingEvidence)?r.supportingEvidence.length:0),0);
+}
+async function render(){const rows=await allRecords();$('count').textContent=rows.length;updateDashboardMetrics(rows);const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=r.userId===currentUser.id;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();}
 $('records').addEventListener('change',e=>{const id=e.target.dataset.selectRecord;if(!id)return;if(e.target.checked)selectedRecordIds.add(id);else selectedRecordIds.delete(id);updateSelectionUI();});
 $('selectAllBtn').addEventListener('click',async()=>{const rows=await allRecords();if(selectedRecordIds.size){selectedRecordIds.clear();}else{rows.forEach(r=>selectedRecordIds.add(r.id));}await render();});
 $('combinedPdfBtn').addEventListener('click',async()=>{const rows=await allRecords();const selected=rows.filter(r=>selectedRecordIds.has(r.id)).sort((a,b)=>new Date(a.incidentAt)-new Date(b.incidentAt));if(!selected.length){alert('Select at least one complaint first.');return;}printRecords(selected);});
@@ -1077,7 +1156,52 @@ function reportHtml(rows){
       +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
       +'</div></article>';
   }).join('');
-  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+'</style></head><body>'
+  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+'
+/* Premium incident form and records refinement */
+.form-stage{padding:15px 16px;margin:12px 0;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft)}
+.form-stage-title{font-size:14px;margin-bottom:12px}
+.form-stage-title span{width:28px;height:28px;border-radius:9px}
+.guided-intro{padding:15px 16px;border-radius:13px;background:var(--brand-soft);border-color:#cfe9e3}
+.guided-intro strong{font-size:14px}
+.guided-progress{gap:8px}
+.guided-progress a{padding:10px;border-radius:11px;transition:border-color .15s,background .15s}
+.guided-progress a.is-current{background:var(--brand-soft);border-width:1.5px}
+.guided-check{padding:10px 12px;background:var(--surface-soft);border:1px solid var(--line);border-radius:10px}
+input,select,textarea{border-radius:11px;border-color:#d5dfe4}
+input:focus,select:focus,textarea:focus{outline:3px solid #139b8c20;border-color:#139b8c}
+input[type=file]{border-radius:11px;background:var(--surface)}
+.actions button,.actions a{border-radius:10px}
+#saveBtn{min-height:45px;padding-left:20px;padding-right:20px}
+#records{display:grid;gap:10px}
+.record{position:relative;padding:16px;border:1px solid var(--line)!important;border-radius:13px;background:var(--surface);margin:0;box-shadow:0 4px 15px rgba(20,40,55,.035)}
+.record:first-child{border-top:1px solid var(--line)}
+.record h3{font-size:14px;font-weight:800;letter-spacing:-.15px}
+.record p{line-height:1.55}
+.record .actions{display:flex;gap:7px;flex-wrap:wrap}
+.record .actions button{padding:8px 11px;font-size:11px;border-radius:9px}
+.record-tools{margin-top:16px}
+.record-tools input{border-radius:11px;background:var(--surface-soft)}
+.search-count{font-weight:650}
+.selection-tools{border-radius:13px;padding:15px;background:var(--surface-soft)}
+.selection-tools strong{font-size:13px}
+.selection-tools .actions button{border-radius:9px}
+body[data-theme="dark"] .form-stage{background:var(--surface-soft);border-color:var(--line)}
+body[data-theme="dark"] .guided-intro{background:#173b38;border-color:#285c55}
+body[data-theme="dark"] .guided-check{background:var(--surface-soft);border-color:var(--line)}
+body[data-theme="dark"] .record{background:var(--surface);border-color:var(--line)!important;box-shadow:0 4px 15px #0002}
+body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{background:var(--surface);border-color:var(--line);color:var(--ink)}
+@media(max-width:680px){
+ .form-stage{padding:13px 11px;margin:10px 0;border-radius:12px}
+ .guided-intro{padding:12px}
+ .guided-progress{gap:7px}
+ .guided-progress a{padding:9px 7px}
+ .guided-check{align-items:flex-start;line-height:1.5}
+ #records{gap:8px}
+ .record{padding:13px;border-radius:12px}
+ .record .actions button{flex:1}
+ .record-tools input{min-width:0}
+}
+</style></head><body>'
     +'<div class="bar"><span>SOP & Evidence Hub \u2014 Incident Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
