@@ -451,6 +451,7 @@ body[data-theme="dark"] .guided-intro,body[data-theme="dark"] .guided-progress a
 <input id="orderShot" type="file" accept="image/*" required>
 <span class="hint">Upload the order screenshot. The app reads the Order ID and the time shown near the top of the screenshot automatically. Verify both before saving; if the time is unclear, enter it manually.</span>
 <div class="preview" id="orderPreview"></div>
+</div>
 <div class="form-stage" id="stageDetails"><h3 class="form-stage-title"><span>2</span> Verify order details</h3>
 <div class="grid">
 <div><label for="category">Issue category *</label><select id="category" required>
@@ -487,15 +488,15 @@ body[data-theme="dark"] .guided-intro,body[data-theme="dark"] .guided-progress a
 
 (function setupGuidedReport(){
  const form=$('incidentForm');if(!form)return;const links=[...document.querySelectorAll('[data-guide-step]')],status=$('guidedStatus'),hint=$('guidedHint'),percent=$('guidedPercent'),checklist=$('guidedChecklist');
- const stages=[['Add the order screenshot','Upload the original screenshot. OCR will try to read the Order ID and time.'],['Verify order details','Check the Order ID, issue category, store and incident date/time.'],['Attach supporting evidence','Add one or two clear photos that support the incident.'],['Review and save','Review the description and save only when the information is correct.']];
- function update(){const shot=$('orderShot').files.length>0,details=!!($('category').value&&$('orderId').value.trim()&&$('store').value.trim()&&$('incidentAt').value),evidence=$('supporting').files.length>=1&&$('supporting').files.length<=2,review=!!$('notes').value.trim(),done=[shot,details,evidence,review].filter(Boolean).length,current=!shot?1:!details?2:!evidence?3:4;
- if(status)status.textContent='Step '+current+' of 4 · '+stages[current-1][0];if(hint)hint.textContent=stages[current-1][1];if(percent)percent.textContent=Math.round(done/4*100)+'% complete';
- if(checklist)checklist.innerHTML='<strong>'+done+' of 4 checks complete</strong> · '+(shot?'Screenshot added':'Add screenshot')+' · '+(details?'Details entered':'Verify details')+' · '+(evidence?'Evidence attached':'Add evidence')+' · '+(review?'Description ready':'Review description');
- links.forEach((a,i)=>{a.classList.toggle('is-current',i+1===current);a.classList.toggle('is-complete',[shot,details,evidence,review][i]);});}
+ const stages=[['Add the order screenshot','Upload the original screenshot. OCR will try to read the Order ID and time.'],['Verify order details','Check the Order ID, issue category, store and incident date/time.'],['Attach supporting evidence','Add one or two clear photos that support the incident.'],['Review and save','Review the information. The description is optional; save when the required details are correct.']];
+ function update(){const shot=$('orderShot').files.length>0,details=!!($('category').value&&$('orderId').value.trim()&&$('store').value.trim()&&$('incidentAt').value),evidence=$('supporting').files.length>=1&&$('supporting').files.length<=2,done=[shot,details,evidence].filter(Boolean).length,current=!shot?1:!details?2:!evidence?3:4;
+ if(status)status.textContent='Step '+current+' of 4 · '+stages[current-1][0];if(hint)hint.textContent=stages[current-1][1];if(percent)percent.textContent=Math.round(done/3*100)+'% complete';
+ if(checklist)checklist.innerHTML='<strong>'+done+' of 3 required checks complete</strong> · '+(shot?'Screenshot added':'Add screenshot')+' · '+(details?'Details entered':'Verify details')+' · '+(evidence?'Evidence attached':'Add evidence');
+ links.forEach((a,i)=>{a.classList.toggle('is-current',i+1===current);a.classList.toggle('is-complete',[shot,details,evidence,done===3][i]);});}
  ['orderShot','category','orderId','store','incidentAt','supporting','notes'].forEach(id=>{const el=$(id);if(el){el.addEventListener('change',update);el.addEventListener('input',update);}});
  form.addEventListener('reset',()=>setTimeout(update,0));links.forEach(a=>a.addEventListener('click',()=>{const target=document.getElementById(a.getAttribute('href').slice(1));if(target)target.scrollIntoView({behavior:'smooth',block:'start'});}));
  update();window.updateGuidedReport=update;
-})();
+})();;
 /* English / Telugu interface language switch */
 const uiText={
  en:{
