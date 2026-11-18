@@ -1,0 +1,1328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#12283f">
+<title>SOP &amp; Proof Hub</title>
+<style>
+
+:root{
+  color-scheme:light;
+  --bg:#f4f6f8;--surface:#fff;--surface-soft:#f8fafb;--ink:#18232d;
+  --muted:#687783;--line:#e2e8ed;--brand:#245b49;--brand-dark:#194637;
+  --brand-soft:#eaf3ee;--accent:#d9e9df;--warning-bg:#fff8e9;
+  --warning-line:#ead9b4;--warning-ink:#665126;--danger:#a43c3c;
+  --radius:16px;--shadow:0 5px 18px rgba(23,42,55,.045);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+a{color:inherit}
+header{background:var(--surface);color:var(--ink);padding:22px max(18px,calc((100% - 1040px)/2));border-bottom:1px solid var(--line)}
+header h1{font-size:22px;letter-spacing:-.45px;margin:0;font-weight:780}
+header .sub{margin:4px 0 0;color:var(--muted);font-size:13px;max-width:680px}
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.top-actions a,.top-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 13px;border-radius:9px;text-decoration:none;font-size:13px;font-weight:700}
+.top-actions a:first-child{background:var(--brand);color:#fff}
+.top-actions a.outline,.top-actions button.outline{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.theme-toggle{margin-left:auto}
+main{width:min(1040px,100%);margin:24px auto;padding:0 18px 90px}
+.command-center{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr);gap:26px;align-items:center;padding:26px;border-radius:20px;background:#1e493b;color:#fff;margin-bottom:18px}
+.command-copy,.overview-panel{min-width:0}
+.eyebrow{display:flex;align-items:center;gap:8px;color:#c7ded1;font-size:10px;font-weight:800;letter-spacing:1.2px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#8bd1a3}
+.command-copy h2{font-size:clamp(26px,4vw,36px);line-height:1.12;letter-spacing:-1px;margin:13px 0 10px;color:#fff}
+.command-copy h2 em{font-style:normal;color:#c3e2cd}
+.command-copy p{max-width:470px;color:#d7e5dc;font-size:14px;margin:0}
+.command-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:20px}
+.command-actions a{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:9px;text-decoration:none;font-size:13px;font-weight:750}
+.command-primary{background:#fff;color:#204b3c}
+.command-secondary{color:#fff;border:1px solid #ffffff55}
+.overview-panel{background:#ffffff12;border:1px solid #ffffff28;border-radius:14px;padding:17px}
+.overview-top,.overview-bottom{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.overview-top{font-size:10px;font-weight:800;letter-spacing:.8px;color:#d5e7dc}
+.storage-indicator{color:#d0ead8;letter-spacing:0}
+.overview-stat{display:flex;align-items:baseline;gap:10px;margin:20px 0 15px}
+.overview-stat strong{font-size:42px;line-height:1;font-weight:800;letter-spacing:-1.5px}
+.overview-stat span{font-size:12px;color:#d7e5dc}
+.overview-rule{height:1px;background:#ffffff30;margin-bottom:13px}
+.overview-bottom{display:grid;gap:8px;color:#e1ece5;font-size:11px}
+.overview-bottom b{color:#b9dfc5;margin-right:6px}
+.notice{background:var(--warning-bg);border:1px solid var(--warning-line);color:var(--warning-ink);border-radius:12px;padding:13px 15px;margin:0 0 18px;font-size:12px;line-height:1.6}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:18px;box-shadow:var(--shadow)}
+.section-heading{display:flex;align-items:center;gap:10px;margin-bottom:5px}
+.section-number{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:8px;background:var(--brand-soft);color:var(--brand);font-size:11px;font-weight:850}
+.card h2{font-size:18px;letter-spacing:-.3px;margin:0}
+.section-subtitle{margin:0 0 18px 38px;color:var(--muted);font-size:13px}
+.form-divider{height:1px;background:var(--line);margin:17px 0}
+label{display:block;font-weight:700;font-size:13px;margin:12px 0 6px}
+input,select,textarea{display:block;width:100%;min-width:0;max-width:100%;border:1px solid #cfd9df;border-radius:9px;padding:11px 12px;background:#fff;color:var(--ink);font:inherit;font-size:14px}
+input,select{min-height:44px}
+textarea{min-height:100px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:3px solid #245b4920;border-color:#6b9c84}
+input[type=file]{padding:9px;background:var(--surface-soft);border:1px dashed #b7c8be;font-size:12px}
+input[type=file]::file-selector-button{border:0;border-radius:7px;padding:8px 10px;margin-right:9px;background:var(--brand-soft);color:var(--brand);font-weight:750}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px}
+.hint,small{display:block;color:var(--muted);font-size:12px;line-height:1.55}
+.hint{margin-top:5px}
+.pill{display:inline-flex;align-items:center;border-radius:30px;background:var(--brand-soft);color:var(--brand);padding:3px 8px;font-size:10px;font-weight:800;vertical-align:middle}
+.preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.preview img{width:76px;height:76px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+button{min-height:42px;border:1px solid var(--brand);border-radius:9px;padding:9px 14px;background:var(--brand);color:#fff;font:700 13px system-ui;cursor:pointer}
+button:hover{background:var(--brand-dark)}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.secondary{background:var(--surface);color:var(--ink);border-color:var(--line)}
+button.secondary:hover{background:var(--surface-soft)}
+button.danger{background:#fff5f5;color:var(--danger);border-color:#efd3d3}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:15px}
+.status{min-height:20px;margin-top:9px;color:var(--brand);font-size:12px;white-space:pre-line}
+.error{color:var(--danger)}
+.records-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.records-head .actions{margin:0}
+.record-tools{position:relative;display:flex;align-items:center;gap:10px;margin-top:18px}
+.record-tools input{padding-left:38px}
+.search-symbol{position:absolute;left:13px;color:var(--muted);font-size:20px;pointer-events:none}
+.search-count{white-space:nowrap;color:var(--muted);font-size:11px}
+.selection-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px;padding:13px;border:1px solid var(--line);border-radius:11px;background:var(--surface-soft)}
+.selection-tools strong{display:block;font-size:13px}
+.selection-tools small{max-width:470px;margin-top:3px}
+.selection-tools .actions{margin:0}
+#records{margin-top:12px}
+.record{padding:15px 0;border-top:1px solid var(--line)}
+.record:first-child{border-top:0}
+.record h3{font-size:14px;margin:0 0 5px;color:var(--ink)}
+.record p{font-size:12px;color:var(--muted);margin:3px 0;overflow-wrap:anywhere}
+.record .actions{margin-top:9px}
+.bottom-nav{display:none}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+button:focus-visible,a:focus-visible{outline:3px solid #76a98b;outline-offset:2px}
+@media(max-width:680px){
+ header{padding:17px 15px}
+ header h1{font-size:20px}
+ .top-actions{gap:6px}
+ .top-actions a,.top-actions button{padding:8px 10px;font-size:12px}
+ .theme-toggle{margin-left:0}
+ main{padding:0 11px 105px;margin:14px auto}
+ .command-center{grid-template-columns:1fr;gap:17px;padding:19px;border-radius:15px}
+ .command-copy h2{font-size:29px}
+ .overview-panel{padding:14px}
+ .overview-stat{margin:14px 0 12px}
+ .card{padding:16px 14px;border-radius:14px;margin-bottom:13px}
+ .grid{grid-template-columns:minmax(0,1fr);gap:3px}
+ .section-subtitle{margin-left:0}
+ .records-head{align-items:flex-start;flex-direction:column}
+ .records-head .actions{width:100%}
+ .records-head .actions button{flex:1}
+ .record-tools{flex-wrap:wrap}
+ .record-tools input{flex:1}
+ .search-count{width:100%}
+ .selection-tools{align-items:flex-start}
+ .selection-tools .actions{width:100%}
+ .selection-tools .actions button{flex:1}
+ .bottom-nav{position:fixed;z-index:999;left:10px;right:10px;bottom:max(8px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:7px;background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:0 5px 22px #172b251c}
+ .bottom-nav a,.bottom-nav button{display:flex;align-items:center;justify-content:center;min-width:0;min-height:40px;padding:8px 4px;border-radius:8px;text-decoration:none;font-size:11px;font-weight:750}
+ .bottom-nav a{background:var(--surface-soft);color:var(--ink)}
+ .bottom-nav a.primary{background:var(--brand);color:#fff}
+ .bottom-nav button{background:var(--surface-soft);color:var(--ink);border-color:var(--line)}
+}
+@media(min-width:681px){.bottom-nav{display:none!important}}
+@media print{body{background:#fff}.no-print,header,.notice,.bottom-nav,.command-center{display:none!important}main{margin:0;padding:0;max-width:none}.card{border:0;box-shadow:none;padding:0}.record{break-inside:avoid}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body[data-theme="dark"]{
+ color-scheme:dark;--bg:#111a16;--surface:#1a2720;--surface-soft:#202f27;--ink:#e8eee9;
+ --muted:#aab8af;--line:#35483d;--brand:#79b493;--brand-dark:#8bc4a2;--brand-soft:#294334;
+ --warning-bg:#332d1d;--warning-line:#5d4c2c;--warning-ink:#eddfba;--shadow:0 5px 18px #0002;
+ background:var(--bg);color:var(--ink)
+}
+body[data-theme="dark"] header{background:var(--surface);border-color:var(--line)}
+body[data-theme="dark"] .top-actions a:first-child,body[data-theme="dark"] button{background:#2b664b;border-color:#2b664b;color:#fff}
+body[data-theme="dark"] .top-actions a.outline,body[data-theme="dark"] .top-actions button.outline{background:var(--surface);color:var(--ink);border-color:var(--line)}
+body[data-theme="dark"] .command-center{background:#183d30}
+body[data-theme="dark"] .card{background:var(--surface);border-color:var(--line)}
+body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{background:#121d17;color:var(--ink);border-color:#45594c}
+body[data-theme="dark"] input[type=file]{background:#202f27;border-color:#52695a}
+body[data-theme="dark"] button.secondary{background:var(--surface-soft);color:var(--ink);border-color:var(--line)}
+body[data-theme="dark"] button.danger{background:#422626;color:#ffdede;border-color:#704343}
+body[data-theme="dark"] .bottom-nav{background:#1a2720;border-color:var(--line)}
+body[data-theme="dark"] .bottom-nav a{background:var(--surface-soft);color:var(--ink)}
+body[data-theme="dark"] .bottom-nav a.primary{background:#2b664b;color:#fff}
+body[data-theme="dark"] .bottom-nav button{background:var(--surface-soft);color:var(--ink);border-color:var(--line)}
+body[data-theme="dark"] .section-number{background:var(--brand-soft);color:#c7e8d2}
+body[data-theme="dark"] .pill{background:var(--brand-soft);color:#c7e8d2}
+body[data-theme="dark"] .record h3{color:var(--ink)}
+body[data-theme="dark"] .selection-tools{background:var(--surface-soft);border-color:var(--line)}
+body[data-theme="dark"] .notice{background:var(--warning-bg);border-color:var(--warning-line);color:var(--warning-ink)}
+
+
+/* Advanced visual system: midnight navy, teal, mint and amber */
+:root{
+ --bg:#f1f5f7;--surface:#ffffff;--surface-soft:#f6f9fa;
+ --ink:#172b3a;--muted:#687d89;--line:#dce6e9;
+ --brand:#087f78;--brand-dark:#06665f;--brand-soft:#e4f4f1;
+ --warning-bg:#fff8e9;--warning-line:#eed9a9;--warning-ink:#73551d;
+ --shadow:0 10px 30px rgba(20,48,62,.065);
+}
+body{background:var(--bg);color:var(--ink)}
+header{
+ background:#142b3a;color:#f5fafb;border-bottom:1px solid #294454;
+ padding-top:22px;padding-bottom:22px;
+}
+header h1{display:flex;align-items:center;gap:11px;color:#fff;font-size:23px;letter-spacing:-.55px}
+header h1:before{
+ content:"SP";display:inline-grid;place-items:center;width:34px;height:34px;
+ border-radius:10px;background:linear-gradient(145deg,#23a69a,#08746d);
+ color:#fff;font-size:11px;letter-spacing:.3px;font-weight:900;
+ box-shadow:0 4px 12px #071e2a55;
+}
+header .sub{color:#b9cbd3}
+.top-actions a:first-child{background:#20a092;color:#fff;box-shadow:0 4px 12px #061e2b35}
+.top-actions a.outline,.top-actions button.outline{
+ background:#1c3949;color:#e8f1f4;border-color:#3b5664
+}
+.top-actions a.outline:hover,.top-actions button.outline:hover{background:#27495a}
+.theme-toggle{margin-left:auto}
+.command-center{
+ background:
+ radial-gradient(ellipse at 92% 0%,rgba(49,177,158,.28),transparent 36%),
+ linear-gradient(118deg,#142b3a 0%,#174958 54%,#087b73 100%);
+ border:1px solid #1b5660;box-shadow:0 18px 42px rgba(14,54,66,.16);
+ padding:29px;border-radius:21px;position:relative;
+}
+.command-center:before{
+ content:"";position:absolute;right:31%;top:-110px;width:230px;height:230px;
+ border:1px solid #ffffff18;border-radius:50%;pointer-events:none;
+ box-shadow:0 0 0 24px #ffffff08,0 0 0 49px #ffffff05;
+}
+.command-copy h2{font-size:clamp(29px,4.4vw,39px);letter-spacing:-1.25px}
+.command-copy h2 em{color:#8ce0c9}
+.eyebrow{color:#a9ded4}
+.live-dot{background:#f3c66b;box-shadow:0 0 0 4px #f3c66b22}
+.command-primary{background:#f3c66b;color:#233a43;box-shadow:0 5px 15px #061e2b35}
+.command-primary:hover{background:#ffda88}
+.command-secondary{border-color:#8cb6b8;color:#f1fbfa}
+.overview-panel{background:#0f2936a8;border-color:#5b929055;backdrop-filter:blur(8px)}
+.overview-stat strong{color:#fff}
+.overview-bottom b{color:#f3c66b}
+.workspace-tag,.section-number,.pill{background:#e4f4f1;color:#08766f}
+.card{border-color:#dce6e9;box-shadow:var(--shadow);border-radius:17px}
+.card h2{color:#1b3543}
+.section-number{background:#e2f3ef;color:#08766f;border:1px solid #cce9e2}
+.form-divider{background:linear-gradient(90deg,#dce6e9,#edf2f3 65%,transparent)}
+label{color:#294553}
+input,select,textarea{border-color:#ccdbe0;background:#fbfdfe;border-radius:10px}
+input:focus,select:focus,textarea:focus{border-color:#15988c;outline:3px solid #15988c20}
+input[type=file]{background:#f4faf9;border-color:#9fcfc5}
+input[type=file]::file-selector-button{background:#dff2ee;color:#08766f}
+button{background:#087f78;border-color:#087f78;box-shadow:0 4px 10px #087f781b}
+button:hover{background:#06665f}
+button.secondary{background:#fff;color:#24414e;border-color:#d6e2e5;box-shadow:none}
+button.secondary:hover{background:#edf5f5;border-color:#b8d2d3}
+button.danger{background:#fff5f4;color:#a43c3c;border-color:#efd5d2}
+#saveBtn{background:linear-gradient(110deg,#087f78,#159b8e);border:0;box-shadow:0 6px 16px #087f782b}
+#saveBtn:hover{background:linear-gradient(110deg,#06665f,#087f78)}
+.notice{background:#fff9eb;border-color:#eed9a9;color:#73551d}
+.record{border-color:#e5ecee}
+.record h3{color:#1d3b49}
+.record-tools input{background:#f9fcfc}
+.selection-tools{background:#f6f9fa;border-color:#dce6e9}
+.bottom-nav{border-color:#dce6e9;box-shadow:0 8px 28px rgba(20,48,62,.14)}
+.bottom-nav a.primary{background:#087f78}
+.bottom-nav a:not(.primary),.bottom-nav button{color:#254653}
+button:focus-visible,a:focus-visible{outline-color:#e5b84f}
+@media(max-width:680px){
+ header h1{font-size:20px}
+ header h1:before{width:31px;height:31px}
+ .command-center{padding:20px;border-radius:17px}
+ .command-copy h2{font-size:30px}
+ .card{border-radius:15px}
+ .bottom-nav{background:rgba(255,255,255,.96)}
+}
+body[data-theme="dark"]{
+ --bg:#0d1920;--surface:#14242d;--surface-soft:#1a3039;
+ --ink:#e7f0f1;--muted:#a8bbc0;--line:#2d4650;
+ --brand:#38b7a7;--brand-dark:#5acbbb;--brand-soft:#193f3d;
+ --warning-bg:#302a1c;--warning-line:#5b4a2a;--warning-ink:#f0dfb4;
+ --shadow:0 10px 30px rgba(0,0,0,.22);
+ background:var(--bg);color:var(--ink)
+}
+body[data-theme="dark"] header{background:#101f29;border-color:#2d4650}
+body[data-theme="dark"] header h1{color:#f5fbfc}
+body[data-theme="dark"] header .sub{color:#a9bdc5}
+body[data-theme="dark"] .top-actions a:first-child{background:#159b8e;color:#fff}
+body[data-theme="dark"] .top-actions a.outline,body[data-theme="dark"] .top-actions button.outline{background:#1b333e;color:#e7f0f1;border-color:#38545f}
+body[data-theme="dark"] .command-center{background:radial-gradient(ellipse at 92% 0%,rgba(49,177,158,.17),transparent 36%),linear-gradient(118deg,#102531,#123e49 55%,#075d59);border-color:#245b60}
+body[data-theme="dark"] .card{background:var(--surface);border-color:var(--line)}
+body[data-theme="dark"] .card h2,body[data-theme="dark"] .record h3{color:#e7f0f1}
+body[data-theme="dark"] label{color:#d3e2e4}
+body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{background:#0e1b22;color:#e7f0f1;border-color:#3a5660}
+body[data-theme="dark"] input[type=file]{background:#192d35;border-color:#426b69}
+body[data-theme="dark"] input[type=file]::file-selector-button{background:#214a47;color:#c9f0e8}
+body[data-theme="dark"] .notice{background:var(--warning-bg);border-color:var(--warning-line);color:var(--warning-ink)}
+body[data-theme="dark"] .selection-tools{background:var(--surface-soft);border-color:var(--line)}
+body[data-theme="dark"] .record{border-color:var(--line)}
+body[data-theme="dark"] .bottom-nav{background:rgba(20,36,45,.97);border-color:var(--line)}
+body[data-theme="dark"] .bottom-nav a:not(.primary),body[data-theme="dark"] .bottom-nav button{background:#1a3039;color:#e7f0f1;border-color:#36505a}
+body[data-theme="dark"] .bottom-nav a.primary{background:#159b8e;color:#fff}
+body[data-theme="dark"] button.secondary{background:#1a3039;color:#e7f0f1;border-color:#36505a}
+body[data-theme="dark"] button.secondary:hover{background:#24414a}
+body[data-theme="dark"] button.danger{background:#402726;color:#ffdede;border-color:#704343}
+body[data-theme="dark"] .pill,body[data-theme="dark"] .section-number{background:#193f3d;color:#a9e8dc;border-color:#285e59}
+body[data-theme="dark"] .form-divider{background:#2d4650}
+body[data-theme="dark"] .record-tools input{background:#0e1b22}
+
+
+/* Premium product UI refinement: clearer hierarchy, calmer surfaces, precise spacing */
+:root{
+  --bg:#f3f6f8;--surface:#fff;--surface-soft:#f7f9fa;
+  --ink:#142b38;--muted:#657985;--line:#dce5e9;
+  --brand:#087f78;--brand-dark:#06665f;--brand-soft:#e6f4f1;
+  --radius:20px;--shadow:0 14px 38px rgba(17,43,56,.07);
+}
+html{scroll-padding-top:24px}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.6;letter-spacing:-.01em}
+header{padding-top:24px;padding-bottom:23px}
+header h1{font-size:24px;font-weight:760;letter-spacing:-.8px}
+header .sub{font-size:13px;letter-spacing:.005em}
+.top-actions{gap:9px;margin-top:17px}
+.top-actions a,.top-actions button{min-height:42px;padding:9px 15px;border-radius:11px;font-size:12px;letter-spacing:.01em}
+main{width:min(1080px,100%);margin:30px auto;padding-left:22px;padding-right:22px}
+.command-center{min-height:280px;padding:34px 36px;border-radius:24px;gap:34px;margin-bottom:20px}
+.command-copy h2{font-size:clamp(34px,4.5vw,46px);line-height:1.08;letter-spacing:-1.8px;margin:17px 0 13px}
+.command-copy p{font-size:14px;line-height:1.75;max-width:440px}
+.eyebrow{font-size:10px;letter-spacing:1.5px}
+.command-actions{gap:11px;margin-top:24px}
+.command-actions a{min-height:45px;padding:11px 17px;border-radius:11px;font-size:12px}
+.overview-panel{padding:21px;border-radius:18px}
+.overview-top{font-size:10px;letter-spacing:1.1px}
+.overview-stat{margin:25px 0 19px}
+.overview-stat strong{font-size:52px;letter-spacing:-2px}
+.overview-bottom{gap:11px;font-size:12px}
+.notice{padding:15px 18px;border-radius:14px;font-size:12px;line-height:1.75;margin-bottom:21px}
+.card{padding:28px 30px;border-radius:21px;margin-bottom:21px;box-shadow:0 10px 30px rgba(20,48,62,.045)}
+.section-heading{gap:12px;margin-bottom:7px}
+.section-number{width:32px;height:32px;flex-basis:32px;border-radius:10px;font-size:10px}
+.card h2{font-size:20px;font-weight:740;letter-spacing:-.55px}
+.section-subtitle{margin:2px 0 23px 44px;font-size:13px;line-height:1.6}
+.form-divider{margin:22px 0}
+label{font-size:12px;font-weight:720;letter-spacing:.005em;margin:15px 0 7px}
+input,select,textarea{border-radius:12px;border-color:#d3dfe3;padding:12px 14px;font-size:13px;transition:border-color .18s,box-shadow .18s,background .18s}
+input,select{min-height:47px}
+textarea{min-height:112px;line-height:1.65}
+input:focus,select:focus,textarea:focus{outline:0;border-color:#15988c;box-shadow:0 0 0 4px rgba(21,152,140,.12)}
+input[type=file]{padding:11px 12px;border-radius:12px}
+input[type=file]::file-selector-button{border-radius:9px;padding:9px 12px}
+.grid{gap:12px 20px}
+.hint,small{font-size:11px;line-height:1.7}
+.hint{margin-top:7px}
+.pill{padding:4px 9px;border-radius:7px;font-size:9px;letter-spacing:.035em;text-transform:uppercase}
+.preview{gap:10px;margin-top:12px}
+.preview img{width:88px;height:88px;border-radius:12px}
+button{min-height:44px;padding:10px 16px;border-radius:11px;font-size:12px;font-weight:740;letter-spacing:.005em;transition:transform .16s,box-shadow .16s,background .16s}
+button:hover{transform:translateY(-1px);box-shadow:0 7px 16px rgba(8,127,120,.14)}
+button:active{transform:translateY(0)}
+button.secondary{border-radius:11px}
+.actions{gap:10px;margin-top:19px}
+#saveBtn{min-height:48px;padding:12px 21px;border-radius:12px;font-size:13px}
+.status{font-size:12px;margin-top:12px}
+.records-head{align-items:center}
+.records-head .actions{gap:8px}
+.record-tools{margin-top:22px;gap:12px}
+.record-tools input{min-height:48px;border-radius:13px;padding-left:42px}
+.search-symbol{left:15px;font-size:21px}
+.selection-tools{margin-top:16px;padding:16px 18px;border-radius:14px}
+.selection-tools strong{font-size:13px}
+#records{margin-top:16px}
+.record{padding:19px 4px;border-top:1px solid var(--line)}
+.record h3{font-size:14px;font-weight:760;letter-spacing:-.15px}
+.record p{font-size:12px;line-height:1.65}
+.record .actions{margin-top:12px}
+.bottom-nav{backdrop-filter:blur(16px)}
+button:focus-visible,a:focus-visible{outline:3px solid #e5b84f;outline-offset:3px}
+@media(min-width:681px){
+  .card{padding:30px 34px}
+  .grid{column-gap:24px;row-gap:10px}
+}
+@media(max-width:680px){
+  header{padding:18px 16px}
+  header h1{font-size:21px}
+  .top-actions{gap:7px;margin-top:14px}
+  .top-actions a,.top-actions button{min-height:39px;padding:8px 11px;font-size:11px}
+  .theme-toggle{margin-left:0}
+  main{margin:16px auto;padding:0 12px 112px}
+  .command-center{min-height:0;padding:23px 20px;border-radius:19px;gap:19px}
+  .command-copy h2{font-size:34px;letter-spacing:-1.3px;margin:14px 0 10px}
+  .command-copy p{font-size:13px}
+  .command-actions{margin-top:19px}
+  .command-actions a{min-height:43px;padding:10px 13px}
+  .overview-panel{padding:16px;border-radius:14px}
+  .overview-stat{margin:16px 0 14px}
+  .overview-stat strong{font-size:43px}
+  .overview-bottom{font-size:11px}
+  .notice{padding:13px 14px;margin-bottom:14px}
+  .card{padding:20px 16px;border-radius:17px;margin-bottom:14px}
+  .card h2{font-size:18px}
+  .section-subtitle{margin:4px 0 18px;font-size:12px}
+  .form-divider{margin:17px 0}
+  .grid{gap:4px}
+  .record-tools{margin-top:17px}
+  .selection-tools{padding:13px;border-radius:12px}
+  .bottom-nav{left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom));padding:8px;border-radius:16px}
+  .bottom-nav a,.bottom-nav button{min-height:43px;border-radius:10px;font-size:11px}
+}
+body[data-theme="dark"]{
+  --bg:#0d1920;--surface:#14242d;--surface-soft:#1a3039;
+  --ink:#e7f0f1;--muted:#a8bbc0;--line:#2d4650;
+  --brand:#38b7a7;--brand-dark:#5acbbb;--brand-soft:#193f3d;
+  --shadow:0 14px 38px rgba(0,0,0,.24);
+}
+body[data-theme="dark"] .card{box-shadow:0 10px 28px rgba(0,0,0,.16)}
+body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{border-color:#3a5660}
+body[data-theme="dark"] input:focus,body[data-theme="dark"] select:focus,body[data-theme="dark"] textarea:focus{box-shadow:0 0 0 4px rgba(56,183,167,.15)}
+body[data-theme="dark"] .record{border-color:var(--line)}
+body[data-theme="dark"] .bottom-nav{backdrop-filter:blur(16px)}
+
+
+[hidden]{display:none!important}
+.auth-card{max-width:560px;margin:24px auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow)}
+.auth-card h2{margin:0 0 6px;font-size:22px;color:var(--ink)}
+.auth-card p{margin:0 0 14px;color:var(--muted);font-size:13px}
+.auth-card .auth-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.auth-card .auth-actions button{flex:1}
+.auth-meta{font-size:12px;color:var(--muted);margin-top:12px}
+.auth-status{min-height:22px;margin-top:12px;font-size:13px;color:var(--brand)}
+.admin-panel{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:18px;margin:0 0 18px}
+.admin-panel h2{font-size:17px;margin:0 0 5px}
+.admin-list{display:grid;gap:8px;margin-top:12px}
+.admin-person{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:12px;overflow-wrap:anywhere}
+.admin-person strong{display:block;font-size:13px}
+.cloud-protected{display:none}
+body.cloud-authenticated .command-center.cloud-protected{display:grid}
+body.cloud-authenticated .notice.cloud-protected,body.cloud-authenticated section.card.cloud-protected,body.cloud-authenticated p.cloud-protected,body.cloud-authenticated .admin-panel.cloud-protected{display:block}
+body:not(.cloud-authenticated) .bottom-nav{display:none!important}
+@media(max-width:680px){.auth-card{margin:14px 11px;padding:18px}.admin-person{align-items:flex-start;flex-direction:column}}
+/* Dashboard and guided-report improvements */
+.dashboard-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:16px}.dashboard-metric{min-width:0;padding:12px;border:1px solid #ffffff24;border-radius:12px;background:#ffffff0d}.dashboard-metric span{display:block;color:#c5d8d9;font-size:10px;line-height:1.4}.dashboard-metric strong{display:block;margin-top:4px;color:#fff;font-size:21px;line-height:1.2;font-weight:800}
+.guided-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 18px;padding:13px 15px;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft)}.guided-intro strong{display:block;font-size:13px;color:var(--ink)}.guided-intro small{display:block;margin-top:2px}
+.guided-progress{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 19px}.guided-progress a{display:flex;align-items:center;gap:7px;min-width:0;padding:9px 8px;border:1px solid var(--line);border-radius:10px;background:var(--surface-soft);color:var(--muted);text-decoration:none;font-size:11px;font-weight:700}.guided-progress a span{display:grid;place-items:center;flex:0 0 22px;width:22px;height:22px;border-radius:7px;background:var(--line);font-size:10px}.guided-progress a.is-complete{border-color:#9bcfc3;background:var(--brand-soft);color:var(--brand-dark)}.guided-progress a.is-complete span{background:var(--brand);color:#fff}.guided-progress a.is-current{border-color:var(--brand);color:var(--ink)}.guided-check{display:flex;align-items:center;gap:8px;margin:0 0 16px;color:var(--muted);font-size:11px}.guided-check strong{color:var(--brand-dark)}.form-stage{scroll-margin-top:18px;padding-top:4px}.form-stage-title{display:flex;align-items:center;gap:9px;margin:0 0 8px;font-size:13px;font-weight:800;color:var(--ink)}.form-stage-title span{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--brand-soft);color:var(--brand);font-size:10px}
+body[data-theme="dark"] .guided-intro,body[data-theme="dark"] .guided-progress a{background:var(--surface-soft);border-color:var(--line)}body[data-theme="dark"] .guided-intro strong,body[data-theme="dark"] .form-stage-title{color:var(--ink)}
+@media(max-width:680px){.dashboard-metrics{gap:7px}.dashboard-metric{padding:10px 8px}.dashboard-metric strong{font-size:19px}.guided-progress{grid-template-columns:repeat(2,minmax(0,1fr))}.guided-progress a{font-size:10px}}
+ .demo-preview .cloud-protected{display:block!important}.demo-preview .command-center.cloud-protected{display:grid!important}.demo-preview .demo-banner{display:block;margin:12px;padding:12px 14px;border:1px solid #b7d8cd;border-radius:12px;background:#eaf6f1;color:#174b3b;font-weight:700;font-size:13px}.demo-preview #incidentSection{display:block!important}.demo-preview #recordsSection{display:block!important}.demo-preview .bottom-nav{display:flex!important}
+</style>
+</head>
+<body>
+<header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline" id="shareAppBtn" type="button">Share app</button><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
+<main>
+<section class="auth-card" id="authPanel">
+  <h2>Secure partner workspace</h2>
+  <p>Sign in with the email and password invited by the SOP &amp; Proof Hub administrator. Public account registration is disabled.</p>
+  <form id="loginForm">
+    <label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="name@example.com">
+    <label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Your password">
+    <div class="auth-actions"><button id="loginBtn" type="submit">Sign in securely</button><button class="secondary" id="forgotPasswordBtn" type="button">Forgot password</button></div>
+  </form>
+  <div class="auth-status" id="authStatus" role="status" aria-live="polite"></div>
+  <div class="auth-meta">Your incident reports and evidence are stored in a private cloud workspace. Partners can access only their own reports; the administrator can review all reports.</div>
+</section>
+<section class="admin-panel cloud-protected" id="adminPanel" hidden>
+  <div class="records-head"><div><h2>Administrator workspace</h2><small id="adminSummary">Loading workspace details…</small></div><div class="actions" style="margin:0"><button class="secondary" id="migrateBtn" type="button" hidden>Import this device’s old reports</button><button class="secondary" id="inviteGuideBtn" type="button">Invite colleagues</button></div></div>
+  <div class="admin-list" id="adminPeople"></div>
+</section>
+<section class="command-center cloud-protected" aria-label="Workspace overview">
+  <div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span><h2>Every issue.<br><em>Properly documented.</em></h2><p>Capture clear evidence, verify the order details, and keep a report ready when you need it.</p>
+    <div class="command-actions"><a class="command-primary" href="#incidentSection">＋ New incident</a><a class="command-secondary" href="#recordsSection">Browse records <span aria-hidden="true">↗</span></a></div>
+  </div>
+  <div class="overview-panel"><div class="overview-top"><span>YOUR WORKSPACE</span><span class="storage-indicator">● On this device</span></div>
+    <div class="overview-stat"><strong id="dashboardCount">0</strong><span>Saved incident records</span></div>
+    <div class="dashboard-metrics" aria-label="Report summary"><div class="dashboard-metric"><span>Added this week</span><strong id="dashboardWeek">0</strong></div><div class="dashboard-metric"><span>Issue categories</span><strong id="dashboardTypes">0</strong></div><div class="dashboard-metric"><span>Evidence photos</span><strong id="dashboardEvidence">0</strong></div></div>
+    <div class="overview-rule" style="margin-top:15px"></div>
+    <div class="overview-bottom"><span><b>01</b> Capture screenshot</span><span><b>02</b> Add evidence</span><span><b>03</b> Save report</span></div>
+  </div>
+</section>
+<div class="notice cloud-protected"><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
+<section class="card cloud-protected" id="incidentSection">
+<div class="section-heading"><span class="section-number">01</span><h2>Submit an incident</h2></div>
+<p class="section-subtitle">Follow the guided steps. Review the Order ID and time before saving.</p>
+<form id="incidentForm">
+<div class="guided-intro"><div><strong id="guidedStatus">Step 1 of 4 · Add the order screenshot</strong><small id="guidedHint">Start with the original order screenshot.</small></div><span class="pill" id="guidedPercent">0% complete</span></div>
+<nav class="guided-progress" aria-label="Report creation steps"><a href="#stageScreenshot" data-guide-step="1" class="is-current"><span>1</span> Screenshot</a><a href="#stageDetails" data-guide-step="2"><span>2</span> Details</a><a href="#stageEvidence" data-guide-step="3"><span>3</span> Evidence</a><a href="#stageReview" data-guide-step="4"><span>4</span> Review &amp; save</a></nav>
+<div class="guided-check" id="guidedChecklist" role="status" aria-live="polite"><strong>0 of 4 checks complete</strong> · Add screenshot, details and evidence.</div>
+<div class="form-stage" id="stageScreenshot"><h3 class="form-stage-title"><span>1</span> Add order screenshot</h3>
+<div class="form-divider"></div><label for="orderShot">Order screenshot <span class="pill">Required</span></label>
+<input id="orderShot" type="file" accept="image/*" required>
+<span class="hint">Upload the order screenshot. The app reads the Order ID and the time shown near the top of the screenshot automatically. Verify both before saving; if the time is unclear, enter it manually.</span>
+<div class="preview" id="orderPreview"></div>
+</div>
+<div class="form-stage" id="stageDetails"><h3 class="form-stage-title"><span>2</span> Verify order details</h3>
+<div class="grid">
+<div><label for="category">Issue category *</label><select id="category" required>
+<option value="">Select an issue</option>
+<option value="Reusable bag not given">Reusable bag not given</option><option value="Frozen items not packed separately">Frozen items not packed separately</option><option value="Wrong item given">Wrong item given</option><option value="Asked to convince customer wrongly">Asked to convince customer wrongly</option><option value="Manager misconduct">Manager misconduct</option><option value="Other">Other</option>
+</select></div>
+<div><label for="orderId">Order ID *</label><input id="orderId" required maxlength="80" placeholder="Enter or verify Order ID"><button class="secondary" id="rereadBtn" type="button" style="margin-top:8px;padding:8px 12px;font-size:13px">Re-read from screenshot</button><div class="status" id="ocrInline" role="status" aria-live="polite" style="margin-top:6px;font-size:12px"></div><details id="ocrDebug" hidden style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:#66756e">What the OCR saw</summary><pre id="ocrText" style="white-space:pre-wrap;font-size:11px;color:#66756e;background:#f5f7f5;border:1px solid #dce5df;border-radius:8px;padding:8px;margin:6px 0 0;max-height:180px;overflow:auto"></pre></details></div>
+<div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" value="Banjara Hills 150" placeholder="Store name"></div>
+<div><label for="incidentAt">Incident date and time *</label><input id="incidentAt" type="datetime-local" required></div>
+</div>
+</div>
+<div class="form-stage" id="stageEvidence"><h3 class="form-stage-title"><span>3</span> Attach supporting evidence</h3>
+<div class="form-divider"></div><label for="supporting">Supporting evidence photos <span class="pill">1 or 2 required</span></label>
+<input id="supporting" type="file" accept="image/*" multiple required>
+<span class="hint">Add 1–2 clear photos showing the issue. Maximum 8 MB per image.</span>
+<div class="preview" id="supportPreview"></div>
+</div>
+<div class="form-stage" id="stageReview"><h3 class="form-stage-title"><span>4</span> Review and save</h3>
+<label for="notes">Short description (optional)</label><textarea id="notes" rows="3" maxlength="600" placeholder="Select an issue to get a suggested description. You can edit it..."></textarea><span class="hint">A suggested description appears when you select an issue. Review it and edit it to match exactly what happened.</span>
+<div class="actions"><button id="saveBtn" type="submit">Save incident</button><button class="secondary" type="reset">Reset form</button></div>
+<div class="status" id="formStatus" role="status" aria-live="polite"></div>
+</div>
+</form>
+</section>
+<section class="card cloud-protected" id="recordsSection">
+<div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
+<div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div class="selection-tools no-print"><div><strong id="selectionCount">0 complaints selected</strong><small>Select multiple complaints to combine them into one PDF, with a separate section for each complaint.</small></div><div class="actions"><button class="secondary" id="selectAllBtn" type="button">Select all</button><button id="combinedPdfBtn" type="button" disabled>Generate combined PDF</button></div></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
+</section>
+<p class="hint cloud-protected" style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
+</main>
+<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggle" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+<script>
+
+(function setupGuidedReport(){
+ const form=$('incidentForm');if(!form)return;const links=[...document.querySelectorAll('[data-guide-step]')],status=$('guidedStatus'),hint=$('guidedHint'),percent=$('guidedPercent'),checklist=$('guidedChecklist');
+ const stages=[['Add the order screenshot','Upload the original screenshot. OCR will try to read the Order ID and time.'],['Verify order details','Check the Order ID, issue category, store and incident date/time.'],['Attach supporting evidence','Add one or two clear photos that support the incident.'],['Review and save','Review the information. The description is optional; save when the required details are correct.']];
+ function update(){const shot=$('orderShot').files.length>0,details=!!($('category').value&&$('orderId').value.trim()&&$('store').value.trim()&&$('incidentAt').value),evidence=$('supporting').files.length>=1&&$('supporting').files.length<=2,done=[shot,details,evidence].filter(Boolean).length,current=!shot?1:!details?2:!evidence?3:4;
+ if(status)status.textContent='Step '+current+' of 4 · '+stages[current-1][0];if(hint)hint.textContent=stages[current-1][1];if(percent)percent.textContent=Math.round(done/3*100)+'% complete';
+ if(checklist)checklist.innerHTML='<strong>'+done+' of 3 required checks complete</strong> · '+(shot?'Screenshot added':'Add screenshot')+' · '+(details?'Details entered':'Verify details')+' · '+(evidence?'Evidence attached':'Add evidence');
+ links.forEach((a,i)=>{a.classList.toggle('is-current',i+1===current);a.classList.toggle('is-complete',[shot,details,evidence,done===3][i]);});}
+ ['orderShot','category','orderId','store','incidentAt','supporting','notes'].forEach(id=>{const el=$(id);if(el){el.addEventListener('change',update);el.addEventListener('input',update);}});
+ form.addEventListener('reset',()=>setTimeout(update,0));links.forEach(a=>a.addEventListener('click',()=>{const target=document.getElementById(a.getAttribute('href').slice(1));if(target)target.scrollIntoView({behavior:'smooth',block:'start'});}));
+ update();window.updateGuidedReport=update;
+})();;
+/* English / Telugu interface language switch */
+const uiText={
+ en:{
+  headerSub:'Document store-related incidents, preserve evidence and review what happened against SOPs and policies.',
+  create:'＋ Create a report',saved:'View saved records',share:'Share app',
+  eyebrow:'SOP & PROOF · INCIDENT DOCUMENTATION',hero:'Every issue.<br><em>Properly documented.</em>',
+  heroSub:'Capture clear evidence, verify the order details, and keep a report ready when you need it.',
+  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● Private cloud workspace',
+  savedCount:'Saved incident records',step1:'<b>01</b> Capture screenshot',step2:'<b>02</b> Add evidence',step3:'<b>03</b> Save report',
+  notice:'<strong>Private cloud storage:</strong> Reports and evidence are stored in your secure workspace. Partners see only their own reports; the administrator can review all reports.',
+  incidentTitle:'Submit an incident',incidentSub:'Follow the steps below. Check the Order ID and incident time before saving.',
+  orderShot:'Order screenshot <span class="pill">Required</span>',
+  orderHint:'Upload the order screenshot. The app tries to read the Order ID and screenshot time automatically. Check the details and correct them if needed.',
+  category:'Issue category *',selectIssue:'Select an issue',orderId:'Order ID *',reread:'Re-read from screenshot',
+  store:'Store / hub name *',incidentAt:'Incident date and time *',
+  evidence:'Supporting evidence photos <span class="pill">1 or 2 required</span>',
+  evidenceHint:'Add 1–2 clear photos showing the issue. Maximum 8 MB per image.',
+  description:'Short description (optional)',descriptionPlaceholder:'Describe what happened in a few clear words…',
+  descriptionHint:'Choose an issue to see a suggested description. Edit it so it accurately describes what happened.',
+  save:'Save incident',reset:'Reset form',recordsTitle:'Saved records',deviceOnly:'Stored in private cloud',
+  export:'Export report / PDF',backup:'Download backup',search:'Search by Order ID, store or issue…',
+  allRecords:'All records',selectCount:'complaints selected',selectHelp:'Select multiple complaints to combine them into one PDF, with a separate section for each complaint.',
+  selectAll:'Select all',clear:'Clear selection',combined:'Generate combined PDF',newReport:'＋ New report',
+  noRecords:'No records saved yet.',shareCopied:'App link copied. Send it to your colleagues.',
+  shareFallback:'Copy this app link and send it to your colleagues: ',
+  ocrLoading:'Loading OCR engine…'
+ },
+ te:{
+  headerSub:'స్టోర్‌లో జరిగిన సమస్యలను నమోదు చేయండి. ఆధారాలను భద్రపరచి, SOP మరియు విధానాలతో పరిశీలించండి.',
+  create:'＋ రిపోర్ట్ నమోదు',saved:'సేవ్ చేసిన రికార్డులు',share:'యాప్ షేర్ చేయండి',
+  eyebrow:'SOP & PROOF · ఘటనల నమోదు',hero:'ప్రతి సమస్యను<br><em>సరిగ్గా నమోదు చేయండి.</em>',
+  heroSub:'ఆధారాలను జోడించండి, ఆర్డర్ వివరాలను తనిఖీ చేయండి, అవసరమైనప్పుడు రిపోర్ట్ సిద్ధంగా ఉంచండి.',
+  newIncident:'＋ కొత్త ఘటన',browse:'రికార్డులు చూడండి ↗',workspace:'మీ వర్క్‌స్పేస్',device:'● ప్రైవేట్ క్లౌడ్ వర్క్‌స్పేస్',
+  savedCount:'సేవ్ చేసిన ఘటనలు',step1:'<b>01</b> స్క్రీన్‌షాట్ జోడించండి',step2:'<b>02</b> ఆధారాల ఫోటోలు జోడించండి',step3:'<b>03</b> రిపోర్ట్ సేవ్ చేయండి',
+  notice:'<strong>ప్రైవేట్ క్లౌడ్ స్టోరేజ్:</strong> రిపోర్టులు మరియు ఆధారాలు మీ సురక్షిత వర్క్‌స్పేస్‌లో భద్రపరచబడతాయి. పార్ట్‌నర్లు తమ రిపోర్టులను మాత్రమే చూడగలరు.',
+  incidentTitle:'ఘటనను నమోదు చేయండి',incidentSub:'క్రింది దశలను అనుసరించండి. సేవ్ చేసే ముందు Order ID మరియు ఘటన సమయాన్ని తనిఖీ చేయండి.',
+  orderShot:'ఆర్డర్ స్క్రీన్‌షాట్ <span class="pill">తప్పనిసరి</span>',
+  orderHint:'ఆర్డర్ స్క్రీన్‌షాట్ అప్‌లోడ్ చేయండి. యాప్ Order ID మరియు స్క్రీన్‌షాట్ సమయాన్ని ఆటోమేటిక్‌గా చదవడానికి ప్రయత్నిస్తుంది. వివరాలు తనిఖీ చేసి అవసరమైతే సరిచేయండి.',
+  category:'సమస్య రకం *',selectIssue:'సమస్యను ఎంచుకోండి',orderId:'Order ID *',reread:'స్క్రీన్‌షాట్ నుంచి మళ్లీ చదవండి',
+  store:'స్టోర్ / హబ్ పేరు *',incidentAt:'ఘటన తేదీ మరియు సమయం *',
+  evidence:'ఆధారాల ఫోటోలు <span class="pill">1 లేదా 2 తప్పనిసరి</span>',
+  evidenceHint:'సమస్యను చూపించే 1–2 స్పష్టమైన ఫోటోలు జోడించండి. ఒక్కో ఫోటో గరిష్ఠ పరిమాణం 8 MB.',
+  description:'సంక్షిప్త వివరణ (ఐచ్ఛికం)',descriptionPlaceholder:'ఏం జరిగిందో కొన్ని స్పష్టమైన పదాల్లో రాయండి…',
+  descriptionHint:'సమస్య రకాన్ని ఎంచుకుంటే సూచించిన వివరణ కనిపిస్తుంది. జరిగిన విషయానికి సరిపోయేలా సవరించండి.',
+  save:'ఘటనను సేవ్ చేయండి',reset:'ఫారమ్ రీసెట్ చేయండి',recordsTitle:'సేవ్ చేసిన రికార్డులు',deviceOnly:'ప్రైవేట్ క్లౌడ్‌లో భద్రపరచబడతాయి',
+  export:'రిపోర్ట్ / PDF ఎగుమతి',backup:'బ్యాకప్ డౌన్‌లోడ్',search:'Order ID, స్టోర్ లేదా సమస్యతో వెతకండి…',
+  allRecords:'అన్ని రికార్డులు',selectCount:'ఫిర్యాదులు ఎంపికయ్యాయి',selectHelp:'ఒక PDFలో కలపడానికి అనేక ఫిర్యాదులను ఎంచుకోండి. ప్రతి ఫిర్యాదుకు ప్రత్యేక విభాగం ఉంటుంది.',
+  selectAll:'అన్నీ ఎంచుకోండి',clear:'ఎంపిక తొలగించండి',combined:'కలిపిన PDF రూపొందించండి',newReport:'＋ కొత్త రిపోర్ట్',
+  noRecords:'ఇంకా రికార్డులు సేవ్ చేయలేదు.',shareCopied:'యాప్ లింక్ కాపీ అయింది. సహచరులకు పంపండి.',
+  shareFallback:'ఈ యాప్ లింక్‌ను కాపీ చేసి సహచరులకు పంపండి: ',
+  ocrLoading:'OCR సదుపాయం లోడ్ అవుతోంది…'
+ }
+};
+let currentLanguage='en';
+function setLanguage(lang){
+ currentLanguage=lang==='te'?'te':'en';
+ try{localStorage.setItem('deliveryEvidenceLanguage',currentLanguage);}catch(e){}
+ const t=uiText[currentLanguage];
+ const put=(sel,val,html=false)=>{const el=document.querySelector(sel);if(el){if(html)el.innerHTML=val;else el.textContent=val;}};
+ put('header .sub',t.headerSub);put('.top-actions a[href="#incidentSection"]',t.create);put('.top-actions a[href="#recordsSection"]',t.saved);put('#shareAppBtn',t.share);
+ put('.eyebrow',t.eyebrow);put('.command-copy h2',t.hero,true);put('.command-copy p',t.heroSub);
+ put('.command-primary',t.newIncident);put('.command-secondary',t.browse);put('.overview-top span:first-child',t.workspace);put('.storage-indicator',t.device);
+ put('.overview-stat span',t.savedCount);put('.overview-bottom span:nth-child(1)',t.step1,true);put('.overview-bottom span:nth-child(2)',t.step2,true);put('.overview-bottom span:nth-child(3)',t.step3,true);
+ const notice=document.querySelector('.notice');if(notice){const ocr=$('ocrState');notice.innerHTML=t.notice+'<br>';if(ocr){ocr.id='ocrState';ocr.style.color='#624c20';ocr.textContent=t.ocrLoading;notice.append(ocr);}}
+ put('#incidentSection h2',t.incidentTitle);put('#incidentSection .section-subtitle',t.incidentSub);
+ put('label[for="orderShot"]',t.orderShot,true);put('#orderShot + .hint',t.orderHint);
+ put('label[for="category"]',t.category);put('#category option[value=""]',t.selectIssue);
+ const categoryLabels=currentLanguage==='te'?['పునర్వినియోగ బ్యాగ్ ఇవ్వలేదు','ఫ్రోజెన్ వస్తువులను వేరుగా ప్యాక్ చేయలేదు','తప్పు వస్తువు ఇచ్చారు','కస్టమర్‌ను తప్పుగా ఒప్పించమన్నారు','మేనేజర్ దుర్వ్యవహారం','ఇతర']:['Reusable bag not given','Frozen items not packed separately','Wrong item given','Asked to convince customer wrongly','Manager misconduct','Other'];
+ [...document.querySelectorAll('#category option')].slice(1).forEach((o,i)=>{if(categoryLabels[i])o.textContent=categoryLabels[i];});
+ put('label[for="orderId"]',t.orderId);put('#rereadBtn',t.reread);put('label[for="store"]',t.store);put('label[for="incidentAt"]',t.incidentAt);
+ put('label[for="supporting"]',t.evidence,true);put('#supporting + .hint',t.evidenceHint);
+ put('label[for="notes"]',t.description);put('#notes',t.descriptionPlaceholder);put('#notes + .hint',t.descriptionHint);
+ put('#saveBtn',t.save);put('#incidentForm button[type="reset"]',t.reset);
+ const rh=$('#recordsSection .records-head h2');if(rh){rh.childNodes[0].textContent=t.recordsTitle+' ';}
+ put('#recordsSection .records-head small',t.deviceOnly);put('#exportBtn',t.export);put('#backupBtn',t.backup);
+ put('#recordSearch',t.search);put('#searchCount',t.allRecords);put('#selectionHelp',t.selectHelp);
+ put('#selectAllBtn',selectedRecordIds.size?t.clear:t.selectAll);put('#combinedPdfBtn',t.combined);
+ const empty=$('#records .hint');if(empty&&!$('#records .record'))empty.textContent=t.noRecords;
+ put('.bottom-nav a.primary',t.newReport);put('.bottom-nav a[href="#recordsSection"]','▤ '+t.recordsTitle);
+ put('#languageToggle',currentLanguage==='en'?'తెలుగు':'English');
+ document.documentElement.lang=currentLanguage==='te'?'te':'en';
+}
+document.getElementById('languageToggle').addEventListener('click',()=>setLanguage(currentLanguage==='en'?'te':'en'));
+document.getElementById('shareAppBtn').addEventListener('click',async()=>{
+ const url='https://maddulaq.github.io/evidence-log/';
+ const title='SOP & Proof Hub';
+ const message='Open SOP & Proof Hub to document store-related incidents: '+url;
+ try{
+  if(navigator.share){await navigator.share({title,text:message,url});}
+  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(url);alert(uiText[currentLanguage].shareCopied);}
+  else{window.prompt(uiText[currentLanguage].shareFallback,url);}
+ }catch(e){if(e.name!=='AbortError')window.prompt(uiText[currentLanguage].shareFallback,url);}
+});
+
+const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
+const $=id=>document.getElementById(id);
+let db;
+const SUPABASE_URL='https://rihobudcchrgwithvutx.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_37ysHEHEDJ0qxX7Mx3CM5w_G2YTkqNa';
+const EVIDENCE_BUCKET='incident-evidence';
+let supabaseClient=null,currentUser=null,currentProfile=null,cloudRecords=[],cloudReady=false;
+function authMessage(message,isError=false){const el=$('authStatus');if(el){el.textContent=message;el.style.color=isError?'var(--danger)':'var(--brand)';}}
+function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+function localRecords(){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly'),req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result.sort((a,b)=>b.submittedAt.localeCompare(a.submittedAt)));req.onerror=()=>reject(req.error);});}
+async function allRecords(){return cloudReady?cloudRecords:await localRecords();}
+async function blobToDataUrl(blob){return await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(blob);});}
+async function cloudEvidenceToDataUrl(item){const {data,error}=await supabaseClient.storage.from(EVIDENCE_BUCKET).createSignedUrl(item.path,3600);if(error)throw error;const response=await fetch(data.signedUrl);if(!response.ok)throw new Error('Could not retrieve private evidence image');return await blobToDataUrl(await response.blob());}
+async function mapCloudIncident(row){
+ const items=Array.isArray(row.evidence)?row.evidence:[];
+ const files=await Promise.all(items.map(async item=>({name:item.name||'Evidence',data:await cloudEvidenceToDataUrl(item)})));
+ return {id:row.id,legacyId:row.legacy_id,userId:row.user_id,category:row.category,orderId:row.order_id,store:row.store,incidentAt:row.incident_at,submittedAt:row.submitted_at,notes:row.notes||'',orderScreenshot:files[0]||{name:'Order screenshot',data:''},supportingEvidence:files.slice(1)};
+}
+async function refreshCloudRecords(){
+ const {data,error}=await supabaseClient.from('incidents').select('*').order('submitted_at',{ascending:false});
+ if(error)throw error;
+ cloudRecords=await Promise.all((data||[]).map(mapCloudIncident));
+ await render();
+}
+async function uploadEvidenceFile(file,userId,incidentId,index){
+ const safeName=String(file.name||('evidence-'+index)).replace(/[^a-zA-Z0-9._-]/g,'_').slice(-90);
+ const path=userId+'/'+incidentId+'/'+String(index).padStart(2,'0')+'-'+crypto.randomUUID()+'-'+safeName;
+ const {error}=await supabaseClient.storage.from(EVIDENCE_BUCKET).upload(path,file,{contentType:file.type,upsert:false});
+ if(error)throw error;
+ return {path,name:file.name||safeName,mime:file.type||'application/octet-stream'};
+}
+async function saveCloudIncident(files,fields,legacyId=null){
+ const incidentId=crypto.randomUUID(),uploaded=[];
+ try{
+  for(let i=0;i<files.length;i++)uploaded.push(await uploadEvidenceFile(files[i],currentUser.id,incidentId,i));
+  const payload={id:incidentId,user_id:currentUser.id,category:fields.category,order_id:fields.orderId,store:fields.store,incident_at:new Date(fields.incidentAt).toISOString(),notes:fields.notes||'',evidence:uploaded,legacy_id:legacyId};
+  const {error}=await supabaseClient.from('incidents').insert(payload);if(error)throw error;
+ }catch(err){if(uploaded.length)await supabaseClient.storage.from(EVIDENCE_BUCKET).remove(uploaded.map(x=>x.path));throw err;}
+}
+async function deleteRecord(id){
+ const {data:raw,error:readError}=await supabaseClient.from('incidents').select('id,user_id,evidence').eq('id',id).single();
+ if(readError)throw readError;
+ if(raw.user_id!==currentUser.id)throw new Error('You can delete only your own reports.');
+ const paths=(raw.evidence||[]).map(x=>x.path).filter(Boolean);
+ if(paths.length){const {error}=await supabaseClient.storage.from(EVIDENCE_BUCKET).remove(paths);if(error)throw error;}
+ const {error}=await supabaseClient.from('incidents').delete().eq('id',id);if(error)throw error;
+ await refreshCloudRecords();
+}
+async function pushLegacyRecord(record){
+ const exists=await supabaseClient.from('incidents').select('id').eq('user_id',currentUser.id).eq('legacy_id',String(record.id)).maybeSingle();
+ if(exists.error)throw exists.error;if(exists.data)return false;
+ const blobs=[];
+ const asFile=async(item,fallback)=>{const response=await fetch(item.data);const blob=await response.blob();return new File([blob],item.name||fallback,{type:blob.type||'image/jpeg'});};
+ blobs.push(await asFile(record.orderScreenshot,'order-screenshot.jpg'));
+ for(const item of record.supportingEvidence||[])blobs.push(await asFile(item,'supporting-evidence.jpg'));
+ await saveCloudIncident(blobs,{category:record.category,orderId:record.orderId,store:record.store,incidentAt:record.incidentAt,notes:record.notes},String(record.id));
+ return true;
+}
+async function migrateLocalRecords(){
+ const local=await localRecords();if(!local.length){authMessage('No older device-only reports were found.');return;}
+ const btn=$('migrateBtn');btn.disabled=true;btn.textContent='Importing…';
+ try{let added=0;for(let i=0;i<local.length;i++){authMessage('Importing report '+(i+1)+' of '+local.length+'…');if(await pushLegacyRecord(local[i]))added++;}
+ await refreshCloudRecords();authMessage(added+' report(s) imported to your private cloud. Original copies remain on this device.');btn.hidden=true;
+ }catch(err){authMessage('Import stopped: '+err.message+'. Your original device copies are unchanged.',true);}
+ finally{btn.disabled=false;btn.textContent='Import this device’s old reports';}
+}
+async function showAdminPanel(){
+ const admin=currentProfile&&currentProfile.role==='admin',panel=$('adminPanel');panel.hidden=!admin;if(!admin)return;
+ $('adminSummary').textContent='Signed in as '+currentUser.email+' · Administrator access · '+cloudRecords.length+' reports visible';
+ const {data,error}=await supabaseClient.from('profiles').select('id,display_name,role,created_at').order('created_at',{ascending:true});
+ if(error){$('adminPeople').textContent='Could not load partner list: '+error.message;return;}
+ $('adminPeople').innerHTML=(data||[]).map(p=>'<div class="admin-person"><div><strong>'+esc(p.display_name||'Partner account')+'</strong><span>'+esc(p.id)+'</span></div><span class="pill">'+esc(p.role)+'</span></div>').join('')||'<small>No partner accounts yet.</small>';
+}
+async function activateWorkspace(session){
+ currentUser=session.user;
+ const {data:profile,error}=await supabaseClient.from('profiles').select('id,display_name,role').eq('id',currentUser.id).single();if(error)throw error;
+ currentProfile=profile;cloudReady=true;document.body.classList.add('cloud-authenticated');$('authPanel').hidden=true;
+ const top=document.querySelector('.top-actions');
+ if(!$('signOutBtn')){const b=document.createElement('button');b.id='signOutBtn';b.className='outline';b.type='button';b.textContent='Sign out';b.addEventListener('click',async()=>{const {error}=await supabaseClient.auth.signOut();if(error)authMessage(error.message,true);});top.append(b);}
+ await refreshCloudRecords();await showAdminPanel();
+ const local=await localRecords();$('migrateBtn').hidden=!(local.length>0);
+ document.querySelector('.storage-indicator').textContent='● Private cloud · '+(currentProfile.display_name||currentUser.email);
+ const notice=document.querySelector('.notice');notice.innerHTML='<strong>Private cloud storage:</strong> Reports and evidence are stored securely in your Supabase workspace. Partners see only their own reports; the administrator can review all reports.<br><strong id="ocrState" style="color:#087f78">Loading OCR engine…</strong>';setOcrState(ocrState);
+}
+async function startCloudWorkspace(){
+ if(!window.supabase||!window.supabase.createClient){authMessage('Secure sign-in service did not load. Refresh the page and try again.',true);return;}
+ supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ const {data:{session},error}=await supabaseClient.auth.getSession();if(error)throw error;
+ if(session)await activateWorkspace(session);
+ supabaseClient.auth.onAuthStateChange((_event,nextSession)=>{if(nextSession){setTimeout(()=>activateWorkspace(nextSession).catch(err=>authMessage('Workspace could not load: '+err.message,true)),0);}else{cloudReady=false;currentUser=null;currentProfile=null;cloudRecords=[];document.body.classList.remove('cloud-authenticated');$('authPanel').hidden=false;$('adminPanel').hidden=true;const b=$('signOutBtn');if(b)b.remove();}});
+}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();if(!supabaseClient){authMessage('Connecting to secure sign-in…');return;}const btn=$('loginBtn');btn.disabled=true;authMessage('Signing in…');try{const {error}=await supabaseClient.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;authMessage('Signed in. Loading your reports…');}catch(err){authMessage(err.message||'Sign-in failed. Check your email and password.',true);}finally{btn.disabled=false;}});
+$('forgotPasswordBtn').addEventListener('click',async()=>{const btn=$('forgotPasswordBtn');const email=$('loginEmail').value.trim();if(!email){authMessage('Enter your account email first.',true);$('loginEmail').focus();return;}if(!supabaseClient){authMessage('Secure sign-in is not connected yet. Refresh this page and try again.',true);return;}btn.disabled=true;btn.textContent='Sending reset email…';authMessage('Requesting a password-reset email for '+email+'…');try{const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:'https://maddulaq.github.io/evidence-log/'});if(error)throw error;authMessage('Password-reset request submitted. Check your inbox and Spam folder. The reset link will open the main SOP & Proof Hub website.');}catch(err){authMessage('Password reset failed: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;btn.textContent='Forgot password';}});
+$('migrateBtn').addEventListener('click',migrateLocalRecords);
+$('inviteGuideBtn').addEventListener('click',()=>window.open('https://supabase.com/dashboard/project/rihobudcchrgwithvutx/auth/users','_blank','noopener'));
+function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+function putRecord(record){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
+function deleteLocalRecord(id){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
+function readFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file);});}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function setStatus(msg,isError=false){$('formStatus').textContent=msg;$('formStatus').className='status'+(isError?' error':'');}
+function localDateTime(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());}
+$('incidentAt').value=localDateTime(new Date());
+const OCR_DIGIT_MAP={O:'0',Q:'0',D:'0',U:'0',I:'1',L:'1','|':'1','!':'1','[':'1',']':'1',S:'5',B:'8',Z:'2',G:'6',T:'7'};
+function extractOrderId(rawText){
+  if(!rawText)return null;
+  const text=String(rawText).toUpperCase()
+    .replace(/[\u2010-\u2015\u2212]/g,'-')
+    .replace(/\u00A0/g,' ');
+  const candidates=[];
+  const prefix=/[O0][D0][\s:#-]*/g;
+  let match;
+  // First pass: explicit OD prefix, allowing OCR to split the digits with spaces.
+  while((match=prefix.exec(text))!==null){
+    let digits='',ambiguous=0;
+    for(let i=prefix.lastIndex;i<text.length;i++){
+      const ch=text[i];
+      if(/[0-9]/.test(ch)){digits+=ch;continue;}
+      if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;continue;}
+      if(/[\s:#=.-]/.test(ch))continue;
+      break;
+    }
+    if(digits.length===18){
+      const before=text.slice(Math.max(0,match.index-55),match.index);
+      const keyword=/ORDER\s*(?:ID|NO\.?|NUMBER|#)|ORDER|SHIPMENT|DELIVERY/.test(before)?20:0;
+      candidates.push({id:'OD'+digits,score:keyword-ambiguous*3,ambiguous});
+    }
+  }
+
+  // Second pass: some screenshots put "Order ID" on one line and the
+  // value below it, while OCR drops the leading "OD". Use this only
+  // when nearby OCR text explicitly labels the number as an Order ID.
+  const lines=text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  for(let i=0;i<lines.length;i++){
+    if(!/ORDER\s*(?:ID|NO\.?|NUMBER)\b/.test(lines[i]))continue;
+    let digits='',ambiguous=0;
+    for(let j=i;j<Math.min(lines.length,i+4);j++){
+      let line=lines[j];
+      if(j===i)line=line.replace(/.*?ORDER\s*(?:ID|NO\.?|NUMBER)\b/,'');
+      line=line.replace(/^[\s:#-]*[O0][D0]/,'');
+      for(const ch of line){
+        if(/[0-9]/.test(ch)){digits+=ch;continue;}
+        if(OCR_DIGIT_MAP[ch]){digits+=OCR_DIGIT_MAP[ch];ambiguous++;continue;}
+        if(/[\s:#=.-]/.test(ch))continue;
+        if(/[A-Z]/.test(ch)){digits='';ambiguous=99;break;}
+      }
+      if(digits.length>=18)break;
+      if(ambiguous>4)break;
+    }
+    if(digits.length===18&&ambiguous<=4)candidates.push({id:'OD'+digits,score:30-ambiguous*3,ambiguous});
+  }
+  candidates.sort((a,b)=>b.score-a.score);
+  const best=candidates[0];
+  return best&&best.ambiguous<=4?best.id:null;
+}
+/* ---------- Order ID OCR (rewritten) ---------- */
+const OCR_MAX_AREA=4.2e6,OCR_MAX_SIDE=3800,OCR_DEADLINE=45000;
+const OCR_LANG_SOURCES=['https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0','https://unpkg.com/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://tessdata.projectnaptha.com/4.0.0_best_int'];
+const OCR_LIB_SOURCES=['https://unpkg.com/tesseract.js@5/dist/tesseract.min.js','https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js'];
+let ocrWorkerPromise=null,ocrToken=0,lastAutoId='',ocrState='loading';
+
+window.loadOcrLibFallback=function(index){
+  const i=index||0;
+  if(i>=OCR_LIB_SOURCES.length)return;
+  const script=document.createElement('script');
+  script.src=OCR_LIB_SOURCES[i];
+  script.defer=true;
+  script.onerror=()=>window.loadOcrLibFallback(i+1);
+  script.onload=()=>{if(ocrState==='loading')warmOcr();};
+  document.head.appendChild(script);
+};
+
+function setOcrState(state,detail){
+  ocrState=state;
+  const el=document.getElementById('ocrState');
+  if(!el)return;
+  const map={loading:['Loading OCR engine…','#624c20'],ready:['OCR engine ready','#174b3b'],offline:['OCR engine unavailable — type the Order ID','#a63232']};
+  const picked=map[state]||map.loading;
+  el.textContent=detail||picked[0];
+  el.style.color=picked[1];
+}
+
+function loadImageEl(file){return new Promise((resolve,reject)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('This image could not be opened. Use a PNG or JPG screenshot.'));};img.src=url;});}
+function newCanvas(w,h){const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));return c;}
+function fitScale(w,h,desired,maxSide){let s=desired;s=Math.min(s,Math.sqrt(OCR_MAX_AREA/(w*h)));s=Math.min(s,(maxSide||OCR_MAX_SIDE)/Math.max(w,h));return Math.max(0.2,s);}
+function drawRegion(img,rect,desired,maxSide){const sx=rect?rect.x:0,sy=rect?rect.y:0,sw=rect?rect.w:img.naturalWidth,sh=rect?rect.h:img.naturalHeight;const s=fitScale(sw,sh,desired,maxSide);const cv=newCanvas(sw*s,sh*s);const ctx=cv.getContext('2d',{willReadFrequently:true});ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(img,sx,sy,sw,sh,0,0,cv.width,cv.height);cv._scale=s;return cv;}
+
+function preprocess(cv,mode){
+  if(mode==='raw')return cv;
+  const ctx=cv.getContext('2d',{willReadFrequently:true});
+  const frame=ctx.getImageData(0,0,cv.width,cv.height),d=frame.data;
+  const px=d.length>>2,gray=new Uint8ClampedArray(px);
+  let min=255,max=0,sum=0;
+  for(let i=0,p=0;p<px;i+=4,p++){const g=(d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114)|0;gray[p]=g;sum+=g;if(g<min)min=g;if(g>max)max=g;}
+  const mean=px?sum/px:0, invert=mean<110;
+  if(mode==='binary'){
+    const hist=new Uint32Array(256);
+    for(let p=0;p<px;p++)hist[gray[p]]++;
+    let totalSum=0;for(let t=0;t<256;t++)totalSum+=t*hist[t];
+    let sumB=0,wB=0,best=-1,thr=127;
+    for(let t=0;t<256;t++){wB+=hist[t];if(!wB)continue;const wF=px-wB;if(!wF)break;sumB+=t*hist[t];const mB=sumB/wB,mF=(totalSum-sumB)/wF;const between=wB*wF*(mB-mF)*(mB-mF);if(between>best){best=between;thr=t;}}
+    for(let p=0;p<px;p++){let v=gray[p]>thr?255:0;if(invert)v=255-v;const o=p<<2;d[o]=d[o+1]=d[o+2]=v;}
+  }else{
+    const span=Math.max(1,max-min);
+    for(let p=0;p<px;p++){let v=Math.round((gray[p]-min)*255/span);if(invert)v=255-v;const o=p<<2;d[o]=d[o+1]=d[o+2]=v;}
+  }
+  ctx.putImageData(frame,0,0);
+  return cv;
+}
+
+function bandRects(w,h){const out=[],bh=Math.round(h*0.42),step=Math.max(1,Math.round(h*0.29));for(let y=0;y+bh<=h;y+=step)out.push({x:0,y,w,h:bh});if(!out.length)out.push({x:0,y:0,w,h});return out.slice(0,3);}
+
+function ocrEditDistance(a,b){
+  if(Math.abs(a.length-b.length)>1)return 2;
+  let prev=Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=1;i<=a.length;i++){
+    const cur=[i];
+    for(let j=1;j<=b.length;j++)cur[j]=Math.min(cur[j-1]+1,prev[j]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    prev=cur;
+  }
+  return prev[b.length];
+}
+function findLabelBox(words,w,h){
+  if(!words||!words.length)return null;
+  const tokens=words.map((word,index)=>{
+    const raw=(word.text||'').toUpperCase();
+    const t=raw.replace(/[^A-Z0-9]/g,'');
+    return {word,index,t,b:word.bbox};
+  }).filter(x=>x.b&&x.t);
+  const candidates=[];
+  const add=(box,score)=>candidates.push({box,score});
+  for(const x of tokens){
+    const bh=Math.max(1,x.b.y1-x.b.y0);
+    const isOrder=/^(ORDER|0RDER|ORD[R]?R|ORDERID|ORDERNO|ORDERNUMBER)$/.test(x.t)||ocrEditDistance(x.t,'ORDER')<=1;
+    if(/^(ORDERID|ORDERNO|ORDERNUMBER)$/.test(x.t))add(x.b,100);
+    if(isOrder){
+      for(const y of tokens){
+        if(y===x)continue;
+        const yh=Math.max(1,y.b.y1-y.b.y0);
+        const sameLine=Math.abs(y.b.y0-x.b.y0)<Math.max(14,bh*0.9);
+        const horizontal=y.b.x0>=x.b.x0-5&&y.b.x0-x.b.x1<Math.max(130,w*0.18);
+        const vertical=Math.abs(y.b.y0-x.b.y1)<Math.max(70,bh*4);
+        if((y.t==='ID'||ocrEditDistance(y.t,'ID')<=1)&&(sameLine&&horizontal||vertical)){
+          add({x0:Math.min(x.b.x0,y.b.x0),y0:Math.min(x.b.y0,y.b.y0),x1:Math.max(x.b.x1,y.b.x1),y1:Math.max(x.b.y1,y.b.y1)},120);
+        }
+      }
+      add(x.b,35);
+    }
+  }
+  if(!candidates.length)return null;
+  // Prefer an explicit ORDER + ID label; do not simply select the first/topmost "ID".
+  candidates.sort((a,b)=>b.score-a.score);
+  return candidates[0].box;
+}
+
+function zoomOnOriginal(img,box,canvasScale){
+  const s=canvasScale||1;
+  const sy=box.y0/s, sh=Math.max(1,(box.y1-box.y0)/s);
+  const y=Math.max(0,sy-sh*1.4);
+  const h=Math.min(img.naturalHeight-y,sh*3.8);
+  return drawRegion(img,{x:0,y,w:img.naturalWidth,h},3.0);
+}
+
+async function getOcrWorker(onStatus){
+  if(ocrWorkerPromise)return ocrWorkerPromise;
+  ocrWorkerPromise=(async()=>{
+    if(!window.Tesseract)throw new Error('the OCR engine did not load (check your internet connection)');
+    let lastErr=null;
+    for(const langPath of OCR_LANG_SOURCES){
+      try{
+        if(onStatus)onStatus('Loading the OCR engine (first time only)…');
+        const worker=await Tesseract.createWorker('eng',1,{langPath,gzip:true,logger:()=>{}});
+        await worker.setParameters({preserve_interword_spaces:'1'});
+        setOcrState('ready');
+        return worker;
+      }catch(e){lastErr=e;}
+    }
+    ocrWorkerPromise=null;
+    setOcrState('offline');
+    throw lastErr||new Error('the OCR engine could not be started');
+  })();
+  return ocrWorkerPromise;
+}
+
+async function warmOcr(){
+  if(ocrState==='ready')return;
+  if(!window.Tesseract){setTimeout(()=>{if(ocrState==='loading'&&!window.Tesseract)setOcrState('offline');},20000);return;}
+  setOcrState('loading');
+  const timer=setTimeout(()=>{if(ocrState==='loading')setOcrState('offline');},25000);
+  try{await getOcrWorker();setOcrState('ready');}catch(e){setOcrState('offline');}finally{clearTimeout(timer);}
+}
+
+async function recognize(cv,worker,psm,whitelist){
+  const params={tessedit_pageseg_mode:psm};
+  if(whitelist)params.tessedit_char_whitelist=whitelist;
+  else params.tessedit_char_whitelist='';
+  await worker.setParameters(params);
+  const res=await worker.recognize(cv);
+  return {text:res.data.text||'',words:res.data.words||[]};
+}
+function exactOrderIdFromDigits(raw){
+  const lines=String(raw||'').split(/\r?\n/);
+  for(const line of lines){
+    const digits=line.replace(/\D/g,'');
+    if(digits.length===18)return 'OD'+digits;
+  }
+  const all=String(raw||'').replace(/\D/g,'');
+  return all.length===18?'OD'+all:null;
+}
+async function readOrderIdFromImage(file,onStatus){
+  const note=(msg)=>{if(onStatus)onStatus(msg);};
+  const img=await loadImageEl(file);
+  if(!img.naturalWidth||!img.naturalHeight)throw new Error('the image is empty');
+  note('Starting the OCR engine…');
+  const worker=await getOcrWorker(onStatus);
+  const t0=Date.now(),seen=[];
+  const budget=()=>Date.now()-t0<OCR_DEADLINE;
+  const record=(r)=>{seen.push(r.text||'');return extractOrderId(r.text)||null;};
+
+  // Locate the label using more than one layout mode and scale.
+  // PSM 6 handles regular blocks; PSM 11 handles sparse/mobile UI text.
+  note('Locating the Order ID label…');
+  let base=null,res=null,label=null;
+  for(const pass of [{scale:1.6,psm:'6',mode:'grey'},{scale:2.1,psm:'11',mode:'grey'},{scale:2.1,psm:'12',mode:'grey'}]){
+    if(!budget())break;
+    base=preprocess(drawRegion(img,null,pass.scale,2800),pass.mode);
+    res=await recognize(base,worker,pass.psm);
+    seen.push('[label scan '+pass.psm+' @ '+pass.scale+'x]\\n'+res.text);
+    label=findLabelBox(res.words,base.width,base.height);
+    if(label)break;
+  }
+
+  // Critical fix: crop from the Order ID label downwards. The old code used
+  // a fixed 48%-of-image crop, which could cut off the ID when the label was
+  // lower on a tall phone screenshot.
+  if(label&&budget()){
+    const scale=base._scale||1;
+    const labelY=label.y0/scale;
+    const labelH=Math.max(1,(label.y1-label.y0)/scale);
+    const cropY=Math.max(0,labelY-labelH*1.5);
+    const cropH=Math.min(img.naturalHeight-cropY,Math.max(img.naturalHeight*0.24,labelH*16));
+    const crop=drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600);
+    note('Reading the Order ID area at high resolution…');
+    for(const psm of ['6','11','7']){
+      if(!budget())break;
+      const gray=preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'grey');
+      res=await recognize(gray,worker,psm);
+      const hit=record(res);
+      if(hit)return {id:hit,text:seen.join('\n---\n')};
+      // The ID is numeric; a digits-only pass avoids letter confusions.
+      const digits=await recognize(preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'binary'),worker,psm,'0123456789');
+      seen.push('[digits-only pass]\n'+digits.text);
+      const exact=exactOrderIdFromDigits(digits.text);
+      if(exact)return {id:exact,text:seen.join('\n---\n')};
+    }
+  }
+
+  // Fallback: scan overlapping horizontal bands across the entire image.
+  // This also covers screenshots where OCR cannot identify the label.
+  if(budget()){
+    note('Scanning the screenshot in overlapping sections…');
+    const bandH=Math.max(1,Math.round(img.naturalHeight*0.28));
+    const step=Math.max(1,Math.round(img.naturalHeight*0.16));
+    const starts=[];
+    for(let y=0;y+bandH<img.naturalHeight;y+=step)starts.push(y);
+    starts.push(Math.max(0,img.naturalHeight-bandH));
+    const unique=[...new Set(starts)];
+    for(let i=0;i<unique.length;i++){
+      if(!budget())break;
+      const y=unique[i];
+      const rect={x:0,y,w:img.naturalWidth,h:Math.min(bandH,img.naturalHeight-y)};
+      const gray=preprocess(drawRegion(img,rect,2.8,3600),'grey');
+      res=await recognize(gray,worker,'6');
+      const hit=record(res);
+      if(hit)return {id:hit,text:seen.join('\n---\n')};
+      const binary=preprocess(drawRegion(img,rect,2.8,3600),'binary');
+      const digits=await recognize(binary,worker,'6','0123456789');
+      seen.push('[section '+(i+1)+' digits-only]\n'+digits.text);
+      const exact=exactOrderIdFromDigits(digits.text);
+      if(exact)return {id:exact,text:seen.join('\n---\n')};
+    }
+  }
+  return {id:null,text:seen.join('\n---\n')};
+}
+
+function extractScreenshotTime(rawText){
+  if(!rawText)return null;
+  const text=String(rawText).replace(/\u00A0/g,' ');
+  const re=/\b(0?[1-9]|1[0-2]|[01]?\d|2[0-3])\s*[:.]\s*([0-5]\d)\s*(a\.?m\.?|p\.?m\.?)?\b/gi;
+  const hits=[];let m;
+  while((m=re.exec(text))!==null){
+    let hour=Number(m[1]),minute=Number(m[2]),ampm=(m[3]||'').toLowerCase().replace(/\./g,'');
+    if(ampm){if(hour<1||hour>12)continue;if(ampm==='pm'&&hour!==12)hour+=12;if(ampm==='am'&&hour===12)hour=0;}
+    else if(hour>23)continue;
+    const before=text.slice(Math.max(0,m.index-70),m.index).toLowerCase();
+    const after=text.slice(m.index+m[0].length,m.index+m[0].length+45).toLowerCase();
+    let score=ampm?5:0;
+    if(/placed|order time|ordered|created|confirmed|picked|packed|delivered|scheduled|time/i.test(before+' '+after))score+=12;
+    if(/\b(today|yesterday|date)\b/i.test(before+' '+after))score+=2;
+    if(/battery|status|network|wifi|wi-fi/i.test(before+' '+after))score-=10;
+    hits.push({hour,minute,score});
+  }
+  hits.sort((a,b)=>b.score-a.score);
+  return hits.length?{hour:hits[0].hour,minute:hits[0].minute}:null;
+}
+async function readScreenshotTimeFromImage(file){
+  const img=await loadImageEl(file);
+  if(!img.naturalWidth||!img.naturalHeight)return {time:null,text:''};
+  const worker=await getOcrWorker();
+  const topHeight=Math.max(1,Math.round(img.naturalHeight*0.38));
+  const top=preprocess(drawRegion(img,{x:0,y:0,w:img.naturalWidth,h:topHeight},2.6,2400),'grey');
+  const result=await recognize(top,worker,'6');
+  return {time:extractScreenshotTime(result.text),text:result.text||''};
+}
+function applyScreenshotTime(time){
+  if(!time)return false;
+  const field=$('incidentAt'),current=field.value||localDateTime(new Date());
+  const date=current.slice(0,10);
+  field.value=date+'T'+String(time.hour).padStart(2,'0')+':'+String(time.minute).padStart(2,'0');
+  return true;
+}
+function setOcrStatus(msg,isError){
+  const el=$('ocrInline');
+  if(el){el.textContent=msg;el.className='status'+(isError?' error':'');}
+  setStatus(msg,!!isError);
+}
+async function runOrderOcr(file){
+  if(!file)return;
+  const token=++ocrToken;
+  $('ocrDebug').hidden=true;
+  setOcrStatus('Reading the Order ID from this screenshot…');
+  try{
+    const result=await readOrderIdFromImage(file,(msg)=>{if(token===ocrToken)setOcrStatus(msg);});
+    if(token!==ocrToken)return;
+    $('ocrText').textContent=(result.text||'').slice(0,6000)||'(no text recognised)';
+    $('ocrDebug').hidden=false;
+    let timeRead={time:null,text:''};
+    try{timeRead=await readScreenshotTimeFromImage(file);}catch(timeErr){/* Keep Order ID capture available if time OCR fails. */}
+    if(token!==ocrToken)return;
+    const screenshotTime=timeRead.time||extractScreenshotTime(result.text||'');
+    const timeApplied=applyScreenshotTime(screenshotTime);
+    if(result.id){
+      const field=$('orderId');
+      if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;}
+      setOcrStatus('Order ID detected: '+result.id+'. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'Time not detected clearly — please enter it manually. ')+'Please verify the details before saving.');
+    }else{
+      $('ocrDebug').open=true;
+      setOcrStatus('Could not read the Order ID automatically. The OCR text is expanded below so you can check what was recognised. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Enter the Order ID manually if it is still missing.',true);
+    }
+  }catch(err){
+    if(token!==ocrToken)return;
+    setOcrStatus('OCR could not run: '+(err&&err.message?err.message:'unknown error')+'. Please enter the Order ID manually.',true);
+  }
+}
+
+// Issue-specific suggested descriptions. Partners can edit these before saving.
+const issueDescriptions={
+  'Reusable bag not given':"The delivery partner arrived at the store to collect the order. However, the store team did not provide the required reusable bag and instead handed over the order in a paper bag.",
+  'Frozen items not packed separately':"The delivery partner collected the order, but the frozen items were not packed separately from the other items.",
+  'Wrong item given':"At order collection, the item provided by the store did not match the item shown in the order details. The mismatch was noticed during the handover.",
+  'Asked to convince customer wrongly':"During the order handover, the store team asked the delivery partner to communicate information to the customer that the partner believed did not match the actual order or situation.",
+  'Manager misconduct':"The delivery partner experienced an incident involving the store manager. Add the specific words or actions, along with the date, time, and any witnesses, so the report records exactly what happened.",
+  'Other':""
+};
+let lastAutoDescription='';
+let notesManuallyEdited=false;
+function updateSuggestedDescription(){
+  const category=$('category').value;
+  const suggested=issueDescriptions[category]||'';
+  const notes=$('notes');
+  if(!notes)return;
+  // Always refresh an untouched suggestion when the category changes.
+  // Preserve a description only when the partner has actually edited it.
+  if(!notesManuallyEdited||!notes.value.trim()||notes.value===lastAutoDescription){
+    notes.value=suggested;
+    lastAutoDescription=suggested;
+    notesManuallyEdited=false;
+  }
+  if(window.updateGuidedReport)window.updateGuidedReport();
+}
+$('category').addEventListener('change',updateSuggestedDescription);
+$('notes').addEventListener('input',()=>{
+  notesManuallyEdited=!!$('notes').value.trim()&&$('notes').value!==lastAutoDescription;
+});
+$('incidentForm').addEventListener('reset',()=>{
+  lastAutoDescription='';
+  notesManuallyEdited=false;
+  setTimeout(()=>{if($('category').value)updateSuggestedDescription();},0);
+});
+
+$('store').value='Banjara Hills 150';
+$('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';if(!$('store').value.trim())$('store').value='Banjara Hills 150';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{if(window.Tesseract)warmOcr();else window.loadOcrLibFallback(0);});
+$('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
+$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}if(!cloudReady||!currentUser){setStatus('Please sign in before saving a report.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Uploading evidence securely…');try{await saveCloudIncident([shot,...extras],{category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:$('incidentAt').value,notes:$('notes').value.trim()});$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus(currentLanguage==='te'?'ఘటన ప్రైవేట్ క్లౌడ్‌లో సేవ్ అయింది.':'Incident and evidence saved to your private cloud workspace.');await refreshCloudRecords();await showAdminPanel();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
+const selectedRecordIds=new Set();
+function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' complaint'+(n===1?'':'s')+' selected');if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');}
+function updateDashboardMetrics(rows){
+ const week=document.getElementById('dashboardWeek'),types=document.getElementById('dashboardTypes'),evidence=document.getElementById('dashboardEvidence');
+ const now=new Date(),start=new Date(now);start.setDate(now.getDate()-6);start.setHours(0,0,0,0);
+ if(week)week.textContent=rows.filter(r=>{const d=new Date(r.submittedAt||r.incidentAt);return !Number.isNaN(d.getTime())&&d>=start&&d<=now;}).length;
+ if(types)types.textContent=new Set(rows.map(r=>r.category).filter(Boolean)).size;
+ if(evidence)evidence.textContent=rows.reduce((sum,r)=>sum+1+(Array.isArray(r.supportingEvidence)?r.supportingEvidence.length:0),0);
+}
+async function render(){const rows=await allRecords();$('count').textContent=rows.length;updateDashboardMetrics(rows);const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=r.userId===currentUser.id;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();}
+$('records').addEventListener('change',e=>{const id=e.target.dataset.selectRecord;if(!id)return;if(e.target.checked)selectedRecordIds.add(id);else selectedRecordIds.delete(id);updateSelectionUI();});
+$('selectAllBtn').addEventListener('click',async()=>{const rows=await allRecords();if(selectedRecordIds.size){selectedRecordIds.clear();}else{rows.forEach(r=>selectedRecordIds.add(r.id));}await render();});
+$('combinedPdfBtn').addEventListener('click',async()=>{const rows=await allRecords();const selected=rows.filter(r=>selectedRecordIds.has(r.id)).sort((a,b)=>new Date(a.incidentAt)-new Date(b.incidentAt));if(!selected.length){alert('Select at least one complaint first.');return;}printRecords(selected);});
+$('records').addEventListener('click',async e=>{const id=e.target.dataset.delete||e.target.dataset.export;if(!id)return;const rows=await allRecords(),r=rows.find(x=>x.id===id);if(!r)return;if(e.target.dataset.delete){if(confirm('Delete this cloud report and its stored evidence?')){try{await deleteRecord(id);}catch(err){alert('Could not delete report: '+err.message);}}}else printRecords([r]);});
+const REPORT_CSS='@page{size:A4 portrait;margin:12mm}*{box-sizing:border-box}html{margin:0;padding:0;font-size:12pt}body{margin:0;padding:0;width:100%;font:11pt/1.45 Arial,Helvetica,sans-serif;color:#172b25;background:#fff}.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;background:#174b3b;color:#fff}.bar span{font-weight:700;font-size:15px}.bar button{border:0;border-radius:8px;padding:9px 14px;font-weight:700;font-size:13px;background:#fff;color:#174b3b;cursor:pointer}.wrap{display:block;width:100%;max-width:186mm;margin:0 auto;padding:0}.gen{color:#66756e;font-size:9pt;margin:0 0 8mm}.rec{display:block;width:100%;max-width:100%;border:1px solid #d9e3dd;border-radius:3mm;padding:4mm;margin:0 0 5mm;overflow:visible}.rec h2{font-size:12pt;margin:0 0 3mm;padding-bottom:2mm;border-bottom:1px solid #eef2ef;color:#174b3b}.kv{width:100%;border-collapse:collapse;table-layout:fixed;margin:0 0 3mm}.kv td{padding:1mm 0;font-size:9.5pt;vertical-align:top;overflow-wrap:anywhere;word-break:break-word}.kv td.k{width:32%;color:#66756e;padding-right:3mm}.shots{display:block;width:100%;font-size:0}.shots figure{display:inline-block;vertical-align:top;width:49%;margin:0 1% 2mm 0;border:1px solid #e3ebe6;border-radius:2mm;overflow:hidden;background:#fff;break-inside:avoid;page-break-inside:avoid}.shots figure:first-child{display:block;width:100%;margin-right:0}.shots img{display:block;width:100%;height:38mm;object-fit:contain;background:#f7f9f8}.shots figure:first-child img{height:66mm}.shots figcaption{font-size:8pt;color:#66756e;padding:1.5mm;text-align:center;border-top:1px solid #eef2ef;background:#fafbfa}.sign{margin:5mm 0 0;padding-top:2mm;border-top:1px solid #dce5df;font-size:8pt;color:#66756e}@media print{html,body{width:186mm!important;min-width:186mm!important;max-width:186mm!important;margin:0!important;padding:0!important;background:#fff!important;font-size:12pt!important;zoom:1!important;transform:none!important}.bar{display:none!important}.wrap{display:block!important;width:186mm!important;max-width:186mm!important;min-width:186mm!important;margin:0!important;padding:0!important}.gen{margin:0 0 6mm!important}.rec{width:186mm!important;max-width:186mm!important;margin:0 0 5mm!important;padding:4mm!important;break-inside:auto!important;page-break-inside:auto!important}.kv{width:100%!important}.shots figure,.shots figcaption{break-inside:avoid!important;page-break-inside:avoid!important}.shots img{height:35mm!important;max-width:100%!important}.shots figure:first-child img{height:60mm!important}.sign{margin-top:4mm!important}}';
+function reportHtml(rows){
+  const when=new Date().toLocaleString();
+  const recs=rows.map((r,i)=>{
+    const shots=[{src:r.orderScreenshot.data,cap:'Order screenshot'}].concat((r.supportingEvidence||[]).map((x,j)=>({src:x.data,cap:'Supporting evidence '+(j+1)})));
+    return '<article class="rec"><h2>#'+(i+1)+' &mdash; '+esc(r.category)+'</h2>'
+      +'<table class="kv">'
+      +'<tr><td class="k">Order ID</td><td><strong>'+esc(r.orderId)+'</strong></td></tr>'
+      +'<tr><td class="k">Store / hub</td><td>'+esc(r.store)+'</td></tr>'
+      +'<tr><td class="k">Incident date &amp; time</td><td>'+esc(new Date(r.incidentAt).toLocaleString())+'</td></tr>'
+      +'<tr><td class="k">Description</td><td>'+esc(r.notes||'\u2014')+'</td></tr>'
+      +'</table><div class="shots">'
+      +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
+      +'</div></article>';
+  }).join('');
+  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+'</style></head><body>'
+    +'<div class="bar"><span>SOP & Evidence Hub \u2014 Incident Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
+    +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
+    +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
+    +'</main><script>function printEvidenceReport(){const b=document.getElementById("printReportBtn");if(b){b.disabled=true;b.textContent="Preparing report…";}const imgs=Array.from(document.images);Promise.all(imgs.map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;}))).then(()=>{if(b){b.disabled=false;b.textContent="Print / Save as PDF";}setTimeout(()=>window.print(),250);});}</'+ '/script></body></html>';
+}
+let pdfLibPromise=null;
+function loadPdfLibrary(){
+  if(window.PDFLib)return Promise.resolve(window.PDFLib);
+  if(pdfLibPromise)return pdfLibPromise;
+  pdfLibPromise=new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.src='https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+    script.onload=()=>window.PDFLib?resolve(window.PDFLib):reject(new Error('PDF library unavailable'));
+    script.onerror=()=>reject(new Error('Could not load PDF library'));
+    document.head.appendChild(script);
+  });
+  return pdfLibPromise;
+}
+function imageAsJpeg(dataUrl){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const scale=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+        canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+        const ctx=canvas.getContext('2d');
+        ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',0.84));
+      }catch(e){reject(e);}
+    };
+    img.onerror=()=>reject(new Error('An evidence image could not be read'));
+    img.src=dataUrl;
+  });
+}
+async function createEvidencePdfBlob(rows){
+  const lib=await loadPdfLibrary();
+  const {PDFDocument,StandardFonts,rgb}=lib;
+  const pdf=await PDFDocument.create();
+  const font=await pdf.embedFont(StandardFonts.Helvetica);
+  const bold=await pdf.embedFont(StandardFonts.HelveticaBold);
+  const W=595.28,H=841.89,margin=38,green=rgb(0.09,0.29,0.23),muted=rgb(0.39,0.46,0.43),line=rgb(0.86,0.90,0.87);
+  const fit=(w,h,bw,bh)=>{const scale=Math.min(bw/w,bh/h);return {width:w*scale,height:h*scale};};
+  for(let i=0;i<rows.length;i++){
+    const r=rows[i],page=pdf.addPage([W,H]);
+    page.drawRectangle({x:0,y:H-58,width:W,height:58,color:green});
+    page.drawText('SOP & EVIDENCE HUB',{x:margin,y:H-36,size:14,font:bold,color:rgb(1,1,1)});
+    page.drawText('Record '+(i+1)+' of '+rows.length,{x:W-130,y:H-36,size:9,font,color:rgb(1,1,1)});
+    let y=H-82;
+    const field=(label,value)=>{
+      page.drawText(label,{x:margin,y:y-11,size:9,font:bold,color:muted});
+      const text=String(value||'—').replace(/[\r\n]+/g,' ').slice(0,160);
+      const lines=font.widthOfTextAtSize(text,10)>W-2*margin-118? [text.slice(0,75),text.slice(75,150)]:[text];
+      lines.forEach((t,j)=>page.drawText(t,{x:margin+118,y:y-11-j*13,size:10,font,color:rgb(0.10,0.16,0.13)}));
+      y-=Math.max(22,lines.length*13+8);
+    };
+    field('Issue category',r.category);
+    field('Order ID',r.orderId);
+    field('Store / hub',r.store);
+    field('Incident date & time',new Date(r.incidentAt).toLocaleString());
+    field('Description',r.notes||'—');
+    y-=4;
+    page.drawLine({start:{x:margin,y},end:{x:W-margin,y},thickness:1,color:line});
+    y-=18;
+    const shots=[{name:'Order screenshot',data:r.orderScreenshot&&r.orderScreenshot.data}].concat((r.supportingEvidence||[]).map((x,j)=>({name:'Supporting evidence '+(j+1),data:x.data}))).filter(x=>x.data);
+    for(let j=0;j<shots.length;j++){
+      const sh=shots[j];
+      const col=j===0?0:j-1;
+      const bw=j===0?W-2*margin:(W-2*margin-14)/2;
+      const bh=j===0?245:150;
+      const x=j===0?margin:margin+col*(bw+14);
+      const top=j===0?y:y-275;
+      page.drawText(sh.name,{x,y:top-11,size:9,font:bold,color:green});
+      const jpeg=await imageAsJpeg(sh.data);
+      const bytes=Uint8Array.from(atob(jpeg.split(',')[1]),c=>c.charCodeAt(0));
+      const embedded=await pdf.embedJpg(bytes);
+      const dims=fit(embedded.width,embedded.height,bw,bh-18);
+      page.drawImage(embedded,{x:x+(bw-dims.width)/2,y:top-18-dims.height,width:dims.width,height:dims.height});
+    }
+    page.drawLine({start:{x:margin,y:26},end:{x:W-margin,y:26},thickness:0.7,color:line});
+    page.drawText('Prepared by: Maddula Venkata Ramana',{x:margin,y:13,size:8,font:bold,color:muted});
+  }
+  const bytes=await pdf.save();
+  const blob=new Blob([bytes],{type:'application/pdf'});
+  return blob;
+
+}
+function downloadPdfBlob(blob){
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='sop-proof-hub-report-'+new Date().toISOString().slice(0,10)+'.pdf';
+ a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),120000);
+}
+async function sharePdf(rows){
+ const blob=await createEvidencePdfBlob(rows);
+ const file=new File([blob],'sop-proof-hub-report-'+new Date().toISOString().slice(0,10)+'.pdf',{type:'application/pdf'});
+ if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+  await navigator.share({title:'SOP & Evidence Hub incident report',text:'Incident report and supporting evidence.',files:[file]});
+ }else{
+  downloadPdfBlob(blob);
+  alert('Direct PDF sharing is not supported by this browser. The PDF has been downloaded. Attach it from your Downloads folder in WhatsApp, Email or Google Drive.');
+ }
+}
+function printRecords(rows){
+  // Keep the report inside the current page: Android in-app browsers often
+  // block window.open() and leave the user on an empty about:blank tab.
+  const old=document.getElementById('reportPreviewLayer');
+  if(old)old.remove();
+  const layer=document.createElement('div');
+  layer.id='reportPreviewLayer';
+  layer.style.cssText='position:fixed;inset:0;z-index:99999;background:#fff;display:flex;flex-direction:column';
+  const tools=document.createElement('div');
+  tools.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;background:#174b3b;color:#fff;font:14px Arial,sans-serif;flex-wrap:wrap';
+  const label=document.createElement('strong');
+  label.textContent='SOP & Evidence Hub — Combined Incident Report';
+  const actions=document.createElement('div');
+  actions.style.cssText='display:flex;gap:8px;align-items:center';
+  const download=document.createElement('button');
+  download.type='button';download.textContent='Download PDF';
+  download.style.cssText='border:0;border-radius:7px;padding:9px 14px;font-weight:700;background:#fff;color:#174b3b';
+  download.addEventListener('click',async()=>{
+    download.disabled=true;download.textContent='Creating PDF…';
+    try{const blob=await createEvidencePdfBlob(rows);downloadPdfBlob(blob);}
+    catch(err){alert('PDF could not be created. Please check your internet connection and try again. You can still use Print / Save as PDF.');}
+    finally{download.disabled=false;download.textContent='Download PDF';}
+  });
+  const print=document.createElement('button');
+  print.type='button';print.textContent='Print';
+  print.style.cssText='border:1px solid #fff;border-radius:7px;padding:9px 12px;font-weight:700;background:transparent;color:#fff';
+  print.addEventListener('click',()=>{try{frame.contentWindow.focus();frame.contentWindow.print();}catch(e){alert('Use the Download PDF button instead.');}});
+  const close=document.createElement('button');
+  close.type='button';close.textContent='Close';
+  close.style.cssText='border:0;border-radius:7px;padding:9px 12px;font-weight:700;background:#e8eee9;color:#174b3b';
+  close.addEventListener('click',()=>layer.remove());
+  const share=document.createElement('button');
+  share.type='button';share.textContent='Share PDF';
+  share.style.cssText='border:0;border-radius:7px;padding:9px 12px;font-weight:700;background:#dff2e7;color:#174b3b';
+  share.addEventListener('click',async()=>{share.disabled=true;share.textContent='Preparing…';try{await sharePdf(rows);}catch(err){if(err.name!=='AbortError')alert('Sharing failed. Please download the PDF and share it manually.');}finally{share.disabled=false;share.textContent='Share PDF';}});
+  actions.append(download,share,print,close);
+  tools.append(label,actions);
+  const frame=document.createElement('iframe');
+  frame.title='SOP & Evidence Hub incident report preview';
+  frame.style.cssText='display:block;flex:1;width:100%;height:100%;border:0;background:#fff';
+  frame.setAttribute('sandbox','allow-scripts allow-modals allow-same-origin');
+  frame.srcdoc=reportHtml(rows);
+  layer.append(tools,frame);
+  document.body.appendChild(layer);
+}
+$('exportBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to export.');return;}printRecords(rows);});
+$('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to back up.');return;}const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),records:rows},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='sop-proof-hub-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);});
+
+const themeToggle=document.getElementById('themeToggle');
+function applyTheme(theme){
+  const dark=theme==='dark';
+  document.body.dataset.theme=dark?'dark':'light';
+  if(themeToggle){
+    themeToggle.textContent=dark?'☀ Light mode':'☾ Dark mode';
+    themeToggle.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+    themeToggle.setAttribute('aria-pressed',String(dark));
+  }
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.content=dark?'#172820':'#123d32';
+}
+let savedTheme='light';
+try{savedTheme=localStorage.getItem('deliveryEvidenceTheme')||'light';}catch(e){}
+applyTheme(savedTheme);
+let initialLanguage='en';try{initialLanguage=localStorage.getItem('deliveryEvidenceLanguage')||'en';}catch(e){}
+setLanguage(initialLanguage);
+themeToggle?.addEventListener('click',()=>{
+  const next=document.body.dataset.theme==='dark'?'light':'dark';
+  applyTheme(next);
+  try{localStorage.setItem('deliveryEvidenceTheme',next);}catch(e){}
+});
+
+const DEMO_PREVIEW=new URLSearchParams(location.search).has('demo');
+if(DEMO_PREVIEW){document.body.classList.add('cloud-authenticated','demo-preview');$('authPanel').hidden=true;const banner=document.createElement('div');banner.className='demo-banner';banner.textContent='DEMO PREVIEW · Sample interface only · No sign-in · Saving and cloud actions are disabled';document.querySelector('main').prepend(banner);$('incidentSection').querySelectorAll('input,select,textarea,button').forEach(el=>{if(el.type!=='reset')el.disabled=true;});$('saveBtn').textContent='Demo mode — saving disabled';$('incidentSection').querySelector('.section-subtitle').textContent='Explore the guided report layout. This preview does not upload or save real evidence.';document.querySelectorAll('#recordsSection .actions button, #recordsSection .selection-tools button').forEach(el=>el.disabled=true);(async()=>{try{db=await openDB();await render();}catch(e){console.error(e);}})();}else{(async()=>{try{db=await openDB();await startCloudWorkspace();}catch(e){authMessage('Workspace connection failed: '+(e.message||'Please refresh and try again.'),true);}})();}
+
+/* Dashboard count and instant record search */
+const dashboardCount=document.getElementById('dashboardCount');
+const countNode=document.getElementById('count');
+const searchInput=document.getElementById('recordSearch');
+const searchCount=document.getElementById('searchCount');
+function syncDashboardCount(){
+ if(dashboardCount&&countNode)dashboardCount.textContent=countNode.textContent||'0';
+}
+if(countNode&&dashboardCount){
+ new MutationObserver(syncDashboardCount).observe(countNode,{childList:true,characterData:true,subtree:true});
+ syncDashboardCount();
+}
+if(searchInput){
+ searchInput.addEventListener('input',()=>{
+  const q=searchInput.value.trim().toLowerCase();
+  const list=document.getElementById('records');
+  if(!list)return;
+  const cards=[...list.children].filter(el=>el.matches('.record')||el.classList.contains('record'));
+  let shown=0;
+  cards.forEach(card=>{const match=!q||card.textContent.toLowerCase().includes(q);card.hidden=!match;if(match)shown++;});
+  if(searchCount)searchCount.textContent=q?(shown+' match'+(shown===1?'':'es')):'All records';
+  let empty=list.querySelector('.search-empty');
+  if(q&&cards.length&&shown===0){
+   if(!empty){empty=document.createElement('p');empty.className='hint search-empty';empty.textContent='No matching records. Try another Order ID or keyword.';list.appendChild(empty);}
+  }else if(empty)empty.remove();
+ });
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer onerror="window.loadOcrLibFallback(0)"></script>
+</body></html>
