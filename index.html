@@ -1156,7 +1156,52 @@ function reportHtml(rows){
       +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
       +'</div></article>';
   }).join('');
-  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+'</style></head><body>'
+  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+'
+/* Premium incident form and records refinement */
+.form-stage{padding:15px 16px;margin:12px 0;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft)}
+.form-stage-title{font-size:14px;margin-bottom:12px}
+.form-stage-title span{width:28px;height:28px;border-radius:9px}
+.guided-intro{padding:15px 16px;border-radius:13px;background:var(--brand-soft);border-color:#cfe9e3}
+.guided-intro strong{font-size:14px}
+.guided-progress{gap:8px}
+.guided-progress a{padding:10px;border-radius:11px;transition:border-color .15s,background .15s}
+.guided-progress a.is-current{background:var(--brand-soft);border-width:1.5px}
+.guided-check{padding:10px 12px;background:var(--surface-soft);border:1px solid var(--line);border-radius:10px}
+input,select,textarea{border-radius:11px;border-color:#d5dfe4}
+input:focus,select:focus,textarea:focus{outline:3px solid #139b8c20;border-color:#139b8c}
+input[type=file]{border-radius:11px;background:var(--surface)}
+.actions button,.actions a{border-radius:10px}
+#saveBtn{min-height:45px;padding-left:20px;padding-right:20px}
+#records{display:grid;gap:10px}
+.record{position:relative;padding:16px;border:1px solid var(--line)!important;border-radius:13px;background:var(--surface);margin:0;box-shadow:0 4px 15px rgba(20,40,55,.035)}
+.record:first-child{border-top:1px solid var(--line)}
+.record h3{font-size:14px;font-weight:800;letter-spacing:-.15px}
+.record p{line-height:1.55}
+.record .actions{display:flex;gap:7px;flex-wrap:wrap}
+.record .actions button{padding:8px 11px;font-size:11px;border-radius:9px}
+.record-tools{margin-top:16px}
+.record-tools input{border-radius:11px;background:var(--surface-soft)}
+.search-count{font-weight:650}
+.selection-tools{border-radius:13px;padding:15px;background:var(--surface-soft)}
+.selection-tools strong{font-size:13px}
+.selection-tools .actions button{border-radius:9px}
+body[data-theme="dark"] .form-stage{background:var(--surface-soft);border-color:var(--line)}
+body[data-theme="dark"] .guided-intro{background:#173b38;border-color:#285c55}
+body[data-theme="dark"] .guided-check{background:var(--surface-soft);border-color:var(--line)}
+body[data-theme="dark"] .record{background:var(--surface);border-color:var(--line)!important;box-shadow:0 4px 15px #0002}
+body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{background:var(--surface);border-color:var(--line);color:var(--ink)}
+@media(max-width:680px){
+ .form-stage{padding:13px 11px;margin:10px 0;border-radius:12px}
+ .guided-intro{padding:12px}
+ .guided-progress{gap:7px}
+ .guided-progress a{padding:9px 7px}
+ .guided-check{align-items:flex-start;line-height:1.5}
+ #records{gap:8px}
+ .record{padding:13px;border-radius:12px}
+ .record .actions button{flex:1}
+ .record-tools input{min-width:0}
+}
+</style></head><body>'
     +'<div class="bar"><span>SOP & Evidence Hub \u2014 Incident Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
