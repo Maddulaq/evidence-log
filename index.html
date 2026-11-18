@@ -396,10 +396,10 @@ body[data-theme="dark"] .bottom-nav{backdrop-filter:blur(16px)}
 .admin-list{display:grid;gap:8px;margin-top:12px}
 .admin-person{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:12px;overflow-wrap:anywhere}
 .admin-person strong{display:block;font-size:13px}
-.cloud-protected{display:none}
-body.cloud-authenticated .command-center.cloud-protected{display:grid}
-body.cloud-authenticated .notice.cloud-protected,body.cloud-authenticated section.card.cloud-protected,body.cloud-authenticated p.cloud-protected,body.cloud-authenticated .admin-panel.cloud-protected{display:block}
-body:not(.cloud-authenticated) .bottom-nav{display:none!important}
+.{display:none}
+body.cloud-authenticated .command-center.{display:grid}
+body.cloud-authenticated .notice.,body.cloud-authenticated section.card.,body.cloud-authenticated p.,body.cloud-authenticated .admin-panel.{display:block}
+
 @media(max-width:680px){.auth-card{margin:14px 11px;padding:18px}.admin-person{align-items:flex-start;flex-direction:column}}
 /* Dashboard and guided-report improvements */
 .dashboard-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:16px}.dashboard-metric{min-width:0;padding:12px;border:1px solid #ffffff24;border-radius:12px;background:#ffffff0d}.dashboard-metric span{display:block;color:#c5d8d9;font-size:10px;line-height:1.4}.dashboard-metric strong{display:block;margin-top:4px;color:#fff;font-size:21px;line-height:1.2;font-weight:800}
@@ -454,34 +454,21 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 <body>
 <header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline" id="shareAppBtn" type="button">Share app</button><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
 <main>
-<section class="auth-card" id="authPanel">
-  <h2>Secure partner workspace</h2>
-  <p>Sign in with the email and password invited by the SOP &amp; Proof Hub administrator. Public account registration is disabled.</p>
-  <form id="loginForm">
-    <label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="name@example.com">
-    <label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Your password">
-    <div class="auth-actions"><button id="loginBtn" type="submit">Sign in securely</button><button class="secondary" id="forgotPasswordBtn" type="button">Forgot password</button></div>
-  </form>
-  <div class="auth-status" id="authStatus" role="status" aria-live="polite"></div>
-  <div class="auth-meta">Your incident reports and evidence are stored in a private cloud workspace. Partners can access only their own reports; the administrator can review all reports.</div>
-</section>
-<section class="admin-panel cloud-protected" id="adminPanel" hidden>
-  <div class="records-head"><div><h2>Administrator workspace</h2><small id="adminSummary">Loading workspace details…</small></div><div class="actions" style="margin:0"><button class="secondary" id="migrateBtn" type="button" hidden>Import this device’s old reports</button><button class="secondary" id="inviteGuideBtn" type="button">Invite colleagues</button></div></div>
-  <div class="admin-list" id="adminPeople"></div>
-</section>
-<section class="command-center cloud-protected" aria-label="Workspace overview">
+
+
+<section class="command-center " aria-label="Workspace overview">
   <div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span><h2>Every issue.<br><em>Properly documented.</em></h2><p>Capture clear evidence, verify the order details, and keep a report ready when you need it.</p>
     <div class="command-actions"><a class="command-primary" href="#incidentSection">＋ New incident</a><a class="command-secondary" href="#recordsSection">Browse records <span aria-hidden="true">↗</span></a></div>
   </div>
-  <div class="overview-panel"><div class="overview-top"><span>YOUR WORKSPACE</span><span class="storage-indicator">● On this device</span></div>
+  <div class="overview-panel"><div class="overview-top"><span>YOUR WORKSPACE</span><span class="storage-indicator">● Saved on this device</span></div>
     <div class="overview-stat"><strong id="dashboardCount">0</strong><span>Saved incident records</span></div>
     <div class="dashboard-metrics" aria-label="Report summary"><div class="dashboard-metric"><span>Added this week</span><strong id="dashboardWeek">0</strong></div><div class="dashboard-metric"><span>Issue categories</span><strong id="dashboardTypes">0</strong></div><div class="dashboard-metric"><span>Evidence photos</span><strong id="dashboardEvidence">0</strong></div></div>
     <div class="overview-rule" style="margin-top:15px"></div>
     <div class="overview-bottom"><span><b>01</b> Capture screenshot</span><span><b>02</b> Add evidence</span><span><b>03</b> Save report</span></div>
   </div>
 </section>
-<div class="notice cloud-protected"><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
-<section class="card cloud-protected" id="incidentSection">
+<div class="notice "><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
+<section class="card " id="incidentSection">
 <div class="section-heading"><span class="section-number">01</span><h2>Submit an incident</h2></div>
 <p class="section-subtitle">Follow the guided steps. Review the Order ID and time before saving.</p>
 <form id="incidentForm">
@@ -518,14 +505,14 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 </div>
 </form>
 </section>
-<section class="card cloud-protected" id="recordsSection">
+<section class="card " id="recordsSection">
 <div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
 <div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div class="selection-tools no-print"><div><strong id="selectionCount">0 complaints selected</strong><small>Select multiple complaints to combine them into one PDF, with a separate section for each complaint.</small></div><div class="actions"><button class="secondary" id="selectAllBtn" type="button">Select all</button><button id="combinedPdfBtn" type="button" disabled>Generate combined PDF</button></div></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
 </section>
-<p class="hint cloud-protected" style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
+<p class="hint " style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
 </main>
 <nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggle" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+
 <script>
 
 (function setupGuidedReport(){
@@ -548,9 +535,7 @@ const uiText={
   heroSub:'Capture clear evidence, verify the order details, and keep a report ready when you need it.',
   newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● Private cloud workspace',
   savedCount:'Saved incident records',step1:'<b>01</b> Capture screenshot',step2:'<b>02</b> Add evidence',step3:'<b>03</b> Save report',
-  notice:'<strong>Private cloud storage:</strong> Reports and evidence are stored in your secure workspace. Partners see only their own reports; the administrator can review all reports.',
-  incidentTitle:'Submit an incident',incidentSub:'Follow the steps below. Check the Order ID and incident time before saving.',
-  orderShot:'Order screenshot <span class="pill">Required</span>',
+  notice:'<strong>Device-only storage:</strong> Reports and evidence stay on this phone. They are not uploaded to a cloud account.<br><span class="pill">Required</span>',
   orderHint:'Upload the order screenshot. The app tries to read the Order ID and screenshot time automatically. Check the details and correct them if needed.',
   category:'Issue category *',selectIssue:'Select an issue',orderId:'Order ID *',reread:'Re-read from screenshot',
   store:'Store / hub name *',incidentAt:'Incident date and time *',
@@ -636,98 +621,7 @@ document.getElementById('shareAppBtn').addEventListener('click',async()=>{
 const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
 const $=id=>document.getElementById(id);
 let db;
-const SUPABASE_URL='https://rihobudcchrgwithvutx.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY='sb_publishable_37ysHEHEDJ0qxX7Mx3CM5w_G2YTkqNa';
-const EVIDENCE_BUCKET='incident-evidence';
-let supabaseClient=null,currentUser=null,currentProfile=null,cloudRecords=[],cloudReady=false;
-function authMessage(message,isError=false){const el=$('authStatus');if(el){el.textContent=message;el.style.color=isError?'var(--danger)':'var(--brand)';}}
-function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
-function localRecords(){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly'),req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result.sort((a,b)=>b.submittedAt.localeCompare(a.submittedAt)));req.onerror=()=>reject(req.error);});}
-async function allRecords(){return cloudReady?cloudRecords:await localRecords();}
-async function blobToDataUrl(blob){return await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(blob);});}
-async function cloudEvidenceToDataUrl(item){const {data,error}=await supabaseClient.storage.from(EVIDENCE_BUCKET).createSignedUrl(item.path,3600);if(error)throw error;const response=await fetch(data.signedUrl);if(!response.ok)throw new Error('Could not retrieve private evidence image');return await blobToDataUrl(await response.blob());}
-async function mapCloudIncident(row){
- const items=Array.isArray(row.evidence)?row.evidence:[];
- const files=await Promise.all(items.map(async item=>({name:item.name||'Evidence',data:await cloudEvidenceToDataUrl(item)})));
- return {id:row.id,legacyId:row.legacy_id,userId:row.user_id,category:row.category,orderId:row.order_id,store:row.store,incidentAt:row.incident_at,submittedAt:row.submitted_at,notes:row.notes||'',orderScreenshot:files[0]||{name:'Order screenshot',data:''},supportingEvidence:files.slice(1)};
-}
-async function refreshCloudRecords(){
- const {data,error}=await supabaseClient.from('incidents').select('*').order('submitted_at',{ascending:false});
- if(error)throw error;
- cloudRecords=await Promise.all((data||[]).map(mapCloudIncident));
- await render();
-}
-async function uploadEvidenceFile(file,userId,incidentId,index){
- const safeName=String(file.name||('evidence-'+index)).replace(/[^a-zA-Z0-9._-]/g,'_').slice(-90);
- const path=userId+'/'+incidentId+'/'+String(index).padStart(2,'0')+'-'+crypto.randomUUID()+'-'+safeName;
- const {error}=await supabaseClient.storage.from(EVIDENCE_BUCKET).upload(path,file,{contentType:file.type,upsert:false});
- if(error)throw error;
- return {path,name:file.name||safeName,mime:file.type||'application/octet-stream'};
-}
-async function saveCloudIncident(files,fields,legacyId=null){
- const incidentId=crypto.randomUUID(),uploaded=[];
- try{
-  for(let i=0;i<files.length;i++)uploaded.push(await uploadEvidenceFile(files[i],currentUser.id,incidentId,i));
-  const payload={id:incidentId,user_id:currentUser.id,category:fields.category,order_id:fields.orderId,store:fields.store,incident_at:new Date(fields.incidentAt).toISOString(),notes:fields.notes||'',evidence:uploaded,legacy_id:legacyId};
-  const {error}=await supabaseClient.from('incidents').insert(payload);if(error)throw error;
- }catch(err){if(uploaded.length)await supabaseClient.storage.from(EVIDENCE_BUCKET).remove(uploaded.map(x=>x.path));throw err;}
-}
-async function deleteRecord(id){
- const {data:raw,error:readError}=await supabaseClient.from('incidents').select('id,user_id,evidence').eq('id',id).single();
- if(readError)throw readError;
- if(raw.user_id!==currentUser.id)throw new Error('You can delete only your own reports.');
- const paths=(raw.evidence||[]).map(x=>x.path).filter(Boolean);
- if(paths.length){const {error}=await supabaseClient.storage.from(EVIDENCE_BUCKET).remove(paths);if(error)throw error;}
- const {error}=await supabaseClient.from('incidents').delete().eq('id',id);if(error)throw error;
- await refreshCloudRecords();
-}
-async function pushLegacyRecord(record){
- const exists=await supabaseClient.from('incidents').select('id').eq('user_id',currentUser.id).eq('legacy_id',String(record.id)).maybeSingle();
- if(exists.error)throw exists.error;if(exists.data)return false;
- const blobs=[];
- const asFile=async(item,fallback)=>{const response=await fetch(item.data);const blob=await response.blob();return new File([blob],item.name||fallback,{type:blob.type||'image/jpeg'});};
- blobs.push(await asFile(record.orderScreenshot,'order-screenshot.jpg'));
- for(const item of record.supportingEvidence||[])blobs.push(await asFile(item,'supporting-evidence.jpg'));
- await saveCloudIncident(blobs,{category:record.category,orderId:record.orderId,store:record.store,incidentAt:record.incidentAt,notes:record.notes},String(record.id));
- return true;
-}
-async function migrateLocalRecords(){
- const local=await localRecords();if(!local.length){authMessage('No older device-only reports were found.');return;}
- const btn=$('migrateBtn');btn.disabled=true;btn.textContent='Importing…';
- try{let added=0;for(let i=0;i<local.length;i++){authMessage('Importing report '+(i+1)+' of '+local.length+'…');if(await pushLegacyRecord(local[i]))added++;}
- await refreshCloudRecords();authMessage(added+' report(s) imported to your private cloud. Original copies remain on this device.');btn.hidden=true;
- }catch(err){authMessage('Import stopped: '+err.message+'. Your original device copies are unchanged.',true);}
- finally{btn.disabled=false;btn.textContent='Import this device’s old reports';}
-}
-async function showAdminPanel(){
- const admin=currentProfile&&currentProfile.role==='admin',panel=$('adminPanel');panel.hidden=!admin;if(!admin)return;
- $('adminSummary').textContent='Signed in as '+currentUser.email+' · Administrator access · '+cloudRecords.length+' reports visible';
- const {data,error}=await supabaseClient.from('profiles').select('id,display_name,role,created_at').order('created_at',{ascending:true});
- if(error){$('adminPeople').textContent='Could not load partner list: '+error.message;return;}
- $('adminPeople').innerHTML=(data||[]).map(p=>'<div class="admin-person"><div><strong>'+esc(p.display_name||'Partner account')+'</strong><span>'+esc(p.id)+'</span></div><span class="pill">'+esc(p.role)+'</span></div>').join('')||'<small>No partner accounts yet.</small>';
-}
-async function activateWorkspace(session){
- currentUser=session.user;
- const {data:profile,error}=await supabaseClient.from('profiles').select('id,display_name,role').eq('id',currentUser.id).single();if(error)throw error;
- currentProfile=profile;cloudReady=true;document.body.classList.add('cloud-authenticated');$('authPanel').hidden=true;
- const top=document.querySelector('.top-actions');
- if(!$('signOutBtn')){const b=document.createElement('button');b.id='signOutBtn';b.className='outline';b.type='button';b.textContent='Sign out';b.addEventListener('click',async()=>{const {error}=await supabaseClient.auth.signOut();if(error)authMessage(error.message,true);});top.append(b);}
- await refreshCloudRecords();await showAdminPanel();
- let local=[];if(db){try{local=await localRecords();}catch(e){console.warn('Could not read local report history.',e);}}$('migrateBtn').hidden=!(local.length>0);
- document.querySelector('.storage-indicator').textContent='● Private cloud · '+(currentProfile.display_name||currentUser.email);
- const notice=document.querySelector('.notice');notice.innerHTML='<strong>Private cloud storage:</strong> Reports and evidence are stored securely in your Supabase workspace. Partners see only their own reports; the administrator can review all reports.<br><strong id="ocrState" style="color:#087f78">Loading OCR engine…</strong>';setOcrState(ocrState);
-}
-async function startCloudWorkspace(){
- if(!window.supabase||!window.supabase.createClient){authMessage('Secure sign-in service did not load. Refresh the page and try again.',true);return;}
- supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
- const {data:{session},error}=await supabaseClient.auth.getSession();if(error)throw error;
- if(session)await activateWorkspace(session);
- supabaseClient.auth.onAuthStateChange((_event,nextSession)=>{if(nextSession){setTimeout(()=>activateWorkspace(nextSession).catch(err=>authMessage('Workspace could not load: '+err.message,true)),0);}else{cloudReady=false;currentUser=null;currentProfile=null;cloudRecords=[];document.body.classList.remove('cloud-authenticated');$('authPanel').hidden=false;$('adminPanel').hidden=true;const b=$('signOutBtn');if(b)b.remove();}});
-}
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('loginBtn');btn.disabled=true;authMessage('Connecting securely…');try{if(!supabaseClient){if(!cloudStartupPromise)cloudStartupPromise=startCloudWorkspace();await cloudStartupPromise;}if(!supabaseClient)throw new Error('Secure sign-in service is unavailable. Please refresh the page and try again.');authMessage('Signing in…');const {error}=await supabaseClient.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;authMessage('Sign-in accepted. Loading your workspace…');}catch(err){authMessage(err.message||'Sign-in failed. Check your email address and password.',true);}finally{btn.disabled=false;}});
-$('forgotPasswordBtn').addEventListener('click',async()=>{const btn=$('forgotPasswordBtn');const email=$('loginEmail').value.trim();if(!email){authMessage('Enter your account email first.',true);$('loginEmail').focus();return;}if(!supabaseClient){authMessage('Secure sign-in is not connected yet. Refresh this page and try again.',true);return;}btn.disabled=true;btn.textContent='Sending reset email…';authMessage('Requesting a password-reset email for '+email+'…');try{const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:'https://maddulaq.github.io/evidence-log/'});if(error)throw error;authMessage('Password-reset request submitted. Check your inbox and Spam folder. The reset link will open the main SOP & Proof Hub website.');}catch(err){authMessage('Password reset failed: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;btn.textContent='Forgot password';}});
-$('migrateBtn').addEventListener('click',migrateLocalRecords);
-$('inviteGuideBtn').addEventListener('click',()=>window.open('https://supabase.com/dashboard/project/rihobudcchrgwithvutx/auth/users','_blank','noopener'));
+async function allRecords(){return await localRecords();}
 function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
 function putRecord(record){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
 function deleteLocalRecord(id){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
@@ -1126,7 +1020,7 @@ $('incidentForm').addEventListener('reset',()=>{
 $('store').value='Banjara Hills 150';
 $('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';if(!$('store').value.trim())$('store').value='Banjara Hills 150';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{if(window.Tesseract)warmOcr();else window.loadOcrLibFallback(0);});
 $('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
-$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}if(!cloudReady||!currentUser){setStatus('Please sign in before saving a report.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Uploading evidence securely…');try{await saveCloudIncident([shot,...extras],{category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:$('incidentAt').value,notes:$('notes').value.trim()});$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus(currentLanguage==='te'?'ఘటన ప్రైవేట్ క్లౌడ్‌లో సేవ్ అయింది.':'Incident and evidence saved to your private cloud workspace.');await refreshCloudRecords();await showAdminPanel();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
+$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
 const selectedRecordIds=new Set();
 function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' complaint'+(n===1?'':'s')+' selected');if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');}
 function updateDashboardMetrics(rows){
@@ -1136,11 +1030,11 @@ function updateDashboardMetrics(rows){
  if(types)types.textContent=new Set(rows.map(r=>r.category).filter(Boolean)).size;
  if(evidence)evidence.textContent=rows.reduce((sum,r)=>sum+1+(Array.isArray(r.supportingEvidence)?r.supportingEvidence.length:0),0);
 }
-async function render(){const rows=await allRecords();$('count').textContent=rows.length;updateDashboardMetrics(rows);const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=r.userId===currentUser.id;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();}
+async function render(){const rows=await allRecords();$('count').textContent=rows.length;updateDashboardMetrics(rows);const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=true;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();}
 $('records').addEventListener('change',e=>{const id=e.target.dataset.selectRecord;if(!id)return;if(e.target.checked)selectedRecordIds.add(id);else selectedRecordIds.delete(id);updateSelectionUI();});
 $('selectAllBtn').addEventListener('click',async()=>{const rows=await allRecords();if(selectedRecordIds.size){selectedRecordIds.clear();}else{rows.forEach(r=>selectedRecordIds.add(r.id));}await render();});
 $('combinedPdfBtn').addEventListener('click',async()=>{const rows=await allRecords();const selected=rows.filter(r=>selectedRecordIds.has(r.id)).sort((a,b)=>new Date(a.incidentAt)-new Date(b.incidentAt));if(!selected.length){alert('Select at least one complaint first.');return;}printRecords(selected);});
-$('records').addEventListener('click',async e=>{const id=e.target.dataset.delete||e.target.dataset.export;if(!id)return;const rows=await allRecords(),r=rows.find(x=>x.id===id);if(!r)return;if(e.target.dataset.delete){if(confirm('Delete this cloud report and its stored evidence?')){try{await deleteRecord(id);}catch(err){alert('Could not delete report: '+err.message);}}}else printRecords([r]);});
+$('records').addEventListener('click',async e=>{const id=e.target.dataset.delete||e.target.dataset.export;if(!id)return;const rows=await allRecords(),r=rows.find(x=>x.id===id);if(!r)return;if(e.target.dataset.delete){if(confirm('Delete this report and its evidence from this device?')){try{await deleteLocalRecord(id);await render();}catch(err){alert('Could not delete report: '+err.message);}}}else printRecords([r]);});
 const REPORT_CSS='@page{size:A4 portrait;margin:12mm}*{box-sizing:border-box}html{margin:0;padding:0;font-size:12pt}body{margin:0;padding:0;width:100%;font:11pt/1.45 Arial,Helvetica,sans-serif;color:#172b25;background:#fff}.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;background:#174b3b;color:#fff}.bar span{font-weight:700;font-size:15px}.bar button{border:0;border-radius:8px;padding:9px 14px;font-weight:700;font-size:13px;background:#fff;color:#174b3b;cursor:pointer}.wrap{display:block;width:100%;max-width:186mm;margin:0 auto;padding:0}.gen{color:#66756e;font-size:9pt;margin:0 0 8mm}.rec{display:block;width:100%;max-width:100%;border:1px solid #d9e3dd;border-radius:3mm;padding:4mm;margin:0 0 5mm;overflow:visible}.rec h2{font-size:12pt;margin:0 0 3mm;padding-bottom:2mm;border-bottom:1px solid #eef2ef;color:#174b3b}.kv{width:100%;border-collapse:collapse;table-layout:fixed;margin:0 0 3mm}.kv td{padding:1mm 0;font-size:9.5pt;vertical-align:top;overflow-wrap:anywhere;word-break:break-word}.kv td.k{width:32%;color:#66756e;padding-right:3mm}.shots{display:block;width:100%;font-size:0}.shots figure{display:inline-block;vertical-align:top;width:49%;margin:0 1% 2mm 0;border:1px solid #e3ebe6;border-radius:2mm;overflow:hidden;background:#fff;break-inside:avoid;page-break-inside:avoid}.shots figure:first-child{display:block;width:100%;margin-right:0}.shots img{display:block;width:100%;height:38mm;object-fit:contain;background:#f7f9f8}.shots figure:first-child img{height:66mm}.shots figcaption{font-size:8pt;color:#66756e;padding:1.5mm;text-align:center;border-top:1px solid #eef2ef;background:#fafbfa}.sign{margin:5mm 0 0;padding-top:2mm;border-top:1px solid #dce5df;font-size:8pt;color:#66756e}@media print{html,body{width:186mm!important;min-width:186mm!important;max-width:186mm!important;margin:0!important;padding:0!important;background:#fff!important;font-size:12pt!important;zoom:1!important;transform:none!important}.bar{display:none!important}.wrap{display:block!important;width:186mm!important;max-width:186mm!important;min-width:186mm!important;margin:0!important;padding:0!important}.gen{margin:0 0 6mm!important}.rec{width:186mm!important;max-width:186mm!important;margin:0 0 5mm!important;padding:4mm!important;break-inside:auto!important;page-break-inside:auto!important}.kv{width:100%!important}.shots figure,.shots figcaption{break-inside:avoid!important;page-break-inside:avoid!important}.shots img{height:35mm!important;max-width:100%!important}.shots figure:first-child img{height:60mm!important}.sign{margin-top:4mm!important}}';
 function reportHtml(rows){
   const when=new Date().toLocaleString();
@@ -1378,9 +1272,7 @@ themeToggle?.addEventListener('click',()=>{
   try{localStorage.setItem('deliveryEvidenceTheme',next);}catch(e){}
 });
 
-let cloudStartupPromise=null;
-cloudStartupPromise=startCloudWorkspace().catch(e=>{authMessage('Secure sign-in could not start: '+(e.message||'Please refresh and try again.'),true);throw e;});
-(async()=>{try{db=await openDB();}catch(e){console.warn('Local device storage is unavailable; cloud sign-in can still be used.',e);}})();
+(async()=>{try{db=await openDB();await render();}catch(e){console.error(e);setStatus('Device storage could not start. Please check browser storage permissions.',true);}})();
 
 /* Dashboard count and instant record search */
 const dashboardCount=document.getElementById('dashboardCount');
