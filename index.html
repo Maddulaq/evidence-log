@@ -407,6 +407,48 @@ body:not(.cloud-authenticated) .bottom-nav{display:none!important}
 .guided-progress{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 19px}.guided-progress a{display:flex;align-items:center;gap:7px;min-width:0;padding:9px 8px;border:1px solid var(--line);border-radius:10px;background:var(--surface-soft);color:var(--muted);text-decoration:none;font-size:11px;font-weight:700}.guided-progress a span{display:grid;place-items:center;flex:0 0 22px;width:22px;height:22px;border-radius:7px;background:var(--line);font-size:10px}.guided-progress a.is-complete{border-color:#9bcfc3;background:var(--brand-soft);color:var(--brand-dark)}.guided-progress a.is-complete span{background:var(--brand);color:#fff}.guided-progress a.is-current{border-color:var(--brand);color:var(--ink)}.guided-check{display:flex;align-items:center;gap:8px;margin:0 0 16px;color:var(--muted);font-size:11px}.guided-check strong{color:var(--brand-dark)}.form-stage{scroll-margin-top:18px;padding-top:4px}.form-stage-title{display:flex;align-items:center;gap:9px;margin:0 0 8px;font-size:13px;font-weight:800;color:var(--ink)}.form-stage-title span{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--brand-soft);color:var(--brand);font-size:10px}
 body[data-theme="dark"] .guided-intro,body[data-theme="dark"] .guided-progress a{background:var(--surface-soft);border-color:var(--line)}body[data-theme="dark"] .guided-intro strong,body[data-theme="dark"] .form-stage-title{color:var(--ink)}
 @media(max-width:680px){.dashboard-metrics{gap:7px}.dashboard-metric{padding:10px 8px}.dashboard-metric strong{font-size:19px}.guided-progress{grid-template-columns:repeat(2,minmax(0,1fr))}.guided-progress a{font-size:10px}}
+
+/* Premium dashboard refinement — development branch */
+:root{--brand:#139b8c;--brand-dark:#087d73;--brand-soft:#e7f6f3;--radius:15px;--shadow:0 10px 28px rgba(18,38,54,.07)}
+body{background:#f3f6f8}
+header{background:#111f30;padding:22px max(18px,calc((100% - 1180px)/2));box-shadow:0 5px 20px #10203012}
+header h1{letter-spacing:-.55px}
+header .sub{color:#b9c8d5}
+.top-actions a,.top-actions button{border-radius:10px}
+.command-center{background:linear-gradient(120deg,#111f30 0%,#1b3548 100%);border:1px solid #28465a;border-radius:19px;padding:28px;gap:24px;box-shadow:0 14px 32px #142c3b1c}
+.command-copy h2{font-size:clamp(27px,4vw,37px);letter-spacing:-1.1px}
+.command-copy h2 em{color:#7fe0cf}
+.command-copy p{color:#c5d2dc;line-height:1.65}
+.eyebrow{color:#9fc8c1;letter-spacing:1.35px}
+.live-dot{background:#42d6b8;box-shadow:0 0 0 4px #42d6b820}
+.command-primary{background:#18aa99;color:#062e2a;border-radius:10px}
+.command-secondary{border-color:#ffffff42;border-radius:10px}
+.overview-panel{background:#ffffff0c;border-color:#ffffff24;border-radius:15px;padding:19px}
+.overview-stat strong{font-size:46px}
+.dashboard-metric{background:#ffffff0b;border-color:#ffffff22;border-radius:11px;padding:12px}
+.dashboard-metric span{color:#b8cbd4;font-size:10px}
+.dashboard-metric strong{color:#fff;font-size:23px}
+.overview-bottom{grid-template-columns:1fr 1fr 1fr;gap:7px;font-size:10px}
+.notice{border-radius:12px}
+.card{border-radius:16px;padding:23px;box-shadow:0 8px 26px rgba(18,38,54,.055)}
+.card h2{letter-spacing:-.45px}
+.section-number{border-radius:9px}
+.records-head{align-items:flex-start}
+.selection-tools{border-radius:12px}
+body[data-theme="dark"]{background:#0e1722}
+body[data-theme="dark"] .command-center{background:linear-gradient(120deg,#101d2b,#172e40);border-color:#2a4356}
+body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
+@media(max-width:680px){
+ header{padding:16px 14px}
+ .command-center{grid-template-columns:1fr;padding:19px;gap:18px;border-radius:15px}
+ .command-copy h2{font-size:29px}
+ .overview-stat strong{font-size:39px}
+ .dashboard-metric{padding:10px 8px}
+ .dashboard-metric strong{font-size:20px}
+ .overview-bottom{grid-template-columns:1fr 1fr;gap:9px}
+ .card{padding:17px;border-radius:14px}
+ .records-head{gap:10px}
+}
 </style>
 </head>
 <body>
