@@ -713,7 +713,7 @@ async function activateWorkspace(session){
  const top=document.querySelector('.top-actions');
  if(!$('signOutBtn')){const b=document.createElement('button');b.id='signOutBtn';b.className='outline';b.type='button';b.textContent='Sign out';b.addEventListener('click',async()=>{const {error}=await supabaseClient.auth.signOut();if(error)authMessage(error.message,true);});top.append(b);}
  await refreshCloudRecords();await showAdminPanel();
- const local=await localRecords();$('migrateBtn').hidden=!(local.length>0);
+ let local=[];if(db){try{local=await localRecords();}catch(e){console.warn('Could not read local report history.',e);}}$('migrateBtn').hidden=!(local.length>0);
  document.querySelector('.storage-indicator').textContent='● Private cloud · '+(currentProfile.display_name||currentUser.email);
  const notice=document.querySelector('.notice');notice.innerHTML='<strong>Private cloud storage:</strong> Reports and evidence are stored securely in your Supabase workspace. Partners see only their own reports; the administrator can review all reports.<br><strong id="ocrState" style="color:#087f78">Loading OCR engine…</strong>';setOcrState(ocrState);
 }
@@ -724,7 +724,7 @@ async function startCloudWorkspace(){
  if(session)await activateWorkspace(session);
  supabaseClient.auth.onAuthStateChange((_event,nextSession)=>{if(nextSession){setTimeout(()=>activateWorkspace(nextSession).catch(err=>authMessage('Workspace could not load: '+err.message,true)),0);}else{cloudReady=false;currentUser=null;currentProfile=null;cloudRecords=[];document.body.classList.remove('cloud-authenticated');$('authPanel').hidden=false;$('adminPanel').hidden=true;const b=$('signOutBtn');if(b)b.remove();}});
 }
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();if(!supabaseClient){authMessage('Connecting to secure sign-in…');return;}const btn=$('loginBtn');btn.disabled=true;authMessage('Signing in…');try{const {error}=await supabaseClient.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;authMessage('Signed in. Loading your reports…');}catch(err){authMessage(err.message||'Sign-in failed. Check your email and password.',true);}finally{btn.disabled=false;}});
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('loginBtn');btn.disabled=true;authMessage('Connecting securely…');try{if(!supabaseClient){if(!cloudStartupPromise)cloudStartupPromise=startCloudWorkspace();await cloudStartupPromise;}if(!supabaseClient)throw new Error('Secure sign-in service is unavailable. Please refresh the page and try again.');authMessage('Signing in…');const {error}=await supabaseClient.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;authMessage('Sign-in accepted. Loading your workspace…');}catch(err){authMessage(err.message||'Sign-in failed. Check your email address and password.',true);}finally{btn.disabled=false;}});
 $('forgotPasswordBtn').addEventListener('click',async()=>{const btn=$('forgotPasswordBtn');const email=$('loginEmail').value.trim();if(!email){authMessage('Enter your account email first.',true);$('loginEmail').focus();return;}if(!supabaseClient){authMessage('Secure sign-in is not connected yet. Refresh this page and try again.',true);return;}btn.disabled=true;btn.textContent='Sending reset email…';authMessage('Requesting a password-reset email for '+email+'…');try{const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:'https://maddulaq.github.io/evidence-log/'});if(error)throw error;authMessage('Password-reset request submitted. Check your inbox and Spam folder. The reset link will open the main SOP & Proof Hub website.');}catch(err){authMessage('Password reset failed: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;btn.textContent='Forgot password';}});
 $('migrateBtn').addEventListener('click',migrateLocalRecords);
 $('inviteGuideBtn').addEventListener('click',()=>window.open('https://supabase.com/dashboard/project/rihobudcchrgwithvutx/auth/users','_blank','noopener'));
@@ -1378,7 +1378,9 @@ themeToggle?.addEventListener('click',()=>{
   try{localStorage.setItem('deliveryEvidenceTheme',next);}catch(e){}
 });
 
-(async()=>{try{db=await openDB();await startCloudWorkspace();}catch(e){authMessage('Workspace connection failed: '+(e.message||'Please refresh and try again.'),true);}})();
+let cloudStartupPromise=null;
+cloudStartupPromise=startCloudWorkspace().catch(e=>{authMessage('Secure sign-in could not start: '+(e.message||'Please refresh and try again.'),true);throw e;});
+(async()=>{try{db=await openDB();}catch(e){console.warn('Local device storage is unavailable; cloud sign-in can still be used.',e);}})();
 
 /* Dashboard count and instant record search */
 const dashboardCount=document.getElementById('dashboardCount');
