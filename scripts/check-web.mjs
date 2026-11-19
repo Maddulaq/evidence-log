@@ -31,6 +31,26 @@ if (!appSource.includes("tesseract.js@5.0.0") ||
     !appSource.includes('[label-crop numeric pass]')) {
   throw new Error('OCR loader or label-anchored Order ID recognition safeguards are missing.');
 }
+
+if (!html.includes('id="ocrConfidence"') ||
+    !appSource.includes('function estimateOcrConfidence(words)') ||
+    !appSource.includes('confidence:estimateOcrConfidence(r.words)') ||
+    !appSource.includes('ocrConfidence') ||
+    !appSource.includes('ocrVerify')) {
+  throw new Error('OCR confidence feedback or bilingual verification copy is missing.');
+}
+const confidenceStart = appSource.indexOf('function estimateOcrConfidence(words){');
+const confidenceEnd = appSource.indexOf('function exactOrderIdFromDigits(raw){', confidenceStart);
+if (confidenceStart < 0 || confidenceEnd <= confidenceStart) {
+  throw new Error('OCR confidence helper could not be located.');
+}
+const confidenceSource = appSource.slice(confidenceStart, confidenceEnd);
+const estimateOcrConfidence = new Function(confidenceSource + '; return estimateOcrConfidence;')();
+if (estimateOcrConfidence([{confidence:80},{confidence:90}]) !== 85 ||
+    estimateOcrConfidence([{confidence:-1},{confidence:101}]) !== null ||
+    estimateOcrConfidence([]) !== null) {
+  throw new Error('OCR confidence helper failed its numeric boundary tests.');
+}
 if (!appSource.includes("issueDescriptionsTe") ||
     !appSource.includes("languageToggleMobile") ||
     !appSource.includes('Could not refresh records after language change')) {

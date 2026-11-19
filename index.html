@@ -449,6 +449,10 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
  .card{padding:17px;border-radius:14px}
  .records-head{gap:10px}
 }
+
+.ocr-confidence{margin-top:7px;padding:9px 11px;border:1px solid #b8ddd4;border-radius:9px;background:#eef8f5;color:#185f55;font-size:11px;line-height:1.5}
+.ocr-confidence[hidden]{display:none}
+body[data-theme="dark"] .ocr-confidence{background:#183b36;border-color:#326b60;color:#c8eee4}
 </style>
 </head>
 <body>
@@ -487,7 +491,7 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 <option value="">Select an issue</option>
 <option value="Reusable bag not given">Reusable bag not given</option><option value="Frozen items not packed separately">Frozen items not packed separately</option><option value="Wrong item given">Wrong item given</option><option value="Asked to convince customer wrongly">Asked to convince customer wrongly</option><option value="Manager misconduct">Manager misconduct</option><option value="Other">Other</option>
 </select></div>
-<div><label for="orderId">Order ID *</label><input id="orderId" required maxlength="20" pattern="OD[0-9]{18}" inputmode="text" autocapitalize="characters" spellcheck="false" title="Enter OD followed by exactly 18 digits" placeholder="OD followed by 18 digits"><button class="secondary" id="rereadBtn" type="button" style="margin-top:8px;padding:8px 12px;font-size:13px">Re-read from screenshot</button><div class="status" id="ocrInline" role="status" aria-live="polite" style="margin-top:6px;font-size:12px"></div><details id="ocrDebug" hidden style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:#66756e">What the OCR saw</summary><pre id="ocrText" style="white-space:pre-wrap;font-size:11px;color:#66756e;background:#f5f7f5;border:1px solid #dce5df;border-radius:8px;padding:8px;margin:6px 0 0;max-height:180px;overflow:auto"></pre></details></div>
+<div><label for="orderId">Order ID *</label><input id="orderId" required maxlength="20" pattern="OD[0-9]{18}" inputmode="text" autocapitalize="characters" spellcheck="false" title="Enter OD followed by exactly 18 digits" placeholder="OD followed by 18 digits"><button class="secondary" id="rereadBtn" type="button" style="margin-top:8px;padding:8px 12px;font-size:13px">Re-read from screenshot</button><div class="status" id="ocrInline" role="status" aria-live="polite" style="margin-top:6px;font-size:12px"></div><div id="ocrConfidence" class="ocr-confidence" role="status" aria-live="polite" hidden></div><details id="ocrDebug" hidden style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:#66756e">What the OCR saw</summary><pre id="ocrText" style="white-space:pre-wrap;font-size:11px;color:#66756e;background:#f5f7f5;border:1px solid #dce5df;border-radius:8px;padding:8px;margin:6px 0 0;max-height:180px;overflow:auto"></pre></details></div>
 <div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" placeholder="Enter your actual store / hub name"></div>
 <div><label for="incidentAt">Incident date and time *</label><input id="incidentAt" type="datetime-local" required></div>
 </div>
@@ -551,7 +555,7 @@ const uiText={
   selectAll:'Select all',clear:'Clear selection',combined:'Generate combined PDF',newReport:'＋ New report',
   noRecords:'No records saved yet.',shareCopied:'App link copied. Send it to your colleagues.',
   shareFallback:'Copy this app link and send it to your colleagues: ',
-  ocrLoading:'Loading OCR engine…',ocrMessages:{reading:'Reading the Order ID from this screenshot…',detected:'Order ID detected. Please verify the details before saving.',notFound:'Could not read the Order ID automatically. Check the recognised text and enter the ID manually.'}
+  ocrLoading:'Loading OCR engine…',ocrMessages:{reading:'Reading the Order ID from this screenshot…',detected:'Order ID detected. Please verify the details before saving.',notFound:'Could not read the Order ID automatically. Check the recognised text and enter the ID manually.',error:'OCR could not run. Enter the Order ID manually.'},ocrConfidence:'Approximate OCR text confidence',ocrVerify:'Please verify every character against the original screenshot.'
  },
  te:{
   headerSub:'స్టోర్‌లో జరిగిన సమస్యలను నమోదు చేయండి. ఆధారాలను భద్రపరచి, SOP మరియు విధానాలతో పరిశీలించండి.',
@@ -576,7 +580,7 @@ const uiText={
   selectAll:'అన్నీ ఎంచుకోండి',clear:'ఎంపిక తొలగించండి',combined:'కలిపిన PDF రూపొందించండి',newReport:'＋ కొత్త రిపోర్ట్',
   noRecords:'ఇంకా రికార్డులు సేవ్ చేయలేదు.',shareCopied:'యాప్ లింక్ కాపీ అయింది. సహచరులకు పంపండి.',
   shareFallback:'ఈ యాప్ లింక్‌ను కాపీ చేసి సహచరులకు పంపండి: ',
-  ocrLoading:'OCR సదుపాయం లోడ్ అవుతోంది…',ocrMessages:{reading:'ఈ స్క్రీన్‌షాట్ నుంచి Order ID చదువుతోంది…',detected:'Order ID గుర్తించబడింది. సేవ్ చేసే ముందు వివరాలు తనిఖీ చేయండి.',notFound:'Order ID ఆటోమేటిక్‌గా చదవలేకపోయింది. గుర్తించిన టెక్స్ట్ తనిఖీ చేసి IDని మాన్యువల్‌గా నమోదు చేయండి.'}
+  ocrLoading:'OCR సదుపాయం లోడ్ అవుతోంది…',ocrMessages:{reading:'ఈ స్క్రీన్‌షాట్ నుంచి Order ID చదువుతోంది…',detected:'Order ID గుర్తించబడింది. సేవ్ చేసే ముందు స్క్రీన్‌షాట్‌తో సరిపోల్చి తనిఖీ చేయండి.',notFound:'Order ID ఆటోమేటిక్‌గా చదవలేకపోయింది. గుర్తించిన టెక్స్ట్ తనిఖీ చేసి IDని మాన్యువల్‌గా నమోదు చేయండి.',error:'OCR పనిచేయలేదు. Order IDని మాన్యువల్‌గా నమోదు చేయండి.'},ocrConfidence:'OCR టెక్స్ట్ గుర్తింపు నమ్మక స్థాయి (సుమారు)',ocrVerify:'ప్రతి అక్షరాన్ని అసలు స్క్రీన్‌షాట్‌తో తప్పనిసరిగా సరిపోల్చండి.'
   }
 };
 let currentLanguage='en';
@@ -607,7 +611,7 @@ function setLanguage(lang){
  put('.bottom-nav a.primary',t.newReport);put('.bottom-nav a[href="#recordsSection"]','▤ '+t.recordsTitle);
  put('#languageToggle',currentLanguage==='en'?'తెలుగు':'English');put('#languageToggleMobile',currentLanguage==='en'?'తెలుగు':'English');
  document.documentElement.lang=currentLanguage==='te'?'te':'en';
- const inlineOcr=$('ocrInline');if(inlineOcr&&inlineOcr.dataset.messageKey){const msg=uiText[currentLanguage].ocrMessages?.[inlineOcr.dataset.messageKey];if(msg)inlineOcr.textContent=msg;}
+ const inlineOcr=$('ocrInline');if(inlineOcr&&inlineOcr.dataset.messageKey){const msg=uiText[currentLanguage].ocrMessages?.[inlineOcr.dataset.messageKey];if(msg)inlineOcr.textContent=msg;}const confidenceEl=$('ocrConfidence');if(confidenceEl&&!confidenceEl.hidden&&confidenceEl.textContent){const match=confidenceEl.textContent.match(/(?:\d+)%/);if(match)confidenceEl.textContent=uiText[currentLanguage].ocrConfidence+': '+match[0]+' · '+uiText[currentLanguage].ocrVerify;}
  if($('category').value&&!notesManuallyEdited)updateSuggestedDescription();
  if(db)render().catch(error=>console.error('Could not refresh records after language change:',error));
 }
@@ -852,6 +856,11 @@ async function warmOcr(){
   catch(e){setOcrState('offline');}
 }
 
+function estimateOcrConfidence(words){
+ const values=(words||[]).map(word=>Number(word&&word.confidence)).filter(value=>Number.isFinite(value)&&value>=0&&value<=100);
+ if(!values.length)return null;
+ return Math.round(values.reduce((sum,value)=>sum+value,0)/values.length);
+}
 function exactOrderIdFromDigits(raw){
  const lines=String(raw||'').split(/\r?\n/);
  for(const line of lines){const digits=line.replace(/\D/g,'');if(digits.length===18)return 'OD'+digits;}
@@ -873,7 +882,7 @@ async function readOrderIdFromImage(file,onStatus){
   const worker=await getOcrWorker(onStatus);
   const t0=Date.now(),seen=[];
   const budget=()=>Date.now()-t0<OCR_DEADLINE;
-  const record=(r)=>{seen.push(r.text||'');return extractOrderId(r.text)||null;};
+  const record=(r)=>{seen.push(r.text||'');const id=extractOrderId(r.text);return id?{id,confidence:estimateOcrConfidence(r.words)}:null;};
 
   // Locate the label using more than one layout mode and scale.
   // PSM 6 handles regular blocks; PSM 11 handles sparse/mobile UI text.
@@ -903,13 +912,13 @@ async function readOrderIdFromImage(file,onStatus){
       const gray=preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'grey');
       res=await recognize(gray,worker,psm);
       const hit=record(res);
-      if(hit)return {id:hit,text:seen.join('\n---\n')};
+      if(hit)return {id:hit.id,confidence:hit.confidence,text:seen.join('\n---\n')};
       if(budget()){
         const binary=preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'binary');
         const digits=await recognize(binary,worker,psm,'0123456789');
         seen.push('[label-crop numeric pass]\\n'+digits.text);
         const exact=exactOrderIdFromDigits(digits.text);
-        if(exact)return {id:exact,text:seen.join('\n---\n')};
+        if(exact)return {id:exact,confidence:estimateOcrConfidence(digits.words),text:seen.join('\n---\n')};
       }
     }
   }
@@ -931,10 +940,10 @@ async function readOrderIdFromImage(file,onStatus){
       const gray=preprocess(drawRegion(img,rect,2.8,3600),'grey');
       res=await recognize(gray,worker,'6');
       const hit=record(res);
-      if(hit)return {id:hit,text:seen.join('\n---\n')};
+      if(hit)return {id:hit.id,confidence:hit.confidence,text:seen.join('\n---\n')};
     }
   }
-  return {id:null,text:seen.join('\n---\n')};
+  return {id:null,confidence:null,text:seen.join('\n---\n')};
 }
 
 function extractScreenshotTime(rawText){
@@ -984,6 +993,8 @@ async function runOrderOcr(file){
   if(!file)return;
   const token=++ocrToken;
   $('ocrDebug').hidden=true;
+  const confidenceEl=$('ocrConfidence');
+  if(confidenceEl){confidenceEl.hidden=true;confidenceEl.textContent='';}
   setOcrStatus(uiText[currentLanguage].ocrMessages.reading,false,'reading');
   try{
     const result=await readOrderIdFromImage(file,(msg)=>{if(token===ocrToken)setOcrStatus(msg);});
@@ -998,14 +1009,18 @@ async function runOrderOcr(file){
     if(result.id){
       const field=$('orderId');
       if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;field.dispatchEvent(new Event('input',{bubbles:true}));field.dispatchEvent(new Event('change',{bubbles:true}));}
-      setOcrStatus('Order ID detected: '+result.id+'. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'Time not detected clearly — please enter it manually. ')+'Please verify the details before saving.',false,'detected');
+      if(confidenceEl&&Number.isFinite(result.confidence)){
+        confidenceEl.textContent=uiText[currentLanguage].ocrConfidence+': '+result.confidence+'% · '+uiText[currentLanguage].ocrVerify;
+        confidenceEl.hidden=false;
+      }
+      setOcrStatus(uiText[currentLanguage].ocrMessages.detected+(timeApplied?' '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0'):''),false,'detected');
     }else{
       $('ocrDebug').open=true;
-      setOcrStatus('Could not read the Order ID automatically. The OCR text is expanded below so you can check what was recognised. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Enter the Order ID manually if it is still missing.',true,'notFound');
+      setOcrStatus(uiText[currentLanguage].ocrMessages.notFound+(timeApplied?' '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0'):''),true,'notFound');
     }
   }catch(err){
     if(token!==ocrToken)return;
-    setOcrStatus('OCR could not run: '+(err&&err.message?err.message:'unknown error')+'. Please enter the Order ID manually.',true,'error');
+    setOcrStatus(uiText[currentLanguage].ocrMessages.error+' '+(err&&err.message?err.message:'unknown error'),true,'error');
   }
 }
 
