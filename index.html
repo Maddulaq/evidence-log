@@ -1053,7 +1053,7 @@ function reportHtml(rows){
       +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
       +'</div></article>';
   }).join('');
-  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+'
+  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+`
 /* Premium incident form and records refinement */
 .form-stage{padding:15px 16px;margin:12px 0;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft)}
 .form-stage-title{font-size:14px;margin-bottom:12px}
@@ -1098,7 +1098,7 @@ body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="da
  .record .actions button{flex:1}
  .record-tools input{min-width:0}
 }
-</style></head><body>'
+`+'</style></head><body>'
     +'<div class="bar"><span>SOP & Evidence Hub \u2014 Incident Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
