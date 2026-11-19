@@ -621,6 +621,7 @@ document.getElementById('shareAppBtn').addEventListener('click',async()=>{
 const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
 const $=id=>document.getElementById(id);
 let db;
+function localRecords(){return new Promise((resolve,reject)=>{if(!db){reject(new Error('Device database is not ready'));return;}const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error||new Error('Could not read device records'));tx.onerror=()=>reject(tx.error||new Error('Could not read device records'));});}
 async function allRecords(){return await localRecords();}
 function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
 function putRecord(record){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
