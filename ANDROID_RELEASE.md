@@ -23,7 +23,7 @@ OCR and direct PDF export load their JavaScript libraries and OCR language data 
 
 The workflow runs a JavaScript syntax/static source check, prepares the web assets, verifies that the app and privacy policy are copied into the Android web directory, then builds the debug APK. A successful build does not prove that OCR, file selection, local storage, PDF export, or sharing work correctly on every phone.
 
-A push to the main branch that changes the app, Android build configuration, package metadata, privacy policy, or build scripts starts the workflow.
+This Android packaging workflow is manual so that GitHub Pages website updates do not trigger an unrelated Android build. Run it from Actions only when you specifically need a debug APK or signed AAB.
 
 ## Signed Play Store AAB
 
