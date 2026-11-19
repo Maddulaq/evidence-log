@@ -886,8 +886,7 @@ async function readOrderIdFromImage(file,onStatus){
       res=await recognize(gray,worker,psm);
       const hit=record(res);
       if(hit)return {id:hit,text:seen.join('\n---\n')};
-      // The ID is numeric; a digits-only pass avoids letter confusions.
-    }
+          }
   }
 
   // Fallback: scan overlapping horizontal bands across the entire image.
@@ -1152,8 +1151,8 @@ async function createEvidencePdfBlob(rows){
     let y=H-82;
     const field=(label,value)=>{
       page.drawText(label,{x:margin,y:y-11,size:9,font:bold,color:muted});
-      const text=String(value||'—').replace(/[\\r\\n]+/g,' ');
-      const maxWidth=W-2*margin-118,words=text.split(/\\s+/),lines=[];
+      const text=String(value||'—').replace(/[\r\n]+/g,' ');
+      const maxWidth=W-2*margin-118,words=text.split(/\s+/),lines=[];
       let lineText='';
       for(const word of words){
         const candidate=lineText?lineText+' '+word:word;
