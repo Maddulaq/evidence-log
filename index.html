@@ -818,23 +818,26 @@ function zoomOnOriginal(img,box,canvasScale){
 async function getOcrWorker(onStatus){
  if(ocrWorkerPromise)return ocrWorkerPromise;
  ocrWorkerPromise=(async()=>{
-  const engine=await loadOcrLibrary(),config=ocrWorkerConfig;
-  if(!engine||!config)throw new Error('OCR library configuration is unavailable');
+  const engine=await loadOcrLibrary();
+  if(!engine)throw new Error('OCR library is unavailable');
   let lastErr=null;
-  for(const langPath of OCR_LANG_SOURCES){
-   let worker=null;
-   try{
-    if(onStatus)onStatus('Loading the OCR language data (first time only)…');
-    worker=await engine.createWorker('eng',1,{
-     workerPath:config.worker,corePath:config.core,langPath,gzip:true,
-     logger:message=>{if(onStatus&&message&&message.status==='recognizing text')onStatus('Reading screenshot… '+Math.round((message.progress||0)*100)+'%');}
-    });
-    await worker.setParameters({preserve_interword_spaces:'1'});
-    setOcrState('ready');
-    return worker;
-   }catch(error){
-    lastErr=error;
-    if(worker&&worker.terminate){try{await worker.terminate();}catch(cleanupError){}}
+  for(const config of OCR_CDN_CONFIGS){
+   for(const langPath of OCR_LANG_SOURCES){
+    let worker=null;
+    try{
+     if(onStatus)onStatus('Loading the OCR language data (first time only)…');
+     worker=await engine.createWorker('eng',1,{
+      workerPath:config.worker,corePath:config.core,langPath,gzip:true,
+      logger:message=>{if(onStatus&&message&&message.status==='recognizing text')onStatus('Reading screenshot… '+Math.round((message.progress||0)*100)+'%');}
+     });
+     await worker.setParameters({preserve_interword_spaces:'1'});
+     ocrWorkerConfig=config;
+     setOcrState('ready');
+     return worker;
+    }catch(error){
+     lastErr=error;
+     if(worker&&worker.terminate){try{await worker.terminate();}catch(cleanupError){}}
+    }
    }
   }
   throw lastErr||new Error('The OCR language data could not be loaded');
