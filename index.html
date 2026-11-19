@@ -452,7 +452,7 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 </style>
 </head>
 <body>
-<header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline" id="shareAppBtn" type="button">Share app</button><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
+<header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline" id="languageToggle" type="button" aria-label="Switch language">తెలుగు</button><button class="outline" id="shareAppBtn" type="button">Share app</button><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
 <main>
 
 
@@ -487,8 +487,8 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 <option value="">Select an issue</option>
 <option value="Reusable bag not given">Reusable bag not given</option><option value="Frozen items not packed separately">Frozen items not packed separately</option><option value="Wrong item given">Wrong item given</option><option value="Asked to convince customer wrongly">Asked to convince customer wrongly</option><option value="Manager misconduct">Manager misconduct</option><option value="Other">Other</option>
 </select></div>
-<div><label for="orderId">Order ID *</label><input id="orderId" required maxlength="80" placeholder="Enter or verify Order ID"><button class="secondary" id="rereadBtn" type="button" style="margin-top:8px;padding:8px 12px;font-size:13px">Re-read from screenshot</button><div class="status" id="ocrInline" role="status" aria-live="polite" style="margin-top:6px;font-size:12px"></div><details id="ocrDebug" hidden style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:#66756e">What the OCR saw</summary><pre id="ocrText" style="white-space:pre-wrap;font-size:11px;color:#66756e;background:#f5f7f5;border:1px solid #dce5df;border-radius:8px;padding:8px;margin:6px 0 0;max-height:180px;overflow:auto"></pre></details></div>
-<div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" value="Banjara Hills 150" placeholder="Store name"></div>
+<div><label for="orderId">Order ID *</label><input id="orderId" required maxlength="20" pattern="OD[0-9]{18}" inputmode="text" autocapitalize="characters" spellcheck="false" title="Enter OD followed by exactly 18 digits" placeholder="OD followed by 18 digits"><button class="secondary" id="rereadBtn" type="button" style="margin-top:8px;padding:8px 12px;font-size:13px">Re-read from screenshot</button><div class="status" id="ocrInline" role="status" aria-live="polite" style="margin-top:6px;font-size:12px"></div><details id="ocrDebug" hidden style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:#66756e">What the OCR saw</summary><pre id="ocrText" style="white-space:pre-wrap;font-size:11px;color:#66756e;background:#f5f7f5;border:1px solid #dce5df;border-radius:8px;padding:8px;margin:6px 0 0;max-height:180px;overflow:auto"></pre></details></div>
+<div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" placeholder="Enter your actual store / hub name"></div>
 <div><label for="incidentAt">Incident date and time *</label><input id="incidentAt" type="datetime-local" required></div>
 </div>
 </div>
@@ -507,13 +507,15 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 </section>
 <section class="card " id="recordsSection">
 <div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
-<div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div class="selection-tools no-print"><div><strong id="selectionCount">0 complaints selected</strong><small>Select multiple complaints to combine them into one PDF, with a separate section for each complaint.</small></div><div class="actions"><button class="secondary" id="selectAllBtn" type="button">Select all</button><button id="combinedPdfBtn" type="button" disabled>Generate combined PDF</button></div></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
+<div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div class="selection-tools no-print"><div><strong id="selectionCount">0 complaints selected</strong><small id="selectionHelp">Select multiple complaints to combine them into one PDF, with a separate section for each complaint.</small></div><div class="actions"><button class="secondary" id="selectAllBtn" type="button">Select all</button><button id="combinedPdfBtn" type="button" disabled>Generate combined PDF</button></div></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
 </section>
-<p class="hint " style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong></p>
+<p class="hint " style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong> · <a href="privacy.html">Privacy policy</a></p>
 </main>
-<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggle" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
+<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggleMobile" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
 
 <script>
+
+const $=id=>document.getElementById(id);
 
 (function setupGuidedReport(){
  const form=$('incidentForm');if(!form)return;const links=[...document.querySelectorAll('[data-guide-step]')],status=$('guidedStatus'),hint=$('guidedHint'),percent=$('guidedPercent'),checklist=$('guidedChecklist');
@@ -530,10 +532,10 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 const uiText={
  en:{
   headerSub:'Document store-related incidents, preserve evidence and review what happened against SOPs and policies.',
-  create:'＋ Create a report',saved:'View saved records',share:'Share app',
+  create:'＋ Create a report',saved:'View saved records',share:'Share app',incidentTitle:'Submit an incident',incidentSub:'Follow the guided steps. Verify the Order ID and incident date/time before saving.',
   eyebrow:'SOP & PROOF · INCIDENT DOCUMENTATION',hero:'Every issue.<br><em>Properly documented.</em>',
   heroSub:'Capture clear evidence, verify the order details, and keep a report ready when you need it.',
-  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● Private cloud workspace',
+  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● Stored on this device',
   savedCount:'Saved incident records',step1:'<b>01</b> Capture screenshot',step2:'<b>02</b> Add evidence',step3:'<b>03</b> Save report',
   notice:'<strong>Device-only storage:</strong> Reports and evidence stay on this phone. They are not uploaded to a cloud account.<br><span class="pill">Required</span>',
   orderHint:'Upload the order screenshot. The app tries to read the Order ID and screenshot time automatically. Check the details and correct them if needed.',
@@ -543,22 +545,22 @@ const uiText={
   evidenceHint:'Add 1–2 clear photos showing the issue. Maximum 8 MB per image.',
   description:'Short description (optional)',descriptionPlaceholder:'Describe what happened in a few clear words…',
   descriptionHint:'Choose an issue to see a suggested description. Edit it so it accurately describes what happened.',
-  save:'Save incident',reset:'Reset form',recordsTitle:'Saved records',deviceOnly:'Stored in private cloud',
+  save:'Save incident',reset:'Reset form',recordsTitle:'Saved records',deviceOnly:'Stored on this device',
   export:'Export report / PDF',backup:'Download backup',search:'Search by Order ID, store or issue…',
   allRecords:'All records',selectCount:'complaints selected',selectHelp:'Select multiple complaints to combine them into one PDF, with a separate section for each complaint.',
   selectAll:'Select all',clear:'Clear selection',combined:'Generate combined PDF',newReport:'＋ New report',
   noRecords:'No records saved yet.',shareCopied:'App link copied. Send it to your colleagues.',
   shareFallback:'Copy this app link and send it to your colleagues: ',
-  ocrLoading:'Loading OCR engine…'
+  ocrLoading:'Loading OCR engine…',ocrMessages:{reading:'Reading the Order ID from this screenshot…',detected:'Order ID detected. Please verify the details before saving.',notFound:'Could not read the Order ID automatically. Check the recognised text and enter the ID manually.'}
  },
  te:{
   headerSub:'స్టోర్‌లో జరిగిన సమస్యలను నమోదు చేయండి. ఆధారాలను భద్రపరచి, SOP మరియు విధానాలతో పరిశీలించండి.',
   create:'＋ రిపోర్ట్ నమోదు',saved:'సేవ్ చేసిన రికార్డులు',share:'యాప్ షేర్ చేయండి',
   eyebrow:'SOP & PROOF · ఘటనల నమోదు',hero:'ప్రతి సమస్యను<br><em>సరిగ్గా నమోదు చేయండి.</em>',
   heroSub:'ఆధారాలను జోడించండి, ఆర్డర్ వివరాలను తనిఖీ చేయండి, అవసరమైనప్పుడు రిపోర్ట్ సిద్ధంగా ఉంచండి.',
-  newIncident:'＋ కొత్త ఘటన',browse:'రికార్డులు చూడండి ↗',workspace:'మీ వర్క్‌స్పేస్',device:'● ప్రైవేట్ క్లౌడ్ వర్క్‌స్పేస్',
+  newIncident:'＋ కొత్త ఘటన',browse:'రికార్డులు చూడండి ↗',workspace:'మీ వర్క్‌స్పేస్',device:'● ఈ పరికరంలో నిల్వ',
   savedCount:'సేవ్ చేసిన ఘటనలు',step1:'<b>01</b> స్క్రీన్‌షాట్ జోడించండి',step2:'<b>02</b> ఆధారాల ఫోటోలు జోడించండి',step3:'<b>03</b> రిపోర్ట్ సేవ్ చేయండి',
-  notice:'<strong>ప్రైవేట్ క్లౌడ్ స్టోరేజ్:</strong> రిపోర్టులు మరియు ఆధారాలు మీ సురక్షిత వర్క్‌స్పేస్‌లో భద్రపరచబడతాయి. పార్ట్‌నర్లు తమ రిపోర్టులను మాత్రమే చూడగలరు.',
+  notice:'<strong>ఈ పరికరంలో మాత్రమే నిల్వ:</strong> రిపోర్టులు మరియు ఆధారాలు ఈ ఫోన్‌లోనే ఉంటాయి. అవి క్లౌడ్ ఖాతాకు అప్‌లోడ్ కావు.',
   incidentTitle:'ఘటనను నమోదు చేయండి',incidentSub:'క్రింది దశలను అనుసరించండి. సేవ్ చేసే ముందు Order ID మరియు ఘటన సమయాన్ని తనిఖీ చేయండి.',
   orderShot:'ఆర్డర్ స్క్రీన్‌షాట్ <span class="pill">తప్పనిసరి</span>',
   orderHint:'ఆర్డర్ స్క్రీన్‌షాట్ అప్‌లోడ్ చేయండి. యాప్ Order ID మరియు స్క్రీన్‌షాట్ సమయాన్ని ఆటోమేటిక్‌గా చదవడానికి ప్రయత్నిస్తుంది. వివరాలు తనిఖీ చేసి అవసరమైతే సరిచేయండి.',
@@ -568,14 +570,14 @@ const uiText={
   evidenceHint:'సమస్యను చూపించే 1–2 స్పష్టమైన ఫోటోలు జోడించండి. ఒక్కో ఫోటో గరిష్ఠ పరిమాణం 8 MB.',
   description:'సంక్షిప్త వివరణ (ఐచ్ఛికం)',descriptionPlaceholder:'ఏం జరిగిందో కొన్ని స్పష్టమైన పదాల్లో రాయండి…',
   descriptionHint:'సమస్య రకాన్ని ఎంచుకుంటే సూచించిన వివరణ కనిపిస్తుంది. జరిగిన విషయానికి సరిపోయేలా సవరించండి.',
-  save:'ఘటనను సేవ్ చేయండి',reset:'ఫారమ్ రీసెట్ చేయండి',recordsTitle:'సేవ్ చేసిన రికార్డులు',deviceOnly:'ప్రైవేట్ క్లౌడ్‌లో భద్రపరచబడతాయి',
+  save:'ఘటనను సేవ్ చేయండి',reset:'ఫారమ్ రీసెట్ చేయండి',recordsTitle:'సేవ్ చేసిన రికార్డులు',deviceOnly:'ఈ పరికరంలో మాత్రమే నిల్వ',
   export:'రిపోర్ట్ / PDF ఎగుమతి',backup:'బ్యాకప్ డౌన్‌లోడ్',search:'Order ID, స్టోర్ లేదా సమస్యతో వెతకండి…',
   allRecords:'అన్ని రికార్డులు',selectCount:'ఫిర్యాదులు ఎంపికయ్యాయి',selectHelp:'ఒక PDFలో కలపడానికి అనేక ఫిర్యాదులను ఎంచుకోండి. ప్రతి ఫిర్యాదుకు ప్రత్యేక విభాగం ఉంటుంది.',
   selectAll:'అన్నీ ఎంచుకోండి',clear:'ఎంపిక తొలగించండి',combined:'కలిపిన PDF రూపొందించండి',newReport:'＋ కొత్త రిపోర్ట్',
   noRecords:'ఇంకా రికార్డులు సేవ్ చేయలేదు.',shareCopied:'యాప్ లింక్ కాపీ అయింది. సహచరులకు పంపండి.',
   shareFallback:'ఈ యాప్ లింక్‌ను కాపీ చేసి సహచరులకు పంపండి: ',
-  ocrLoading:'OCR సదుపాయం లోడ్ అవుతోంది…'
- }
+  ocrLoading:'OCR సదుపాయం లోడ్ అవుతోంది…',ocrMessages:{reading:'ఈ స్క్రీన్‌షాట్ నుంచి Order ID చదువుతోంది…',detected:'Order ID గుర్తించబడింది. సేవ్ చేసే ముందు వివరాలు తనిఖీ చేయండి.',notFound:'Order ID ఆటోమేటిక్‌గా చదవలేకపోయింది. గుర్తించిన టెక్స్ట్ తనిఖీ చేసి IDని మాన్యువల్‌గా నమోదు చేయండి.'}
+  }
 };
 let currentLanguage='en';
 function setLanguage(lang){
@@ -587,7 +589,7 @@ function setLanguage(lang){
  put('.eyebrow',t.eyebrow);put('.command-copy h2',t.hero,true);put('.command-copy p',t.heroSub);
  put('.command-primary',t.newIncident);put('.command-secondary',t.browse);put('.overview-top span:first-child',t.workspace);put('.storage-indicator',t.device);
  put('.overview-stat span',t.savedCount);put('.overview-bottom span:nth-child(1)',t.step1,true);put('.overview-bottom span:nth-child(2)',t.step2,true);put('.overview-bottom span:nth-child(3)',t.step3,true);
- const notice=document.querySelector('.notice');if(notice){const ocr=$('ocrState');notice.innerHTML=t.notice+'<br>';if(ocr){ocr.id='ocrState';ocr.style.color='#624c20';ocr.textContent=t.ocrLoading;notice.append(ocr);}}
+ const notice=document.querySelector('.notice');if(notice){const ocr=$('ocrState');notice.innerHTML=t.notice+'<br>';if(ocr){ocr.id='ocrState';notice.append(ocr);setOcrState(ocrState);}}
  put('#incidentSection h2',t.incidentTitle);put('#incidentSection .section-subtitle',t.incidentSub);
  put('label[for="orderShot"]',t.orderShot,true);put('#orderShot + .hint',t.orderHint);
  put('label[for="category"]',t.category);put('#category option[value=""]',t.selectIssue);
@@ -595,18 +597,22 @@ function setLanguage(lang){
  [...document.querySelectorAll('#category option')].slice(1).forEach((o,i)=>{if(categoryLabels[i])o.textContent=categoryLabels[i];});
  put('label[for="orderId"]',t.orderId);put('#rereadBtn',t.reread);put('label[for="store"]',t.store);put('label[for="incidentAt"]',t.incidentAt);
  put('label[for="supporting"]',t.evidence,true);put('#supporting + .hint',t.evidenceHint);
- put('label[for="notes"]',t.description);put('#notes',t.descriptionPlaceholder);put('#notes + .hint',t.descriptionHint);
+ put('label[for="notes"]',t.description);const notesField=$('notes');if(notesField)notesField.placeholder=t.descriptionPlaceholder;put('#notes + .hint',t.descriptionHint);
  put('#saveBtn',t.save);put('#incidentForm button[type="reset"]',t.reset);
  const rh=$('#recordsSection .records-head h2');if(rh){rh.childNodes[0].textContent=t.recordsTitle+' ';}
  put('#recordsSection .records-head small',t.deviceOnly);put('#exportBtn',t.export);put('#backupBtn',t.backup);
- put('#recordSearch',t.search);put('#searchCount',t.allRecords);put('#selectionHelp',t.selectHelp);
+ const searchField=$('recordSearch');if(searchField)searchField.placeholder=t.search;put('#searchCount',t.allRecords);put('#selectionHelp',t.selectHelp);
  put('#selectAllBtn',selectedRecordIds.size?t.clear:t.selectAll);put('#combinedPdfBtn',t.combined);
  const empty=$('#records .hint');if(empty&&!$('#records .record'))empty.textContent=t.noRecords;
  put('.bottom-nav a.primary',t.newReport);put('.bottom-nav a[href="#recordsSection"]','▤ '+t.recordsTitle);
- put('#languageToggle',currentLanguage==='en'?'తెలుగు':'English');
+ put('#languageToggle',currentLanguage==='en'?'తెలుగు':'English');put('#languageToggleMobile',currentLanguage==='en'?'తెలుగు':'English');
  document.documentElement.lang=currentLanguage==='te'?'te':'en';
+ const inlineOcr=$('ocrInline');if(inlineOcr&&inlineOcr.dataset.messageKey){const msg=uiText[currentLanguage].ocrMessages?.[inlineOcr.dataset.messageKey];if(msg)inlineOcr.textContent=msg;}
+ if($('category').value&&!notesManuallyEdited)updateSuggestedDescription();
+ if(db)render().catch(error=>console.error('Could not refresh records after language change:',error));
 }
-document.getElementById('languageToggle').addEventListener('click',()=>setLanguage(currentLanguage==='en'?'te':'en'));
+const languageToggle=$('languageToggle'),languageToggleMobile=$('languageToggleMobile');
+[languageToggle,languageToggleMobile].filter(Boolean).forEach(button=>button.addEventListener('click',()=>setLanguage(currentLanguage==='en'?'te':'en')));
 document.getElementById('shareAppBtn').addEventListener('click',async()=>{
  const url='https://maddulaq.github.io/evidence-log/';
  const title='SOP & Proof Hub';
@@ -619,7 +625,6 @@ document.getElementById('shareAppBtn').addEventListener('click',async()=>{
 });
 
 const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
-const $=id=>document.getElementById(id);
 let db;
 function localRecords(){return new Promise((resolve,reject)=>{if(!db){reject(new Error('Device database is not ready'));return;}const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error||new Error('Could not read device records'));tx.onerror=()=>reject(tx.error||new Error('Could not read device records'));});}
 async function allRecords(){return await localRecords();}
@@ -627,6 +632,7 @@ function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open
 function putRecord(record){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
 function deleteLocalRecord(id){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
 function readFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file);});}
+function clearImagePreviews(container){if(!container)return;container.querySelectorAll('img').forEach(img=>{if(img.src&&img.src.startsWith('blob:'))URL.revokeObjectURL(img.src);});container.replaceChildren();}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function setStatus(msg,isError=false){$('formStatus').textContent=msg;$('formStatus').className='status'+(isError?' error':'');}
 function localDateTime(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());}
@@ -685,40 +691,44 @@ function extractOrderId(rawText){
 }
 /* ---------- Order ID OCR (rewritten) ---------- */
 const OCR_MAX_AREA=4.2e6,OCR_MAX_SIDE=3800,OCR_DEADLINE=45000;
-const OCR_LANG_SOURCES=['https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0','https://unpkg.com/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://tessdata.projectnaptha.com/4.0.0_best_int'];
-const OCR_LIB_SOURCES=['https://unpkg.com/tesseract.js@5/dist/tesseract.min.js','https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js'];
-let ocrLibPromise=null,ocrWorkerPromise=null,ocrToken=0,lastAutoId='',ocrState='loading';
-
-// Load OCR on demand and try the second CDN if the first one fails.
-// Do not cache a failed load: a later retry must be able to recover.
+const OCR_LANG_SOURCES=['https://tessdata.projectnaptha.com/4.0.0_best_int','https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://unpkg.com/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://tessdata.projectnaptha.com/4.0.0'];
+const OCR_CDN_CONFIGS=[
+ {script:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/tesseract.min.js',worker:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/worker.min.js',core:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0'},
+ {script:'https://unpkg.com/tesseract.js@5.0.0/dist/tesseract.min.js',worker:'https://unpkg.com/tesseract.js@5.0.0/dist/worker.min.js',core:'https://unpkg.com/tesseract.js-core@5.0.0'}
+];
+let ocrLibPromise=null,ocrWorkerPromise=null,ocrToken=0,lastAutoId='',ocrState='loading',ocrWorkerConfig=null;
 function loadOcrLibrary(){
-  if(window.Tesseract)return Promise.resolve(window.Tesseract);
-  if(ocrLibPromise)return ocrLibPromise;
-  ocrLibPromise=(async()=>{
-    let lastError=null;
-    for(const src of OCR_LIB_SOURCES){
-      try{
-        await new Promise((resolve,reject)=>{
-          const script=document.createElement('script');
-          script.src=src;
-          script.async=true;
-          script.onload=()=>window.Tesseract?resolve():reject(new Error('OCR library loaded but Tesseract was not available'));
-          script.onerror=()=>reject(new Error('Could not load OCR library from '+new URL(src).hostname));
-          document.head.appendChild(script);
-        });
-        return window.Tesseract;
-      }catch(error){lastError=error;}
-    }
-    throw lastError||new Error('All OCR library sources failed');
-  })().catch(error=>{ocrLibPromise=null;throw error;});
-  return ocrLibPromise;
+ if(window.Tesseract)return Promise.resolve(window.Tesseract);
+ if(ocrLibPromise)return ocrLibPromise;
+ ocrLibPromise=(async()=>{
+  let lastError=null;
+  for(const config of OCR_CDN_CONFIGS){
+   try{
+    await new Promise((resolve,reject)=>{
+     const script=document.createElement('script');
+     let settled=false,timer;
+     const finish=error=>{if(settled)return;settled=true;clearTimeout(timer);script.onload=null;script.onerror=null;if(error){script.remove();reject(error);}else resolve();};
+     timer=setTimeout(()=>finish(new Error('Timed out loading OCR library from '+new URL(config.script).hostname)),12000);
+     script.src=config.script;script.async=true;
+     script.onload=()=>window.Tesseract?finish():finish(new Error('OCR library loaded but Tesseract was not available'));
+     script.onerror=()=>finish(new Error('Could not load OCR library from '+new URL(config.script).hostname));
+     document.head.appendChild(script);
+    });
+    if(!window.Tesseract)throw new Error('OCR library is unavailable after download');
+    ocrWorkerConfig=config;
+    return window.Tesseract;
+   }catch(error){lastError=error;}
+  }
+  throw lastError||new Error('All OCR library sources failed');
+ })().catch(error=>{ocrLibPromise=null;throw error;});
+ return ocrLibPromise;
 }
 
 function setOcrState(state,detail){
   ocrState=state;
   const el=document.getElementById('ocrState');
   if(!el)return;
-  const map={loading:['Loading OCR engine…','#624c20'],ready:['OCR engine ready','#174b3b'],offline:['OCR engine unavailable — type the Order ID','#a63232']};
+  const map=currentLanguage==='te'?{loading:['OCR సదుపాయం లోడ్ అవుతోంది…','#624c20'],ready:['OCR సిద్ధంగా ఉంది','#174b3b'],offline:['OCR అందుబాటులో లేదు — Order IDని మాన్యువల్‌గా నమోదు చేయండి','#a63232']}:{loading:['Loading OCR engine…','#624c20'],ready:['OCR engine ready','#174b3b'],offline:['OCR engine unavailable — type the Order ID','#a63232']};
   const picked=map[state]||map.loading;
   el.textContent=detail||picked[0];
   el.style.color=picked[1];
@@ -806,38 +816,47 @@ function zoomOnOriginal(img,box,canvasScale){
 }
 
 async function getOcrWorker(onStatus){
-  if(ocrWorkerPromise)return ocrWorkerPromise;
-  ocrWorkerPromise=(async()=>{
-    await loadOcrLibrary();
-    const engine=window.Tesseract;
-    if(!engine)throw new Error('OCR library is unavailable');
-    let lastErr=null;
-    for(const langPath of OCR_LANG_SOURCES){
-      try{
-        if(onStatus)onStatus('Loading the OCR language data (first time only)…');
-        const worker=await engine.createWorker('eng',1,{langPath,gzip:true,logger:()=>{}});
-        await worker.setParameters({preserve_interword_spaces:'1'});
-        setOcrState('ready');
-        return worker;
-      }catch(e){lastErr=e;}
+ if(ocrWorkerPromise)return ocrWorkerPromise;
+ ocrWorkerPromise=(async()=>{
+  const engine=await loadOcrLibrary();
+  if(!engine)throw new Error('OCR library is unavailable');
+  let lastErr=null;
+  for(const config of OCR_CDN_CONFIGS){
+   for(const langPath of OCR_LANG_SOURCES){
+    let worker=null;
+    try{
+     if(onStatus)onStatus('Loading the OCR language data (first time only)…');
+     worker=await engine.createWorker('eng',1,{
+      workerPath:config.worker,corePath:config.core,langPath,gzip:true,
+      logger:message=>{if(onStatus&&message&&message.status==='recognizing text')onStatus('Reading screenshot… '+Math.round((message.progress||0)*100)+'%');}
+     });
+     await worker.setParameters({preserve_interword_spaces:'1'});
+     ocrWorkerConfig=config;
+     setOcrState('ready');
+     return worker;
+    }catch(error){
+     lastErr=error;
+     if(worker&&worker.terminate){try{await worker.terminate();}catch(cleanupError){}}
     }
-    throw lastErr||new Error('the OCR language data could not be loaded');
-  })().catch(error=>{
-    ocrWorkerPromise=null;
-    setOcrState('offline');
-    throw error;
-  });
-  return ocrWorkerPromise;
+   }
+  }
+  throw lastErr||new Error('The OCR language data could not be loaded');
+ })().catch(error=>{ocrWorkerPromise=null;setOcrState('offline');throw error;});
+ return ocrWorkerPromise;
 }
 
 async function warmOcr(){
   if(ocrState==='ready')return;
-  if(!window.Tesseract){setTimeout(()=>{if(ocrState==='loading'&&!window.Tesseract)setOcrState('offline');},20000);return;}
   setOcrState('loading');
-  const timer=setTimeout(()=>{if(ocrState==='loading')setOcrState('offline');},25000);
-  try{await getOcrWorker();setOcrState('ready');}catch(e){setOcrState('offline');}finally{clearTimeout(timer);}
+  try{await getOcrWorker();setOcrState('ready');}
+  catch(e){setOcrState('offline');}
 }
 
+function exactOrderIdFromDigits(raw){
+ const lines=String(raw||'').split(/\r?\n/);
+ for(const line of lines){const digits=line.replace(/\D/g,'');if(digits.length===18)return 'OD'+digits;}
+ return null;
+}
 async function recognize(cv,worker,psm,whitelist){
   const params={tessedit_pageseg_mode:psm};
   if(whitelist)params.tessedit_char_whitelist=whitelist;
@@ -845,15 +864,6 @@ async function recognize(cv,worker,psm,whitelist){
   await worker.setParameters(params);
   const res=await worker.recognize(cv);
   return {text:res.data.text||'',words:res.data.words||[]};
-}
-function exactOrderIdFromDigits(raw){
-  const lines=String(raw||'').split(/\r?\n/);
-  for(const line of lines){
-    const digits=line.replace(/\D/g,'');
-    if(digits.length===18)return 'OD'+digits;
-  }
-  const all=String(raw||'').replace(/\D/g,'');
-  return all.length===18?'OD'+all:null;
 }
 async function readOrderIdFromImage(file,onStatus){
   const note=(msg)=>{if(onStatus)onStatus(msg);};
@@ -887,7 +897,6 @@ async function readOrderIdFromImage(file,onStatus){
     const labelH=Math.max(1,(label.y1-label.y0)/scale);
     const cropY=Math.max(0,labelY-labelH*1.5);
     const cropH=Math.min(img.naturalHeight-cropY,Math.max(img.naturalHeight*0.24,labelH*16));
-    const crop=drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600);
     note('Reading the Order ID area at high resolution…');
     for(const psm of ['6','11','7']){
       if(!budget())break;
@@ -895,11 +904,13 @@ async function readOrderIdFromImage(file,onStatus){
       res=await recognize(gray,worker,psm);
       const hit=record(res);
       if(hit)return {id:hit,text:seen.join('\n---\n')};
-      // The ID is numeric; a digits-only pass avoids letter confusions.
-      const digits=await recognize(preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'binary'),worker,psm,'0123456789');
-      seen.push('[digits-only pass]\n'+digits.text);
-      const exact=exactOrderIdFromDigits(digits.text);
-      if(exact)return {id:exact,text:seen.join('\n---\n')};
+      if(budget()){
+        const binary=preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'binary');
+        const digits=await recognize(binary,worker,psm,'0123456789');
+        seen.push('[label-crop numeric pass]\\n'+digits.text);
+        const exact=exactOrderIdFromDigits(digits.text);
+        if(exact)return {id:exact,text:seen.join('\n---\n')};
+      }
     }
   }
 
@@ -921,11 +932,6 @@ async function readOrderIdFromImage(file,onStatus){
       res=await recognize(gray,worker,'6');
       const hit=record(res);
       if(hit)return {id:hit,text:seen.join('\n---\n')};
-      const binary=preprocess(drawRegion(img,rect,2.8,3600),'binary');
-      const digits=await recognize(binary,worker,'6','0123456789');
-      seen.push('[section '+(i+1)+' digits-only]\n'+digits.text);
-      const exact=exactOrderIdFromDigits(digits.text);
-      if(exact)return {id:exact,text:seen.join('\n---\n')};
     }
   }
   return {id:null,text:seen.join('\n---\n')};
@@ -965,18 +971,20 @@ function applyScreenshotTime(time){
   const field=$('incidentAt'),current=field.value||localDateTime(new Date());
   const date=current.slice(0,10);
   field.value=date+'T'+String(time.hour).padStart(2,'0')+':'+String(time.minute).padStart(2,'0');
+  field.dispatchEvent(new Event('input',{bubbles:true}));
+  field.dispatchEvent(new Event('change',{bubbles:true}));
   return true;
 }
-function setOcrStatus(msg,isError){
+function setOcrStatus(msg,isError,key){
   const el=$('ocrInline');
-  if(el){el.textContent=msg;el.className='status'+(isError?' error':'');}
+  if(el){el.textContent=msg;el.dataset.messageKey=key||'';el.className='status'+(isError?' error':'');}
   setStatus(msg,!!isError);
 }
 async function runOrderOcr(file){
   if(!file)return;
   const token=++ocrToken;
   $('ocrDebug').hidden=true;
-  setOcrStatus('Reading the Order ID from this screenshot…');
+  setOcrStatus(uiText[currentLanguage].ocrMessages.reading,false,'reading');
   try{
     const result=await readOrderIdFromImage(file,(msg)=>{if(token===ocrToken)setOcrStatus(msg);});
     if(token!==ocrToken)return;
@@ -989,15 +997,15 @@ async function runOrderOcr(file){
     const timeApplied=applyScreenshotTime(screenshotTime);
     if(result.id){
       const field=$('orderId');
-      if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;}
-      setOcrStatus('Order ID detected: '+result.id+'. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'Time not detected clearly — please enter it manually. ')+'Please verify the details before saving.');
+      if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;field.dispatchEvent(new Event('input',{bubbles:true}));field.dispatchEvent(new Event('change',{bubbles:true}));}
+      setOcrStatus('Order ID detected: '+result.id+'. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'Time not detected clearly — please enter it manually. ')+'Please verify the details before saving.',false,'detected');
     }else{
       $('ocrDebug').open=true;
-      setOcrStatus('Could not read the Order ID automatically. The OCR text is expanded below so you can check what was recognised. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Enter the Order ID manually if it is still missing.',true);
+      setOcrStatus('Could not read the Order ID automatically. The OCR text is expanded below so you can check what was recognised. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'No clear time found. ')+'Enter the Order ID manually if it is still missing.',true,'notFound');
     }
   }catch(err){
     if(token!==ocrToken)return;
-    setOcrStatus('OCR could not run: '+(err&&err.message?err.message:'unknown error')+'. Please enter the Order ID manually.',true);
+    setOcrStatus('OCR could not run: '+(err&&err.message?err.message:'unknown error')+'. Please enter the Order ID manually.',true,'error');
   }
 }
 
@@ -1009,12 +1017,19 @@ const issueDescriptions={
   'Asked to convince customer wrongly':"During the order handover, the store team asked the delivery partner to communicate information to the customer that the partner believed did not match the actual order or situation.",
   'Manager misconduct':"The delivery partner experienced an incident involving the store manager. Add the specific words or actions, along with the date, time, and any witnesses, so the report records exactly what happened.",
   'Other':""
+};const issueDescriptionsTe={
+ 'Reusable bag not given':"డెలివరీ భాగస్వామి ఆర్డర్ తీసుకోవడానికి స్టోర్‌కు వెళ్లినప్పుడు, స్టోర్ సిబ్బంది అవసరమైన రీయూజబుల్ బ్యాగ్ ఇవ్వకుండా పేపర్ బ్యాగ్‌లో ఆర్డర్ అందించారు.",
+ 'Frozen items not packed separately':"ఆర్డర్ తీసుకునే సమయంలో ఫ్రోజెన్ వస్తువులను మిగతా వస్తువుల నుంచి వేరుగా ప్యాక్ చేయలేదు.",
+ 'Wrong item given':"ఆర్డర్ వివరాల్లో ఉన్న వస్తువుకు బదులుగా స్టోర్ సిబ్బంది వేరే వస్తువును అందించారు. వస్తువుల మధ్య తేడా హ్యాండోవర్ సమయంలో గుర్తించబడింది.",
+ 'Asked to convince customer wrongly':"ఆర్డర్ హ్యాండోవర్ సమయంలో, వాస్తవ పరిస్థితికి సరిపోని సమాచారాన్ని కస్టమర్‌కు చెప్పమని స్టోర్ సిబ్బంది డెలివరీ భాగస్వామిని కోరారు.",
+ 'Manager misconduct':"స్టోర్ మేనేజర్‌తో సంబంధం ఉన్న ఘటన జరిగింది. ఏమి మాట్లాడారు లేదా ఏమి చేశారు, తేదీ, సమయం, సాక్షులు ఉంటే వాటిని స్పష్టంగా నమోదు చేయండి.",
+ 'Other':""
 };
 let lastAutoDescription='';
 let notesManuallyEdited=false;
 function updateSuggestedDescription(){
   const category=$('category').value;
-  const suggested=issueDescriptions[category]||'';
+  const suggested=(currentLanguage==='te'?issueDescriptionsTe:issueDescriptions)[category]||'';
   const notes=$('notes');
   if(!notes)return;
   // Always refresh an untouched suggestion when the category changes.
@@ -1031,15 +1046,16 @@ $('notes').addEventListener('input',()=>{
   notesManuallyEdited=!!$('notes').value.trim()&&$('notes').value!==lastAutoDescription;
 });
 $('incidentForm').addEventListener('reset',()=>{
+  clearImagePreviews($('supportPreview'));
   lastAutoDescription='';
   notesManuallyEdited=false;
   setTimeout(()=>{if($('category').value)updateSuggestedDescription();},0);
 });
 
-$('store').value='Banjara Hills 150';
-$('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';if(!$('store').value.trim())$('store').value='Banjara Hills 150';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{warmOcr();});
-$('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
-$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
+$('orderId').addEventListener('input',()=>{$('orderId').value=$('orderId').value.toUpperCase().replace(/\s+/g,'');});
+$('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{warmOcr();});
+$('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];clearImagePreviews($('supportPreview'));if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';clearImagePreviews($('supportPreview'));return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
+$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(!$('category').value){setStatus('Please select an issue category.',true);return;}if(!/^OD[0-9]{18}$/.test($('orderId').value.trim().toUpperCase())){setStatus('Enter a valid Order ID: OD followed by exactly 18 digits.',true);$('orderId').focus();return;}if(!$('store').value.trim()){setStatus('Enter the actual store or hub name.',true);$('store').focus();return;}if(!$('incidentAt').value||Number.isNaN(new Date($('incidentAt').value).getTime())){setStatus('Enter a valid incident date and time.',true);$('incidentAt').focus();return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='';$('orderPreview').innerHTML='';clearImagePreviews($('supportPreview'));setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
 const selectedRecordIds=new Set();
 function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' complaint'+(n===1?'':'s')+' selected');if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');}
 function updateDashboardMetrics(rows){
@@ -1049,7 +1065,7 @@ function updateDashboardMetrics(rows){
  if(types)types.textContent=new Set(rows.map(r=>r.category).filter(Boolean)).size;
  if(evidence)evidence.textContent=rows.reduce((sum,r)=>sum+1+(Array.isArray(r.supportingEvidence)?r.supportingEvidence.length:0),0);
 }
-async function render(){const rows=await allRecords();$('count').textContent=rows.length;updateDashboardMetrics(rows);const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=true;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();}
+async function render(){const rows=await allRecords();$('count').textContent=rows.length;updateDashboardMetrics(rows);const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();applyRecordSearch();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=true;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();applyRecordSearch();}
 $('records').addEventListener('change',e=>{const id=e.target.dataset.selectRecord;if(!id)return;if(e.target.checked)selectedRecordIds.add(id);else selectedRecordIds.delete(id);updateSelectionUI();});
 $('selectAllBtn').addEventListener('click',async()=>{const rows=await allRecords();if(selectedRecordIds.size){selectedRecordIds.clear();}else{rows.forEach(r=>selectedRecordIds.add(r.id));}await render();});
 $('combinedPdfBtn').addEventListener('click',async()=>{const rows=await allRecords();const selected=rows.filter(r=>selectedRecordIds.has(r.id)).sort((a,b)=>new Date(a.incidentAt)-new Date(b.incidentAt));if(!selected.length){alert('Select at least one complaint first.');return;}printRecords(selected);});
@@ -1069,7 +1085,7 @@ function reportHtml(rows){
       +shots.map(s=>'<figure><img src="'+s.src+'" alt="'+esc(s.cap)+'"><figcaption>'+esc(s.cap)+'</figcaption></figure>').join('')
       +'</div></article>';
   }).join('');
-  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+'
+  return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP & Evidence Hub — Incident Report</title><style>'+REPORT_CSS+`
 /* Premium incident form and records refinement */
 .form-stage{padding:15px 16px;margin:12px 0;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft)}
 .form-stage-title{font-size:14px;margin-bottom:12px}
@@ -1114,24 +1130,36 @@ body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="da
  .record .actions button{flex:1}
  .record-tools input{min-width:0}
 }
-</style></head><body>'
+`+'</style></head><body>'
     +'<div class="bar"><span>SOP & Evidence Hub \u2014 Incident Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
     +'</main><script>function printEvidenceReport(){const b=document.getElementById("printReportBtn");if(b){b.disabled=true;b.textContent="Preparing report…";}const imgs=Array.from(document.images);Promise.all(imgs.map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;}))).then(()=>{if(b){b.disabled=false;b.textContent="Print / Save as PDF";}setTimeout(()=>window.print(),250);});}</'+ '/script></body></html>';
 }
 let pdfLibPromise=null;
+const PDF_LIB_SOURCES=['https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js','https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js'];
 function loadPdfLibrary(){
-  if(window.PDFLib)return Promise.resolve(window.PDFLib);
-  if(pdfLibPromise)return pdfLibPromise;
-  pdfLibPromise=new Promise((resolve,reject)=>{
-    const script=document.createElement('script');
-    script.src='https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
-    script.onload=()=>window.PDFLib?resolve(window.PDFLib):reject(new Error('PDF library unavailable'));
-    script.onerror=()=>reject(new Error('Could not load PDF library'));
-    document.head.appendChild(script);
-  });
-  return pdfLibPromise;
+ if(window.PDFLib)return Promise.resolve(window.PDFLib);
+ if(pdfLibPromise)return pdfLibPromise;
+ pdfLibPromise=(async()=>{
+  let lastError=null;
+  for(const src of PDF_LIB_SOURCES){
+   try{
+    await new Promise((resolve,reject)=>{
+     const script=document.createElement('script');let settled=false,timer;
+     const finish=error=>{if(settled)return;settled=true;clearTimeout(timer);script.onload=null;script.onerror=null;if(error){script.remove();reject(error);}else resolve();};
+     timer=setTimeout(()=>finish(new Error('Timed out loading PDF library')),12000);
+     script.src=src;script.async=true;
+     script.onload=()=>window.PDFLib?finish():finish(new Error('PDF library did not initialize'));
+     script.onerror=()=>finish(new Error('Could not load PDF library from '+new URL(src).hostname));
+     document.head.appendChild(script);
+    });
+    if(window.PDFLib)return window.PDFLib;
+   }catch(error){lastError=error;}
+  }
+  throw lastError||new Error('PDF library is unavailable');
+ })().catch(error=>{pdfLibPromise=null;throw error;});
+ return pdfLibPromise;
 }
 function imageAsJpeg(dataUrl){
   return new Promise((resolve,reject)=>{
@@ -1168,8 +1196,15 @@ async function createEvidencePdfBlob(rows){
     let y=H-82;
     const field=(label,value)=>{
       page.drawText(label,{x:margin,y:y-11,size:9,font:bold,color:muted});
-      const text=String(value||'—').replace(/[\r\n]+/g,' ').slice(0,160);
-      const lines=font.widthOfTextAtSize(text,10)>W-2*margin-118? [text.slice(0,75),text.slice(75,150)]:[text];
+      const text=String(value||'—').replace(/[\r\n]+/g,' ');
+      const maxWidth=W-2*margin-118,words=text.split(/\s+/),lines=[];
+      let lineText='';
+      for(const word of words){
+        const candidate=lineText?lineText+' '+word:word;
+        if(lineText&&font.widthOfTextAtSize(candidate,10)>maxWidth){lines.push(lineText);lineText=word;}
+        else lineText=candidate;
+      }
+      if(lineText)lines.push(lineText);
       lines.forEach((t,j)=>page.drawText(t,{x:margin+118,y:y-11-j*13,size:10,font,color:rgb(0.10,0.16,0.13)}));
       y-=Math.max(22,lines.length*13+8);
     };
@@ -1184,16 +1219,19 @@ async function createEvidencePdfBlob(rows){
     const shots=[{name:'Order screenshot',data:r.orderScreenshot&&r.orderScreenshot.data}].concat((r.supportingEvidence||[]).map((x,j)=>({name:'Supporting evidence '+(j+1),data:x.data}))).filter(x=>x.data);
     for(let j=0;j<shots.length;j++){
       const sh=shots[j];
-      const col=j===0?0:j-1;
+      const attachmentTop=y-8;
+      const availableHeight=Math.max(100,attachmentTop-68);
+      const mainImageHeight=shots.length>1?Math.min(190,availableHeight*0.58):Math.min(300,availableHeight);
+      const supportImageHeight=shots.length>1?Math.max(48,Math.min(120,availableHeight-mainImageHeight-28)):0;
       const bw=j===0?W-2*margin:(W-2*margin-14)/2;
-      const bh=j===0?245:150;
-      const x=j===0?margin:margin+col*(bw+14);
-      const top=j===0?y:y-275;
+      const bh=j===0?mainImageHeight:supportImageHeight;
+      const x=j===0?margin:margin+(j-1)*(bw+14);
+      const top=j===0?attachmentTop:attachmentTop-18-mainImageHeight-12;
       page.drawText(sh.name,{x,y:top-11,size:9,font:bold,color:green});
       const jpeg=await imageAsJpeg(sh.data);
       const bytes=Uint8Array.from(atob(jpeg.split(',')[1]),c=>c.charCodeAt(0));
       const embedded=await pdf.embedJpg(bytes);
-      const dims=fit(embedded.width,embedded.height,bw,bh-18);
+      const dims=fit(embedded.width,embedded.height,bw,Math.max(30,bh-18));
       page.drawImage(embedded,{x:x+(bw-dims.width)/2,y:top-18-dims.height,width:dims.width,height:dims.height});
     }
     page.drawLine({start:{x:margin,y:26},end:{x:W-margin,y:26},thickness:0.7,color:line});
@@ -1305,22 +1343,18 @@ if(countNode&&dashboardCount){
  new MutationObserver(syncDashboardCount).observe(countNode,{childList:true,characterData:true,subtree:true});
  syncDashboardCount();
 }
-if(searchInput){
- searchInput.addEventListener('input',()=>{
-  const q=searchInput.value.trim().toLowerCase();
-  const list=document.getElementById('records');
-  if(!list)return;
-  const cards=[...list.children].filter(el=>el.matches('.record')||el.classList.contains('record'));
-  let shown=0;
-  cards.forEach(card=>{const match=!q||card.textContent.toLowerCase().includes(q);card.hidden=!match;if(match)shown++;});
-  if(searchCount)searchCount.textContent=q?(shown+' match'+(shown===1?'':'es')):'All records';
-  let empty=list.querySelector('.search-empty');
-  if(q&&cards.length&&shown===0){
-   if(!empty){empty=document.createElement('p');empty.className='hint search-empty';empty.textContent='No matching records. Try another Order ID or keyword.';list.appendChild(empty);}
-  }else if(empty)empty.remove();
- });
+function applyRecordSearch(){
+ const q=searchInput?searchInput.value.trim().toLowerCase():'';
+ const list=document.getElementById('records');if(!list)return;
+ const cards=[...list.children].filter(el=>el.matches('.record'));let shown=0;
+ cards.forEach(card=>{const match=!q||card.textContent.toLowerCase().includes(q);card.hidden=!match;if(match)shown++;});
+ if(searchCount)searchCount.textContent=q?(shown+' match'+(shown===1?'':'es')):(currentLanguage==='te'?'అన్ని రికార్డులు':'All records');
+ let empty=list.querySelector('.search-empty');
+ if(q&&cards.length&&shown===0){if(!empty){empty=document.createElement('p');empty.className='hint search-empty';empty.textContent=currentLanguage==='te'?'సరిపోలే రికార్డులు లేవు. మరో Order ID లేదా పదంతో వెతకండి.':'No matching records. Try another Order ID or keyword.';list.appendChild(empty);}}
+ else if(empty)empty.remove();
 }
+if(searchInput)searchInput.addEventListener('input',applyRecordSearch);
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer onerror="window.loadOcrLibFallback(0)"></script>
+
 </body></html>

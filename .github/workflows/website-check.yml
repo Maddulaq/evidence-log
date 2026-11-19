@@ -1,0 +1,40 @@
+name: Validate SOP & Proof Hub website
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'privacy.html'
+      - 'scripts/**'
+      - '.github/workflows/website-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'privacy.html'
+      - 'scripts/**'
+      - '.github/workflows/website-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Website source validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.21.1'
+      - name: Validate app JavaScript, OCR and language switching
+        run: node scripts/check-web.mjs
+      - name: Prepare website assets
+        run: node scripts/prepare-web.mjs
+      - name: Verify prepared app and privacy assets
+        run: |
+          cmp -s index.html www/index.html
+          cmp -s privacy.html www/privacy.html

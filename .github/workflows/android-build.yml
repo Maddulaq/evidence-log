@@ -2,15 +2,6 @@ name: Build SOP & Proof Hub for Android
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'package.json'
-      - 'capacitor.config.ts'
-      - 'scripts/**'
-      - '.github/workflows/android-build.yml'
-      - '.github/workflows/android-build.yml'
 
 permissions:
   contents: read
@@ -49,14 +40,29 @@ jobs:
       - name: Install Android SDK packages
         shell: bash
         run: |
+          set +e
           yes | sdkmanager --licenses >/dev/null
+          license_status=${PIPESTATUS[1]}
+          set -e
+          if [ "$license_status" -ne 0 ]; then
+            echo "Android SDK license acceptance failed."
+            exit "$license_status"
+          fi
           sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 
       - name: Install app dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Validate web source
+        run: npm run check:web
+
       - name: Prepare web app
         run: npm run prepare
+
+      - name: Verify packaged web assets
+        run: |
+          cmp -s index.html www/index.html
+          cmp -s privacy.html www/privacy.html
 
       - name: Create Android project
         run: npx cap add android

@@ -7,13 +7,15 @@
     "prepare": "node scripts/prepare-web.mjs",
     "android:sync": "npx cap sync android",
     "android:debug": "cd android && ./gradlew assembleDebug",
-    "android:release": "cd android && ./gradlew bundleRelease"
+    "android:release": "cd android && ./gradlew bundleRelease",
+    "check:web": "node scripts/check-web.mjs"
   },
   "dependencies": {
     "@capacitor/android": "8.6.2",
     "@capacitor/core": "8.6.2"
   },
   "devDependencies": {
-    "@capacitor/cli": "8.6.2"
+    "@capacitor/cli": "8.6.2",
+    "typescript": "5.9.3"
   }
 }
