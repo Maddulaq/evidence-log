@@ -487,8 +487,8 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 <option value="">Select an issue</option>
 <option value="Reusable bag not given">Reusable bag not given</option><option value="Frozen items not packed separately">Frozen items not packed separately</option><option value="Wrong item given">Wrong item given</option><option value="Asked to convince customer wrongly">Asked to convince customer wrongly</option><option value="Manager misconduct">Manager misconduct</option><option value="Other">Other</option>
 </select></div>
-<div><label for="orderId">Order ID *</label><input id="orderId" required maxlength="80" placeholder="Enter or verify Order ID"><button class="secondary" id="rereadBtn" type="button" style="margin-top:8px;padding:8px 12px;font-size:13px">Re-read from screenshot</button><div class="status" id="ocrInline" role="status" aria-live="polite" style="margin-top:6px;font-size:12px"></div><details id="ocrDebug" hidden style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:#66756e">What the OCR saw</summary><pre id="ocrText" style="white-space:pre-wrap;font-size:11px;color:#66756e;background:#f5f7f5;border:1px solid #dce5df;border-radius:8px;padding:8px;margin:6px 0 0;max-height:180px;overflow:auto"></pre></details></div>
-<div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" value="Banjara Hills 150" placeholder="Store name"></div>
+<div><label for="orderId">Order ID *</label><input id="orderId" required maxlength="20" pattern="OD[0-9]{18}" inputmode="text" autocapitalize="characters" spellcheck="false" title="Enter OD followed by exactly 18 digits" placeholder="OD followed by 18 digits"><button class="secondary" id="rereadBtn" type="button" style="margin-top:8px;padding:8px 12px;font-size:13px">Re-read from screenshot</button><div class="status" id="ocrInline" role="status" aria-live="polite" style="margin-top:6px;font-size:12px"></div><details id="ocrDebug" hidden style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:#66756e">What the OCR saw</summary><pre id="ocrText" style="white-space:pre-wrap;font-size:11px;color:#66756e;background:#f5f7f5;border:1px solid #dce5df;border-radius:8px;padding:8px;margin:6px 0 0;max-height:180px;overflow:auto"></pre></details></div>
+<div><label for="store">Store / hub name *</label><input id="store" required maxlength="100" placeholder="Enter your actual store / hub name"></div>
 <div><label for="incidentAt">Incident date and time *</label><input id="incidentAt" type="datetime-local" required></div>
 </div>
 </div>
@@ -515,6 +515,8 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 
 <script>
 
+const $=id=>document.getElementById(id);
+
 (function setupGuidedReport(){
  const form=$('incidentForm');if(!form)return;const links=[...document.querySelectorAll('[data-guide-step]')],status=$('guidedStatus'),hint=$('guidedHint'),percent=$('guidedPercent'),checklist=$('guidedChecklist');
  const stages=[['Add the order screenshot','Upload the original screenshot. OCR will try to read the Order ID and time.'],['Verify order details','Check the Order ID, issue category, store and incident date/time.'],['Attach supporting evidence','Add one or two clear photos that support the incident.'],['Review and save','Review the information. The description is optional; save when the required details are correct.']];
@@ -530,10 +532,10 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 const uiText={
  en:{
   headerSub:'Document store-related incidents, preserve evidence and review what happened against SOPs and policies.',
-  create:'＋ Create a report',saved:'View saved records',share:'Share app',
+  create:'＋ Create a report',saved:'View saved records',share:'Share app',incidentTitle:'Submit an incident',incidentSub:'Follow the guided steps. Verify the Order ID and incident date/time before saving.',
   eyebrow:'SOP & PROOF · INCIDENT DOCUMENTATION',hero:'Every issue.<br><em>Properly documented.</em>',
   heroSub:'Capture clear evidence, verify the order details, and keep a report ready when you need it.',
-  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● Private cloud workspace',
+  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● Stored on this device',
   savedCount:'Saved incident records',step1:'<b>01</b> Capture screenshot',step2:'<b>02</b> Add evidence',step3:'<b>03</b> Save report',
   notice:'<strong>Device-only storage:</strong> Reports and evidence stay on this phone. They are not uploaded to a cloud account.<br><span class="pill">Required</span>',
   orderHint:'Upload the order screenshot. The app tries to read the Order ID and screenshot time automatically. Check the details and correct them if needed.',
@@ -543,7 +545,7 @@ const uiText={
   evidenceHint:'Add 1–2 clear photos showing the issue. Maximum 8 MB per image.',
   description:'Short description (optional)',descriptionPlaceholder:'Describe what happened in a few clear words…',
   descriptionHint:'Choose an issue to see a suggested description. Edit it so it accurately describes what happened.',
-  save:'Save incident',reset:'Reset form',recordsTitle:'Saved records',deviceOnly:'Stored in private cloud',
+  save:'Save incident',reset:'Reset form',recordsTitle:'Saved records',deviceOnly:'Stored on this device',
   export:'Export report / PDF',backup:'Download backup',search:'Search by Order ID, store or issue…',
   allRecords:'All records',selectCount:'complaints selected',selectHelp:'Select multiple complaints to combine them into one PDF, with a separate section for each complaint.',
   selectAll:'Select all',clear:'Clear selection',combined:'Generate combined PDF',newReport:'＋ New report',
@@ -556,9 +558,9 @@ const uiText={
   create:'＋ రిపోర్ట్ నమోదు',saved:'సేవ్ చేసిన రికార్డులు',share:'యాప్ షేర్ చేయండి',
   eyebrow:'SOP & PROOF · ఘటనల నమోదు',hero:'ప్రతి సమస్యను<br><em>సరిగ్గా నమోదు చేయండి.</em>',
   heroSub:'ఆధారాలను జోడించండి, ఆర్డర్ వివరాలను తనిఖీ చేయండి, అవసరమైనప్పుడు రిపోర్ట్ సిద్ధంగా ఉంచండి.',
-  newIncident:'＋ కొత్త ఘటన',browse:'రికార్డులు చూడండి ↗',workspace:'మీ వర్క్‌స్పేస్',device:'● ప్రైవేట్ క్లౌడ్ వర్క్‌స్పేస్',
+  newIncident:'＋ కొత్త ఘటన',browse:'రికార్డులు చూడండి ↗',workspace:'మీ వర్క్‌స్పేస్',device:'● ఈ పరికరంలో నిల్వ',
   savedCount:'సేవ్ చేసిన ఘటనలు',step1:'<b>01</b> స్క్రీన్‌షాట్ జోడించండి',step2:'<b>02</b> ఆధారాల ఫోటోలు జోడించండి',step3:'<b>03</b> రిపోర్ట్ సేవ్ చేయండి',
-  notice:'<strong>ప్రైవేట్ క్లౌడ్ స్టోరేజ్:</strong> రిపోర్టులు మరియు ఆధారాలు మీ సురక్షిత వర్క్‌స్పేస్‌లో భద్రపరచబడతాయి. పార్ట్‌నర్లు తమ రిపోర్టులను మాత్రమే చూడగలరు.',
+  notice:'<strong>ఈ పరికరంలో మాత్రమే నిల్వ:</strong> రిపోర్టులు మరియు ఆధారాలు ఈ ఫోన్‌లోనే ఉంటాయి. అవి క్లౌడ్ ఖాతాకు అప్‌లోడ్ కావు.',
   incidentTitle:'ఘటనను నమోదు చేయండి',incidentSub:'క్రింది దశలను అనుసరించండి. సేవ్ చేసే ముందు Order ID మరియు ఘటన సమయాన్ని తనిఖీ చేయండి.',
   orderShot:'ఆర్డర్ స్క్రీన్‌షాట్ <span class="pill">తప్పనిసరి</span>',
   orderHint:'ఆర్డర్ స్క్రీన్‌షాట్ అప్‌లోడ్ చేయండి. యాప్ Order ID మరియు స్క్రీన్‌షాట్ సమయాన్ని ఆటోమేటిక్‌గా చదవడానికి ప్రయత్నిస్తుంది. వివరాలు తనిఖీ చేసి అవసరమైతే సరిచేయండి.',
@@ -568,7 +570,7 @@ const uiText={
   evidenceHint:'సమస్యను చూపించే 1–2 స్పష్టమైన ఫోటోలు జోడించండి. ఒక్కో ఫోటో గరిష్ఠ పరిమాణం 8 MB.',
   description:'సంక్షిప్త వివరణ (ఐచ్ఛికం)',descriptionPlaceholder:'ఏం జరిగిందో కొన్ని స్పష్టమైన పదాల్లో రాయండి…',
   descriptionHint:'సమస్య రకాన్ని ఎంచుకుంటే సూచించిన వివరణ కనిపిస్తుంది. జరిగిన విషయానికి సరిపోయేలా సవరించండి.',
-  save:'ఘటనను సేవ్ చేయండి',reset:'ఫారమ్ రీసెట్ చేయండి',recordsTitle:'సేవ్ చేసిన రికార్డులు',deviceOnly:'ప్రైవేట్ క్లౌడ్‌లో భద్రపరచబడతాయి',
+  save:'ఘటనను సేవ్ చేయండి',reset:'ఫారమ్ రీసెట్ చేయండి',recordsTitle:'సేవ్ చేసిన రికార్డులు',deviceOnly:'ఈ పరికరంలో మాత్రమే నిల్వ',
   export:'రిపోర్ట్ / PDF ఎగుమతి',backup:'బ్యాకప్ డౌన్‌లోడ్',search:'Order ID, స్టోర్ లేదా సమస్యతో వెతకండి…',
   allRecords:'అన్ని రికార్డులు',selectCount:'ఫిర్యాదులు ఎంపికయ్యాయి',selectHelp:'ఒక PDFలో కలపడానికి అనేక ఫిర్యాదులను ఎంచుకోండి. ప్రతి ఫిర్యాదుకు ప్రత్యేక విభాగం ఉంటుంది.',
   selectAll:'అన్నీ ఎంచుకోండి',clear:'ఎంపిక తొలగించండి',combined:'కలిపిన PDF రూపొందించండి',newReport:'＋ కొత్త రిపోర్ట్',
@@ -587,7 +589,7 @@ function setLanguage(lang){
  put('.eyebrow',t.eyebrow);put('.command-copy h2',t.hero,true);put('.command-copy p',t.heroSub);
  put('.command-primary',t.newIncident);put('.command-secondary',t.browse);put('.overview-top span:first-child',t.workspace);put('.storage-indicator',t.device);
  put('.overview-stat span',t.savedCount);put('.overview-bottom span:nth-child(1)',t.step1,true);put('.overview-bottom span:nth-child(2)',t.step2,true);put('.overview-bottom span:nth-child(3)',t.step3,true);
- const notice=document.querySelector('.notice');if(notice){const ocr=$('ocrState');notice.innerHTML=t.notice+'<br>';if(ocr){ocr.id='ocrState';ocr.style.color='#624c20';ocr.textContent=t.ocrLoading;notice.append(ocr);}}
+ const notice=document.querySelector('.notice');if(notice){const ocr=$('ocrState');notice.innerHTML=t.notice+'<br>';if(ocr){ocr.id='ocrState';notice.append(ocr);setOcrState(ocrState);}}
  put('#incidentSection h2',t.incidentTitle);put('#incidentSection .section-subtitle',t.incidentSub);
  put('label[for="orderShot"]',t.orderShot,true);put('#orderShot + .hint',t.orderHint);
  put('label[for="category"]',t.category);put('#category option[value=""]',t.selectIssue);
@@ -595,11 +597,11 @@ function setLanguage(lang){
  [...document.querySelectorAll('#category option')].slice(1).forEach((o,i)=>{if(categoryLabels[i])o.textContent=categoryLabels[i];});
  put('label[for="orderId"]',t.orderId);put('#rereadBtn',t.reread);put('label[for="store"]',t.store);put('label[for="incidentAt"]',t.incidentAt);
  put('label[for="supporting"]',t.evidence,true);put('#supporting + .hint',t.evidenceHint);
- put('label[for="notes"]',t.description);put('#notes',t.descriptionPlaceholder);put('#notes + .hint',t.descriptionHint);
+ put('label[for="notes"]',t.description);const notesField=$('notes');if(notesField)notesField.placeholder=t.descriptionPlaceholder;put('#notes + .hint',t.descriptionHint);
  put('#saveBtn',t.save);put('#incidentForm button[type="reset"]',t.reset);
  const rh=$('#recordsSection .records-head h2');if(rh){rh.childNodes[0].textContent=t.recordsTitle+' ';}
  put('#recordsSection .records-head small',t.deviceOnly);put('#exportBtn',t.export);put('#backupBtn',t.backup);
- put('#recordSearch',t.search);put('#searchCount',t.allRecords);put('#selectionHelp',t.selectHelp);
+ const searchField=$('recordSearch');if(searchField)searchField.placeholder=t.search;put('#searchCount',t.allRecords);put('#selectionHelp',t.selectHelp);
  put('#selectAllBtn',selectedRecordIds.size?t.clear:t.selectAll);put('#combinedPdfBtn',t.combined);
  const empty=$('#records .hint');if(empty&&!$('#records .record'))empty.textContent=t.noRecords;
  put('.bottom-nav a.primary',t.newReport);put('.bottom-nav a[href="#recordsSection"]','▤ '+t.recordsTitle);
@@ -619,7 +621,6 @@ document.getElementById('shareAppBtn').addEventListener('click',async()=>{
 });
 
 const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
-const $=id=>document.getElementById(id);
 let db;
 function localRecords(){return new Promise((resolve,reject)=>{if(!db){reject(new Error('Device database is not ready'));return;}const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error||new Error('Could not read device records'));tx.onerror=()=>reject(tx.error||new Error('Could not read device records'));});}
 async function allRecords(){return await localRecords();}
@@ -832,10 +833,9 @@ async function getOcrWorker(onStatus){
 
 async function warmOcr(){
   if(ocrState==='ready')return;
-  if(!window.Tesseract){setTimeout(()=>{if(ocrState==='loading'&&!window.Tesseract)setOcrState('offline');},20000);return;}
   setOcrState('loading');
-  const timer=setTimeout(()=>{if(ocrState==='loading')setOcrState('offline');},25000);
-  try{await getOcrWorker();setOcrState('ready');}catch(e){setOcrState('offline');}finally{clearTimeout(timer);}
+  try{await getOcrWorker();setOcrState('ready');}
+  catch(e){setOcrState('offline');}
 }
 
 async function recognize(cv,worker,psm,whitelist){
@@ -845,15 +845,6 @@ async function recognize(cv,worker,psm,whitelist){
   await worker.setParameters(params);
   const res=await worker.recognize(cv);
   return {text:res.data.text||'',words:res.data.words||[]};
-}
-function exactOrderIdFromDigits(raw){
-  const lines=String(raw||'').split(/\r?\n/);
-  for(const line of lines){
-    const digits=line.replace(/\D/g,'');
-    if(digits.length===18)return 'OD'+digits;
-  }
-  const all=String(raw||'').replace(/\D/g,'');
-  return all.length===18?'OD'+all:null;
 }
 async function readOrderIdFromImage(file,onStatus){
   const note=(msg)=>{if(onStatus)onStatus(msg);};
@@ -896,10 +887,6 @@ async function readOrderIdFromImage(file,onStatus){
       const hit=record(res);
       if(hit)return {id:hit,text:seen.join('\n---\n')};
       // The ID is numeric; a digits-only pass avoids letter confusions.
-      const digits=await recognize(preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'binary'),worker,psm,'0123456789');
-      seen.push('[digits-only pass]\n'+digits.text);
-      const exact=exactOrderIdFromDigits(digits.text);
-      if(exact)return {id:exact,text:seen.join('\n---\n')};
     }
   }
 
@@ -921,11 +908,6 @@ async function readOrderIdFromImage(file,onStatus){
       res=await recognize(gray,worker,'6');
       const hit=record(res);
       if(hit)return {id:hit,text:seen.join('\n---\n')};
-      const binary=preprocess(drawRegion(img,rect,2.8,3600),'binary');
-      const digits=await recognize(binary,worker,'6','0123456789');
-      seen.push('[section '+(i+1)+' digits-only]\n'+digits.text);
-      const exact=exactOrderIdFromDigits(digits.text);
-      if(exact)return {id:exact,text:seen.join('\n---\n')};
     }
   }
   return {id:null,text:seen.join('\n---\n')};
@@ -965,6 +947,8 @@ function applyScreenshotTime(time){
   const field=$('incidentAt'),current=field.value||localDateTime(new Date());
   const date=current.slice(0,10);
   field.value=date+'T'+String(time.hour).padStart(2,'0')+':'+String(time.minute).padStart(2,'0');
+  field.dispatchEvent(new Event('input',{bubbles:true}));
+  field.dispatchEvent(new Event('change',{bubbles:true}));
   return true;
 }
 function setOcrStatus(msg,isError){
@@ -989,7 +973,7 @@ async function runOrderOcr(file){
     const timeApplied=applyScreenshotTime(screenshotTime);
     if(result.id){
       const field=$('orderId');
-      if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;}
+      if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;field.dispatchEvent(new Event('input',{bubbles:true}));field.dispatchEvent(new Event('change',{bubbles:true}));}
       setOcrStatus('Order ID detected: '+result.id+'. '+(timeApplied?'Screenshot time detected: '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0')+'. ':'Time not detected clearly — please enter it manually. ')+'Please verify the details before saving.');
     }else{
       $('ocrDebug').open=true;
@@ -1036,10 +1020,10 @@ $('incidentForm').addEventListener('reset',()=>{
   setTimeout(()=>{if($('category').value)updateSuggestedDescription();},0);
 });
 
-$('store').value='Banjara Hills 150';
-$('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';if(!$('store').value.trim())$('store').value='Banjara Hills 150';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{warmOcr();});
+$('orderId').addEventListener('input',()=>{$('orderId').value=$('orderId').value.toUpperCase().replace(/\s+/g,'');});
+$('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{warmOcr();});
 $('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
-$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
+$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(!$('category').value){setStatus('Please select an issue category.',true);return;}if(!/^OD[0-9]{18}$/.test($('orderId').value.trim().toUpperCase())){setStatus('Enter a valid Order ID: OD followed by exactly 18 digits.',true);$('orderId').focus();return;}if(!$('store').value.trim()){setStatus('Enter the actual store or hub name.',true);$('store').focus();return;}if(!$('incidentAt').value||Number.isNaN(new Date($('incidentAt').value).getTime())){setStatus('Enter a valid incident date and time.',true);$('incidentAt').focus();return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
 const selectedRecordIds=new Set();
 function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' complaint'+(n===1?'':'s')+' selected');if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');}
 function updateDashboardMetrics(rows){
@@ -1049,7 +1033,7 @@ function updateDashboardMetrics(rows){
  if(types)types.textContent=new Set(rows.map(r=>r.category).filter(Boolean)).size;
  if(evidence)evidence.textContent=rows.reduce((sum,r)=>sum+1+(Array.isArray(r.supportingEvidence)?r.supportingEvidence.length:0),0);
 }
-async function render(){const rows=await allRecords();$('count').textContent=rows.length;updateDashboardMetrics(rows);const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=true;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();}
+async function render(){const rows=await allRecords();$('count').textContent=rows.length;updateDashboardMetrics(rows);const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();applyRecordSearch();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=true;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();applyRecordSearch();}
 $('records').addEventListener('change',e=>{const id=e.target.dataset.selectRecord;if(!id)return;if(e.target.checked)selectedRecordIds.add(id);else selectedRecordIds.delete(id);updateSelectionUI();});
 $('selectAllBtn').addEventListener('click',async()=>{const rows=await allRecords();if(selectedRecordIds.size){selectedRecordIds.clear();}else{rows.forEach(r=>selectedRecordIds.add(r.id));}await render();});
 $('combinedPdfBtn').addEventListener('click',async()=>{const rows=await allRecords();const selected=rows.filter(r=>selectedRecordIds.has(r.id)).sort((a,b)=>new Date(a.incidentAt)-new Date(b.incidentAt));if(!selected.length){alert('Select at least one complaint first.');return;}printRecords(selected);});
@@ -1305,22 +1289,18 @@ if(countNode&&dashboardCount){
  new MutationObserver(syncDashboardCount).observe(countNode,{childList:true,characterData:true,subtree:true});
  syncDashboardCount();
 }
-if(searchInput){
- searchInput.addEventListener('input',()=>{
-  const q=searchInput.value.trim().toLowerCase();
-  const list=document.getElementById('records');
-  if(!list)return;
-  const cards=[...list.children].filter(el=>el.matches('.record')||el.classList.contains('record'));
-  let shown=0;
-  cards.forEach(card=>{const match=!q||card.textContent.toLowerCase().includes(q);card.hidden=!match;if(match)shown++;});
-  if(searchCount)searchCount.textContent=q?(shown+' match'+(shown===1?'':'es')):'All records';
-  let empty=list.querySelector('.search-empty');
-  if(q&&cards.length&&shown===0){
-   if(!empty){empty=document.createElement('p');empty.className='hint search-empty';empty.textContent='No matching records. Try another Order ID or keyword.';list.appendChild(empty);}
-  }else if(empty)empty.remove();
- });
+function applyRecordSearch(){
+ const q=searchInput?searchInput.value.trim().toLowerCase():'';
+ const list=document.getElementById('records');if(!list)return;
+ const cards=[...list.children].filter(el=>el.matches('.record'));let shown=0;
+ cards.forEach(card=>{const match=!q||card.textContent.toLowerCase().includes(q);card.hidden=!match;if(match)shown++;});
+ if(searchCount)searchCount.textContent=q?(shown+' match'+(shown===1?'':'es')):(currentLanguage==='te'?'అన్ని రికార్డులు':'All records');
+ let empty=list.querySelector('.search-empty');
+ if(q&&cards.length&&shown===0){if(!empty){empty=document.createElement('p');empty.className='hint search-empty';empty.textContent=currentLanguage==='te'?'సరిపోలే రికార్డులు లేవు. మరో Order ID లేదా పదంతో వెతకండి.':'No matching records. Try another Order ID or keyword.';list.appendChild(empty);}}
+ else if(empty)empty.remove();
 }
+if(searchInput)searchInput.addEventListener('input',applyRecordSearch);
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer onerror="window.loadOcrLibFallback(0)"></script>
+
 </body></html>
