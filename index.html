@@ -1152,8 +1152,15 @@ async function createEvidencePdfBlob(rows){
     let y=H-82;
     const field=(label,value)=>{
       page.drawText(label,{x:margin,y:y-11,size:9,font:bold,color:muted});
-      const text=String(value||'—').replace(/[\r\n]+/g,' ').slice(0,160);
-      const lines=font.widthOfTextAtSize(text,10)>W-2*margin-118? [text.slice(0,75),text.slice(75,150)]:[text];
+      const text=String(value||'—').replace(/[\\r\\n]+/g,' ');
+      const maxWidth=W-2*margin-118,words=text.split(/\\s+/),lines=[];
+      let lineText='';
+      for(const word of words){
+        const candidate=lineText?lineText+' '+word:word;
+        if(lineText&&font.widthOfTextAtSize(candidate,10)>maxWidth){lines.push(lineText);lineText=word;}
+        else lineText=candidate;
+      }
+      if(lineText)lines.push(lineText);
       lines.forEach((t,j)=>page.drawText(t,{x:margin+118,y:y-11-j*13,size:10,font,color:rgb(0.10,0.16,0.13)}));
       y-=Math.max(22,lines.length*13+8);
     };
@@ -1168,16 +1175,19 @@ async function createEvidencePdfBlob(rows){
     const shots=[{name:'Order screenshot',data:r.orderScreenshot&&r.orderScreenshot.data}].concat((r.supportingEvidence||[]).map((x,j)=>({name:'Supporting evidence '+(j+1),data:x.data}))).filter(x=>x.data);
     for(let j=0;j<shots.length;j++){
       const sh=shots[j];
-      const col=j===0?0:j-1;
+      const attachmentTop=y-8;
+      const availableHeight=Math.max(100,attachmentTop-68);
+      const mainImageHeight=shots.length>1?Math.min(190,availableHeight*0.58):Math.min(300,availableHeight);
+      const supportImageHeight=shots.length>1?Math.max(48,Math.min(120,availableHeight-mainImageHeight-28)):0;
       const bw=j===0?W-2*margin:(W-2*margin-14)/2;
-      const bh=j===0?245:150;
-      const x=j===0?margin:margin+col*(bw+14);
-      const top=j===0?y:y-275;
+      const bh=j===0?mainImageHeight:supportImageHeight;
+      const x=j===0?margin:margin+(j-1)*(bw+14);
+      const top=j===0?attachmentTop:attachmentTop-18-mainImageHeight-12;
       page.drawText(sh.name,{x,y:top-11,size:9,font:bold,color:green});
       const jpeg=await imageAsJpeg(sh.data);
       const bytes=Uint8Array.from(atob(jpeg.split(',')[1]),c=>c.charCodeAt(0));
       const embedded=await pdf.embedJpg(bytes);
-      const dims=fit(embedded.width,embedded.height,bw,bh-18);
+      const dims=fit(embedded.width,embedded.height,bw,Math.max(30,bh-18));
       page.drawImage(embedded,{x:x+(bw-dims.width)/2,y:top-18-dims.height,width:dims.width,height:dims.height});
     }
     page.drawLine({start:{x:margin,y:26},end:{x:W-margin,y:26},thickness:0.7,color:line});
