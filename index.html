@@ -449,6 +449,10 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
  .card{padding:17px;border-radius:14px}
  .records-head{gap:10px}
 }
+
+.ocr-confidence{margin-top:7px;padding:9px 11px;border:1px solid #b8ddd4;border-radius:9px;background:#eef8f5;color:#185f55;font-size:11px;line-height:1.5}
+.ocr-confidence[hidden]{display:none}
+body[data-theme="dark"] .ocr-confidence{background:#183b36;border-color:#326b60;color:#c8eee4}
 </style>
 </head>
 <body>
@@ -1141,11 +1145,7 @@ body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="da
  .record .actions button{flex:1}
  .record-tools input{min-width:0}
 }
-`+'
-.ocr-confidence{margin-top:7px;padding:9px 11px;border:1px solid #b8ddd4;border-radius:9px;background:#eef8f5;color:#185f55;font-size:11px;line-height:1.5}
-.ocr-confidence[hidden]{display:none}
-body[data-theme="dark"] .ocr-confidence{background:#183b36;border-color:#326b60;color:#c8eee4}
-</style></head><body>'
+`+'</style></head><body>'
     +'<div class="bar"><span>SOP & Evidence Hub \u2014 Incident Report</span><button id="printReportBtn" type="button" onclick="printEvidenceReport()">Print / Save as PDF</button></div>'
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
