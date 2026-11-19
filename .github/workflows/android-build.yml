@@ -10,7 +10,8 @@ on:
       - 'capacitor.config.ts'
       - 'scripts/**'
       - '.github/workflows/android-build.yml'
-      - '.github/workflows/android-build.yml'
+      - 'privacy.html'
+      - 'package-lock.json'
 
 permissions:
   contents: read
@@ -55,8 +56,16 @@ jobs:
       - name: Install app dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Validate web source
+        run: npm run check:web
+
       - name: Prepare web app
         run: npm run prepare
+
+      - name: Verify packaged web assets
+        run: |
+          cmp -s index.html www/index.html
+          cmp -s privacy.html www/privacy.html
 
       - name: Create Android project
         run: npx cap add android
