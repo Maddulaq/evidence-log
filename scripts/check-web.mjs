@@ -20,7 +20,7 @@ if (html.includes('window.loadOcrLibFallback') || html.includes('Banjara Hills 1
 for (const id of ['incidentForm','orderShot','category','orderId','store','incidentAt','supporting','notes','records','recordSearch']) {
   if (!html.includes('id="' + id + '"')) throw new Error('Required app element is missing: ' + id);
 }
-if (!privacy.includes('Device-local storage') || !privacy.includes('SOP & Proof Hub')) {
+if (!privacy.includes('Device-local storage') || !privacy.includes('SOP &amp; Proof Hub')) {
   throw new Error('Privacy policy content is missing its required identity or storage disclosure.');
 }
 console.log('Web source checks passed: inline JavaScript parses and required app/privacy elements are present.');
