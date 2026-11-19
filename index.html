@@ -452,7 +452,7 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 </style>
 </head>
 <body>
-<header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline" id="shareAppBtn" type="button">Share app</button><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
+<header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline" id="languageToggle" type="button" aria-label="Switch language">తెలుగు</button><button class="outline" id="shareAppBtn" type="button">Share app</button><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
 <main>
 
 
@@ -511,7 +511,7 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 </section>
 <p class="hint " style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong> · <a href="privacy.html">Privacy policy</a></p>
 </main>
-<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggle" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
+<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggleMobile" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
 
 <script>
 
@@ -551,7 +551,7 @@ const uiText={
   selectAll:'Select all',clear:'Clear selection',combined:'Generate combined PDF',newReport:'＋ New report',
   noRecords:'No records saved yet.',shareCopied:'App link copied. Send it to your colleagues.',
   shareFallback:'Copy this app link and send it to your colleagues: ',
-  ocrLoading:'Loading OCR engine…'
+  ocrLoading:'Loading OCR engine…',ocrMessages:{reading:'Reading the Order ID from this screenshot…',detected:'Order ID detected. Please verify the details before saving.',notFound:'Could not read the Order ID automatically. Check the recognised text and enter the ID manually.'}
  },
  te:{
   headerSub:'స్టోర్‌లో జరిగిన సమస్యలను నమోదు చేయండి. ఆధారాలను భద్రపరచి, SOP మరియు విధానాలతో పరిశీలించండి.',
@@ -576,8 +576,8 @@ const uiText={
   selectAll:'అన్నీ ఎంచుకోండి',clear:'ఎంపిక తొలగించండి',combined:'కలిపిన PDF రూపొందించండి',newReport:'＋ కొత్త రిపోర్ట్',
   noRecords:'ఇంకా రికార్డులు సేవ్ చేయలేదు.',shareCopied:'యాప్ లింక్ కాపీ అయింది. సహచరులకు పంపండి.',
   shareFallback:'ఈ యాప్ లింక్‌ను కాపీ చేసి సహచరులకు పంపండి: ',
-  ocrLoading:'OCR సదుపాయం లోడ్ అవుతోంది…'
- }
+  ocrLoading:'OCR సదుపాయం లోడ్ అవుతోంది…',ocrMessages:{reading:'ఈ స్క్రీన్‌షాట్ నుంచి Order ID చదువుతోంది…',detected:'Order ID గుర్తించబడింది. సేవ్ చేసే ముందు వివరాలు తనిఖీ చేయండి.',notFound:'Order ID ఆటోమేటిక్‌గా చదవలేకపోయింది. గుర్తించిన టెక్స్ట్ తనిఖీ చేసి IDని మాన్యువల్‌గా నమోదు చేయండి.'}
+  }
 };
 let currentLanguage='en';
 function setLanguage(lang){
@@ -605,10 +605,11 @@ function setLanguage(lang){
  put('#selectAllBtn',selectedRecordIds.size?t.clear:t.selectAll);put('#combinedPdfBtn',t.combined);
  const empty=$('#records .hint');if(empty&&!$('#records .record'))empty.textContent=t.noRecords;
  put('.bottom-nav a.primary',t.newReport);put('.bottom-nav a[href="#recordsSection"]','▤ '+t.recordsTitle);
- put('#languageToggle',currentLanguage==='en'?'తెలుగు':'English');
+ put('#languageToggle',currentLanguage==='en'?'తెలుగు':'English');put('#languageToggleMobile',currentLanguage==='en'?'తెలుగు':'English');
  document.documentElement.lang=currentLanguage==='te'?'te':'en';
 }
-document.getElementById('languageToggle').addEventListener('click',()=>setLanguage(currentLanguage==='en'?'te':'en'));
+const languageToggle=$('languageToggle'),languageToggleMobile=$('languageToggleMobile');
+[languageToggle,languageToggleMobile].filter(Boolean).forEach(button=>button.addEventListener('click',()=>setLanguage(currentLanguage==='en'?'te':'en')));
 document.getElementById('shareAppBtn').addEventListener('click',async()=>{
  const url='https://maddulaq.github.io/evidence-log/';
  const title='SOP & Proof Hub';
@@ -686,40 +687,44 @@ function extractOrderId(rawText){
 }
 /* ---------- Order ID OCR (rewritten) ---------- */
 const OCR_MAX_AREA=4.2e6,OCR_MAX_SIDE=3800,OCR_DEADLINE=45000;
-const OCR_LANG_SOURCES=['https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0','https://unpkg.com/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://tessdata.projectnaptha.com/4.0.0_best_int'];
-const OCR_LIB_SOURCES=['https://unpkg.com/tesseract.js@5/dist/tesseract.min.js','https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js'];
-let ocrLibPromise=null,ocrWorkerPromise=null,ocrToken=0,lastAutoId='',ocrState='loading';
-
-// Load OCR on demand and try the second CDN if the first one fails.
-// Do not cache a failed load: a later retry must be able to recover.
+const OCR_LANG_SOURCES=['https://tessdata.projectnaptha.com/4.0.0_best_int','https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://unpkg.com/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://tessdata.projectnaptha.com/4.0.0'];
+const OCR_CDN_CONFIGS=[
+ {script:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/tesseract.min.js',worker:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/worker.min.js',core:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0'},
+ {script:'https://unpkg.com/tesseract.js@5.0.0/dist/tesseract.min.js',worker:'https://unpkg.com/tesseract.js@5.0.0/dist/worker.min.js',core:'https://unpkg.com/tesseract.js-core@5.0.0'}
+];
+let ocrLibPromise=null,ocrWorkerPromise=null,ocrToken=0,lastAutoId='',ocrState='loading',ocrWorkerConfig=null;
 function loadOcrLibrary(){
-  if(window.Tesseract)return Promise.resolve(window.Tesseract);
-  if(ocrLibPromise)return ocrLibPromise;
-  ocrLibPromise=(async()=>{
-    let lastError=null;
-    for(const src of OCR_LIB_SOURCES){
-      try{
-        await new Promise((resolve,reject)=>{
-          const script=document.createElement('script');
-          script.src=src;
-          script.async=true;
-          script.onload=()=>window.Tesseract?resolve():reject(new Error('OCR library loaded but Tesseract was not available'));
-          script.onerror=()=>reject(new Error('Could not load OCR library from '+new URL(src).hostname));
-          document.head.appendChild(script);
-        });
-        return window.Tesseract;
-      }catch(error){lastError=error;}
-    }
-    throw lastError||new Error('All OCR library sources failed');
-  })().catch(error=>{ocrLibPromise=null;throw error;});
-  return ocrLibPromise;
+ if(window.Tesseract)return Promise.resolve(window.Tesseract);
+ if(ocrLibPromise)return ocrLibPromise;
+ ocrLibPromise=(async()=>{
+  let lastError=null;
+  for(const config of OCR_CDN_CONFIGS){
+   try{
+    await new Promise((resolve,reject)=>{
+     const script=document.createElement('script');
+     let settled=false,timer;
+     const finish=error=>{if(settled)return;settled=true;clearTimeout(timer);script.onload=null;script.onerror=null;if(error){script.remove();reject(error);}else resolve();};
+     timer=setTimeout(()=>finish(new Error('Timed out loading OCR library from '+new URL(config.script).hostname)),12000);
+     script.src=config.script;script.async=true;
+     script.onload=()=>window.Tesseract?finish():finish(new Error('OCR library loaded but Tesseract was not available'));
+     script.onerror=()=>finish(new Error('Could not load OCR library from '+new URL(config.script).hostname));
+     document.head.appendChild(script);
+    });
+    if(!window.Tesseract)throw new Error('OCR library is unavailable after download');
+    ocrWorkerConfig=config;
+    return window.Tesseract;
+   }catch(error){lastError=error;}
+  }
+  throw lastError||new Error('All OCR library sources failed');
+ })().catch(error=>{ocrLibPromise=null;throw error;});
+ return ocrLibPromise;
 }
 
 function setOcrState(state,detail){
   ocrState=state;
   const el=document.getElementById('ocrState');
   if(!el)return;
-  const map={loading:['Loading OCR engine…','#624c20'],ready:['OCR engine ready','#174b3b'],offline:['OCR engine unavailable — type the Order ID','#a63232']};
+  const map=currentLanguage==='te'?{loading:['OCR సదుపాయం లోడ్ అవుతోంది…','#624c20'],ready:['OCR సిద్ధంగా ఉంది','#174b3b'],offline:['OCR అందుబాటులో లేదు — Order IDని మాన్యువల్‌గా నమోదు చేయండి','#a63232']}:{loading:['Loading OCR engine…','#624c20'],ready:['OCR engine ready','#174b3b'],offline:['OCR engine unavailable — type the Order ID','#a63232']};
   const picked=map[state]||map.loading;
   el.textContent=detail||picked[0];
   el.style.color=picked[1];
@@ -807,28 +812,30 @@ function zoomOnOriginal(img,box,canvasScale){
 }
 
 async function getOcrWorker(onStatus){
-  if(ocrWorkerPromise)return ocrWorkerPromise;
-  ocrWorkerPromise=(async()=>{
-    await loadOcrLibrary();
-    const engine=window.Tesseract;
-    if(!engine)throw new Error('OCR library is unavailable');
-    let lastErr=null;
-    for(const langPath of OCR_LANG_SOURCES){
-      try{
-        if(onStatus)onStatus('Loading the OCR language data (first time only)…');
-        const worker=await engine.createWorker('eng',1,{langPath,gzip:true,logger:()=>{}});
-        await worker.setParameters({preserve_interword_spaces:'1'});
-        setOcrState('ready');
-        return worker;
-      }catch(e){lastErr=e;}
-    }
-    throw lastErr||new Error('the OCR language data could not be loaded');
-  })().catch(error=>{
-    ocrWorkerPromise=null;
-    setOcrState('offline');
-    throw error;
-  });
-  return ocrWorkerPromise;
+ if(ocrWorkerPromise)return ocrWorkerPromise;
+ ocrWorkerPromise=(async()=>{
+  const engine=await loadOcrLibrary(),config=ocrWorkerConfig;
+  if(!engine||!config)throw new Error('OCR library configuration is unavailable');
+  let lastErr=null;
+  for(const langPath of OCR_LANG_SOURCES){
+   let worker=null;
+   try{
+    if(onStatus)onStatus('Loading the OCR language data (first time only)…');
+    worker=await engine.createWorker('eng',1,{
+     workerPath:config.worker,corePath:config.core,langPath,gzip:true,
+     logger:message=>{if(onStatus&&message&&message.status==='recognizing text')onStatus('Reading screenshot… '+Math.round((message.progress||0)*100)+'%');}
+    });
+    await worker.setParameters({preserve_interword_spaces:'1'});
+    setOcrState('ready');
+    return worker;
+   }catch(error){
+    lastErr=error;
+    if(worker&&worker.terminate){try{await worker.terminate();}catch(cleanupError){}}
+   }
+  }
+  throw lastErr||new Error('The OCR language data could not be loaded');
+ })().catch(error=>{ocrWorkerPromise=null;setOcrState('offline');throw error;});
+ return ocrWorkerPromise;
 }
 
 async function warmOcr(){
@@ -838,6 +845,11 @@ async function warmOcr(){
   catch(e){setOcrState('offline');}
 }
 
+function exactOrderIdFromDigits(raw){
+ const lines=String(raw||'').split(/\r?\n/);
+ for(const line of lines){const digits=line.replace(/\D/g,'');if(digits.length===18)return 'OD'+digits;}
+ return null;
+}
 async function recognize(cv,worker,psm,whitelist){
   const params={tessedit_pageseg_mode:psm};
   if(whitelist)params.tessedit_char_whitelist=whitelist;
@@ -878,7 +890,6 @@ async function readOrderIdFromImage(file,onStatus){
     const labelH=Math.max(1,(label.y1-label.y0)/scale);
     const cropY=Math.max(0,labelY-labelH*1.5);
     const cropH=Math.min(img.naturalHeight-cropY,Math.max(img.naturalHeight*0.24,labelH*16));
-    const crop=drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600);
     note('Reading the Order ID area at high resolution…');
     for(const psm of ['6','11','7']){
       if(!budget())break;
@@ -886,7 +897,14 @@ async function readOrderIdFromImage(file,onStatus){
       res=await recognize(gray,worker,psm);
       const hit=record(res);
       if(hit)return {id:hit,text:seen.join('\n---\n')};
-          }
+      if(budget()){
+        const binary=preprocess(drawRegion(img,{x:0,y:cropY,w:img.naturalWidth,h:cropH},3.2,3600),'binary');
+        const digits=await recognize(binary,worker,psm,'0123456789');
+        seen.push('[label-crop numeric pass]\\n'+digits.text);
+        const exact=exactOrderIdFromDigits(digits.text);
+        if(exact)return {id:exact,text:seen.join('\n---\n')};
+      }
+    }
   }
 
   // Fallback: scan overlapping horizontal bands across the entire image.
