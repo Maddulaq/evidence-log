@@ -1012,7 +1012,7 @@ async function runOrderOcr(file){
       setOcrStatus(uiText[currentLanguage].ocrMessages.detected+(timeApplied?' '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0'):''),false,'detected');
     }else{
       $('ocrDebug').open=true;
-      setOcrStatus(uiText[currentLanguage].ocrMessages.notFound+(timeApplied?' '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0):''),true,'notFound');
+      setOcrStatus(uiText[currentLanguage].ocrMessages.notFound+(timeApplied?' '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0'):''),true,'notFound');
     }
   }catch(err){
     if(token!==ocrToken)return;
