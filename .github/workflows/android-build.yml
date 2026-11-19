@@ -52,7 +52,14 @@ jobs:
       - name: Install Android SDK packages
         shell: bash
         run: |
+          set +e
           yes | sdkmanager --licenses >/dev/null
+          license_status=${PIPESTATUS[1]}
+          set -e
+          if [ "$license_status" -ne 0 ]; then
+            echo "Android SDK license acceptance failed."
+            exit "$license_status"
+          fi
           sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 
       - name: Install app dependencies
