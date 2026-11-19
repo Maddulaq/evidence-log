@@ -632,6 +632,7 @@ function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open
 function putRecord(record){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
 function deleteLocalRecord(id){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
 function readFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file);});}
+function clearImagePreviews(container){if(!container)return;container.querySelectorAll('img').forEach(img=>{if(img.src&&img.src.startsWith('blob:'))URL.revokeObjectURL(img.src);});container.replaceChildren();}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function setStatus(msg,isError=false){$('formStatus').textContent=msg;$('formStatus').className='status'+(isError?' error':'');}
 function localDateTime(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());}
@@ -1042,6 +1043,7 @@ $('notes').addEventListener('input',()=>{
   notesManuallyEdited=!!$('notes').value.trim()&&$('notes').value!==lastAutoDescription;
 });
 $('incidentForm').addEventListener('reset',()=>{
+  clearImagePreviews($('supportPreview'));
   lastAutoDescription='';
   notesManuallyEdited=false;
   setTimeout(()=>{if($('category').value)updateSuggestedDescription();},0);
@@ -1049,8 +1051,8 @@ $('incidentForm').addEventListener('reset',()=>{
 
 $('orderId').addEventListener('input',()=>{$('orderId').value=$('orderId').value.toUpperCase().replace(/\s+/g,'');});
 $('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{warmOcr();});
-$('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
-$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(!$('category').value){setStatus('Please select an issue category.',true);return;}if(!/^OD[0-9]{18}$/.test($('orderId').value.trim().toUpperCase())){setStatus('Enter a valid Order ID: OD followed by exactly 18 digits.',true);$('orderId').focus();return;}if(!$('store').value.trim()){setStatus('Enter the actual store or hub name.',true);$('store').focus();return;}if(!$('incidentAt').value||Number.isNaN(new Date($('incidentAt').value).getTime())){setStatus('Enter a valid incident date and time.',true);$('incidentAt').focus();return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
+$('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];clearImagePreviews($('supportPreview'));if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';clearImagePreviews($('supportPreview'));return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
+$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(!$('category').value){setStatus('Please select an issue category.',true);return;}if(!/^OD[0-9]{18}$/.test($('orderId').value.trim().toUpperCase())){setStatus('Enter a valid Order ID: OD followed by exactly 18 digits.',true);$('orderId').focus();return;}if(!$('store').value.trim()){setStatus('Enter the actual store or hub name.',true);$('store').focus();return;}if(!$('incidentAt').value||Number.isNaN(new Date($('incidentAt').value).getTime())){setStatus('Enter a valid incident date and time.',true);$('incidentAt').focus();return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='';$('orderPreview').innerHTML='';clearImagePreviews($('supportPreview'));setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
 const selectedRecordIds=new Set();
 function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' complaint'+(n===1?'':'s')+' selected');if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');}
 function updateDashboardMetrics(rows){
@@ -1132,17 +1134,29 @@ body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="da
     +'</main><script>function printEvidenceReport(){const b=document.getElementById("printReportBtn");if(b){b.disabled=true;b.textContent="Preparing report…";}const imgs=Array.from(document.images);Promise.all(imgs.map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;}))).then(()=>{if(b){b.disabled=false;b.textContent="Print / Save as PDF";}setTimeout(()=>window.print(),250);});}</'+ '/script></body></html>';
 }
 let pdfLibPromise=null;
+const PDF_LIB_SOURCES=['https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js','https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js'];
 function loadPdfLibrary(){
-  if(window.PDFLib)return Promise.resolve(window.PDFLib);
-  if(pdfLibPromise)return pdfLibPromise;
-  pdfLibPromise=new Promise((resolve,reject)=>{
-    const script=document.createElement('script');
-    script.src='https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
-    script.onload=()=>window.PDFLib?resolve(window.PDFLib):reject(new Error('PDF library unavailable'));
-    script.onerror=()=>reject(new Error('Could not load PDF library'));
-    document.head.appendChild(script);
-  });
-  return pdfLibPromise;
+ if(window.PDFLib)return Promise.resolve(window.PDFLib);
+ if(pdfLibPromise)return pdfLibPromise;
+ pdfLibPromise=(async()=>{
+  let lastError=null;
+  for(const src of PDF_LIB_SOURCES){
+   try{
+    await new Promise((resolve,reject)=>{
+     const script=document.createElement('script');let settled=false,timer;
+     const finish=error=>{if(settled)return;settled=true;clearTimeout(timer);script.onload=null;script.onerror=null;if(error){script.remove();reject(error);}else resolve();};
+     timer=setTimeout(()=>finish(new Error('Timed out loading PDF library')),12000);
+     script.src=src;script.async=true;
+     script.onload=()=>window.PDFLib?finish():finish(new Error('PDF library did not initialize'));
+     script.onerror=()=>finish(new Error('Could not load PDF library from '+new URL(src).hostname));
+     document.head.appendChild(script);
+    });
+    if(window.PDFLib)return window.PDFLib;
+   }catch(error){lastError=error;}
+  }
+  throw lastError||new Error('PDF library is unavailable');
+ })().catch(error=>{pdfLibPromise=null;throw error;});
+ return pdfLibPromise;
 }
 function imageAsJpeg(dataUrl){
   return new Promise((resolve,reject)=>{
