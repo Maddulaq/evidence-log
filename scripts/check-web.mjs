@@ -3,8 +3,8 @@ import { Script } from 'node:vm';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const privacy = await readFile(new URL('../privacy.html', import.meta.url), 'utf8');
-const blocks = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)]
-  .filter(([, attributes]) => !/\\bsrc\\s*=/.test(attributes));
+const blocks = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
+  .filter(([, attributes]) => !/\bsrc\s*=/.test(attributes));
 
 if (blocks.length !== 1) throw new Error(`Expected one inline application script, found ${blocks.length}.`);
 const appSource = blocks[0][2];
@@ -22,7 +22,7 @@ const required = ['incidentForm','orderShot','category','orderId','store','incid
 for (const id of required) {
   if (!html.includes('id="' + id + '"')) throw new Error('Required app element is missing: ' + id);
 }
-const ids = [...html.matchAll(/\\bid="([^"]+)"/g)].map(match => match[1]);
+const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 if (new Set(ids).size !== ids.length) throw new Error('Duplicate HTML element IDs detected.');
 
 if (!appSource.includes("tesseract.js@5.0.0") ||
@@ -47,7 +47,7 @@ const extractOrderId = new Function('OCR_DIGIT_MAP', parserSource + '; return ex
 if (extractOrderId('Order ID: OD123456789012345678') !== 'OD123456789012345678') {
   throw new Error('Order ID parser failed a valid prefixed ID test.');
 }
-if (extractOrderId('Order ID\\n123456789012345678') !== 'OD123456789012345678') {
+if (extractOrderId('Order ID\n123456789012345678') !== 'OD123456789012345678') {
   throw new Error('Order ID parser failed a split-label ID test.');
 }
 if (extractOrderId('123456789012345678') !== null) {
