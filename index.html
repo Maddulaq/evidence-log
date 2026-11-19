@@ -687,18 +687,32 @@ function extractOrderId(rawText){
 const OCR_MAX_AREA=4.2e6,OCR_MAX_SIDE=3800,OCR_DEADLINE=45000;
 const OCR_LANG_SOURCES=['https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0','https://unpkg.com/@tesseract.js-data/eng@1.0.0/4.0.0_best_int','https://tessdata.projectnaptha.com/4.0.0_best_int'];
 const OCR_LIB_SOURCES=['https://unpkg.com/tesseract.js@5/dist/tesseract.min.js','https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js'];
-let ocrWorkerPromise=null,ocrToken=0,lastAutoId='',ocrState='loading';
+let ocrLibPromise=null,ocrWorkerPromise=null,ocrToken=0,lastAutoId='',ocrState='loading';
 
-window.loadOcrLibFallback=function(index){
-  const i=index||0;
-  if(i>=OCR_LIB_SOURCES.length)return;
-  const script=document.createElement('script');
-  script.src=OCR_LIB_SOURCES[i];
-  script.defer=true;
-  script.onerror=()=>window.loadOcrLibFallback(i+1);
-  script.onload=()=>{if(ocrState==='loading')warmOcr();};
-  document.head.appendChild(script);
-};
+// Load OCR on demand and try the second CDN if the first one fails.
+// Do not cache a failed load: a later retry must be able to recover.
+function loadOcrLibrary(){
+  if(window.Tesseract)return Promise.resolve(window.Tesseract);
+  if(ocrLibPromise)return ocrLibPromise;
+  ocrLibPromise=(async()=>{
+    let lastError=null;
+    for(const src of OCR_LIB_SOURCES){
+      try{
+        await new Promise((resolve,reject)=>{
+          const script=document.createElement('script');
+          script.src=src;
+          script.async=true;
+          script.onload=()=>window.Tesseract?resolve():reject(new Error('OCR library loaded but Tesseract was not available'));
+          script.onerror=()=>reject(new Error('Could not load OCR library from '+new URL(src).hostname));
+          document.head.appendChild(script);
+        });
+        return window.Tesseract;
+      }catch(error){lastError=error;}
+    }
+    throw lastError||new Error('All OCR library sources failed');
+  })().catch(error=>{ocrLibPromise=null;throw error;});
+  return ocrLibPromise;
+}
 
 function setOcrState(state,detail){
   ocrState=state;
@@ -794,21 +808,25 @@ function zoomOnOriginal(img,box,canvasScale){
 async function getOcrWorker(onStatus){
   if(ocrWorkerPromise)return ocrWorkerPromise;
   ocrWorkerPromise=(async()=>{
-    if(!window.Tesseract)throw new Error('the OCR engine did not load (check your internet connection)');
+    await loadOcrLibrary();
+    const engine=window.Tesseract;
+    if(!engine)throw new Error('OCR library is unavailable');
     let lastErr=null;
     for(const langPath of OCR_LANG_SOURCES){
       try{
-        if(onStatus)onStatus('Loading the OCR engine (first time only)…');
-        const worker=await Tesseract.createWorker('eng',1,{langPath,gzip:true,logger:()=>{}});
+        if(onStatus)onStatus('Loading the OCR language data (first time only)…');
+        const worker=await engine.createWorker('eng',1,{langPath,gzip:true,logger:()=>{}});
         await worker.setParameters({preserve_interword_spaces:'1'});
         setOcrState('ready');
         return worker;
       }catch(e){lastErr=e;}
     }
+    throw lastErr||new Error('the OCR language data could not be loaded');
+  })().catch(error=>{
     ocrWorkerPromise=null;
     setOcrState('offline');
-    throw lastErr||new Error('the OCR engine could not be started');
-  })();
+    throw error;
+  });
   return ocrWorkerPromise;
 }
 
@@ -1019,7 +1037,7 @@ $('incidentForm').addEventListener('reset',()=>{
 });
 
 $('store').value='Banjara Hills 150';
-$('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';if(!$('store').value.trim())$('store').value='Banjara Hills 150';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{if(window.Tesseract)warmOcr();else window.loadOcrLibFallback(0);});
+$('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';if(!$('store').value.trim())$('store').value='Banjara Hills 150';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{warmOcr();});
 $('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];$('supportPreview').innerHTML='';if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';$('supportPreview').innerHTML='';return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
 $('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='Banjara Hills 150';$('orderPreview').innerHTML='';$('supportPreview').innerHTML='';setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
 const selectedRecordIds=new Set();
