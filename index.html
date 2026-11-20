@@ -634,8 +634,15 @@ document.getElementById('shareAppBtn').addEventListener('click',async()=>{
 });
 
 const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=25*1024*1024, MAX_DRAFT_BYTES=8*1024*1024;
-let db;
-function localRecords(){return new Promise((resolve,reject)=>{if(!db){reject(new Error('Device database is not ready'));return;}const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error||new Error('Could not read device records'));tx.onerror=()=>reject(tx.error||new Error('Could not read device records'));});}
+let db,dbPromise;
+async function ensureDB(){
+ if(db)return db;
+ if(!dbPromise){
+  dbPromise=openDB().then(connection=>{db=connection;return connection;}).finally(()=>{dbPromise=null;});
+ }
+ return dbPromise;
+}
+async function localRecords(){const connection=await ensureDB();return new Promise((resolve,reject)=>{let tx;try{tx=connection.transaction(STORE,'readonly');}catch(error){reject(error);return;}const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error||new Error('Could not read device records'));tx.onerror=()=>reject(tx.error||new Error('Could not read device records'));tx.onabort=()=>reject(tx.error||new Error('Reading saved reports was interrupted'));});}
 async function allRecords(){return await localRecords();}
 function findPotentialDuplicate(records,candidate){
  const normalize=value=>String(value||'').trim().replace(/\\s+/g,' ').toLowerCase();
@@ -653,19 +660,17 @@ function findPotentialDuplicate(records,candidate){
  })||null;
 }
 
-function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,2);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});if(!d.objectStoreNames.contains(DRAFT_STORE))d.createObjectStore(DRAFT_STORE,{keyPath:'id'});};req.onblocked=()=>{const el=document.getElementById('draftStatus');if(el)el.textContent='Storage is waiting for another SOP & Proof Hub tab to close. Close older app tabs, then this page will continue.';};req.onsuccess=()=>{db=req.result;db.onversionchange=()=>{db.close();db=null;};resolve(req.result);};req.onerror=()=>reject(req.error);});}
-function putRecord(record){return new Promise((resolve,reject)=>{
- if(!db){reject(new Error('Device database is not ready'));return;}
+function openDB(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){reject(new Error('This browser does not support local database storage.'));return;}const req=indexedDB.open(DB_NAME,2);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});if(!d.objectStoreNames.contains(DRAFT_STORE))d.createObjectStore(DRAFT_STORE,{keyPath:'id'});};req.onblocked=()=>{const el=document.getElementById('draftStatus');if(el)el.textContent='Storage is waiting for another SOP & Proof Hub tab to close. Close older app tabs, then this page will continue.';};req.onsuccess=()=>{const connection=req.result;connection.onversionchange=()=>{connection.close();if(db===connection)db=null;};resolve(connection);};req.onerror=()=>reject(req.error||new Error('Could not open the device database.'));});}
+async function putRecord(record){const connection=await ensureDB();return new Promise((resolve,reject)=>{
  let tx;
- try{tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);}
+ try{tx=connection.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);}
  catch(error){reject(error);return;}
  tx.oncomplete=()=>resolve();
  tx.onerror=()=>reject(tx.error||new Error('The device could not write this incident.'));
  tx.onabort=()=>reject(tx.error||new Error('The incident save was interrupted.'));
 });}
-function getLocalRecord(id){return new Promise((resolve,reject)=>{
- if(!db){reject(new Error('Device database is not ready'));return;}
- const tx=db.transaction(STORE,'readonly'),req=tx.objectStore(STORE).get(id);
+async function getLocalRecord(id){const connection=await ensureDB();return new Promise((resolve,reject)=>{
+ const tx=connection.transaction(STORE,'readonly'),req=tx.objectStore(STORE).get(id);
  req.onsuccess=()=>resolve(req.result||null);
  req.onerror=()=>reject(req.error||new Error('Could not verify the saved incident.'));
  tx.onerror=()=>reject(tx.error||new Error('Could not verify the saved incident.'));
@@ -676,7 +681,7 @@ function recordHasCompleteEvidence(saved,expectedShot,expectedExtras){
  if(!Array.isArray(saved.supportingEvidence)||saved.supportingEvidence.length!==expectedExtras.length)return false;
  return saved.supportingEvidence.every((item,index)=>item&&item.name===expectedExtras[index].name&&typeof item.data==='string'&&item.data.startsWith('data:image/')&&item.data.length>0);
 }
-function deleteLocalRecord(id){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
+async function deleteLocalRecord(id){const connection=await ensureDB();return new Promise((resolve,reject)=>{const tx=connection.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('Deleting the report was interrupted'));});}
 function isImageFile(file){return !!file&&((typeof file.type==='string'&&file.type.toLowerCase().startsWith('image/'))||/\\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i.test(file.name||''));}
 async function readFile(file){
  if(!file||!file.size)throw new Error('One of the selected image files is empty or unavailable.');
@@ -696,10 +701,11 @@ async function readFile(file){
 const DRAFT_STORE='drafts',DRAFT_ID='active';
 let draftTimer=null,draftSaveChain=Promise.resolve(),draftRestoring=false;
 let draftFiles={orderScreenshot:null,supportingEvidence:[]};
-function draftStoreRequest(mode,action,value){
+async function draftStoreRequest(mode,action,value){
+ const connection=await ensureDB();
  return new Promise((resolve,reject)=>{
-  if(!db){reject(new Error('Device database is not ready'));return;}
-  const tx=db.transaction(DRAFT_STORE,mode),store=tx.objectStore(DRAFT_STORE);
+  let tx;try{tx=connection.transaction(DRAFT_STORE,mode);}catch(error){reject(error);return;}
+  const store=tx.objectStore(DRAFT_STORE);
   const req=action==='get'?store.get(DRAFT_ID):action==='delete'?store.delete(DRAFT_ID):store.put(value);
   let result;
   req.onsuccess=()=>{result=req.result;};
@@ -1528,7 +1534,7 @@ themeToggle?.addEventListener('click',()=>{
   try{localStorage.setItem('deliveryEvidenceTheme',next);}catch(e){}
 });
 
-(async()=>{try{db=await openDB();setupDraftAutosave();await restoreDraft();await render();}catch(e){console.error(e);setStatus('Device storage could not start. Please check browser storage permissions.',true);}})();
+(async()=>{try{await ensureDB();setupDraftAutosave();await restoreDraft();await render();}catch(e){console.error(e);setStatus('Device storage could not start: '+(e.message||'Please check browser storage permissions.'),true);}})();
 
 /* Dashboard count and instant record search */
 const dashboardCount=document.getElementById('dashboardCount');
