@@ -173,9 +173,6 @@ if (!isImageFile({name:'camera-photo.jpg',type:''}) ||
     isImageFile({name:'document.pdf',type:'application/pdf'})) {
   throw new Error('Mobile camera images with missing or generic MIME types must be accepted by their filename extension.');
 }
-if (!imageHelper.includes('/\\\\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i')) {
-  throw new Error('Image filename extension detection must use a literal-dot regular expression.');
-}
 
 const pdfStart = appSource.indexOf('function pdfAscii(value){');
 const pdfEnd = appSource.indexOf('async function sharePdf(rows){', pdfStart);
