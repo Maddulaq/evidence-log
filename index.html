@@ -649,9 +649,12 @@ function draftStoreRequest(mode,action,value){
   if(!db){reject(new Error('Device database is not ready'));return;}
   const tx=db.transaction(DRAFT_STORE,mode),store=tx.objectStore(DRAFT_STORE);
   const req=action==='get'?store.get(DRAFT_ID):action==='delete'?store.delete(DRAFT_ID):store.put(value);
-  req.onsuccess=()=>resolve(req.result);
+  let result;
+  req.onsuccess=()=>{result=req.result;};
   req.onerror=()=>reject(req.error||new Error('Draft storage failed'));
+  tx.oncomplete=()=>resolve(result);
   tx.onerror=()=>reject(tx.error||new Error('Draft storage failed'));
+  tx.onabort=()=>reject(tx.error||new Error('Draft storage was interrupted'));
  });
 }
 function draftFileSnapshot(file){
