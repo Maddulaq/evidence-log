@@ -68,6 +68,37 @@ if (draftHasContent({fields:{orderId:'OD123'},orderScreenshot:null,supportingEvi
     draftHasContent({fields:{},orderScreenshot:null,supportingEvidence:[{name:'photo.jpg'}]}) !== true) {
   throw new Error('Draft content guard failed its empty and populated draft cases.');
 }
+if (!html.includes('pattern="[Oo][Dd][0-9]{18}"') ||
+    !appSource.includes('function getLocalRecord(id){') ||
+    !appSource.includes('function recordHasCompleteEvidence(saved,expectedShot,expectedExtras){') ||
+    !appSource.includes('const persisted=await getLocalRecord(record.id)') ||
+    !appSource.includes('r.onabort=()=>reject(new Error(\'Reading \'+file.name+\' was interrupted. Please choose the image again.\'))') ||
+    !appSource.includes('tx.onabort=()=>reject(tx.error||new Error(\'The incident save was interrupted.\'))')) {
+  throw new Error('Evidence submission must accept lowercase Order IDs, handle interrupted file reads/writes, and verify the saved files.');
+}
+const evidenceStart = appSource.indexOf('function recordHasCompleteEvidence(saved,expectedShot,expectedExtras){');
+const evidenceEnd = appSource.indexOf('function deleteLocalRecord', evidenceStart);
+if (evidenceStart < 0 || evidenceEnd <= evidenceStart) throw new Error('Saved evidence verification helper could not be located.');
+const evidenceSource = appSource.slice(evidenceStart, evidenceEnd);
+const recordHasCompleteEvidence = new Function(evidenceSource + '; return recordHasCompleteEvidence;')();
+const shotFile = {name:'order.png'};
+const extraFiles = [{name:'proof-1.png'},{name:'proof-2.png'}];
+const validSaved = {orderScreenshot:{name:'order.png',data:'data:image/png;base64,AA=='},supportingEvidence:[
+ {name:'proof-1.png',data:'data:image/png;base64,AA=='},
+ {name:'proof-2.png',data:'data:image/png;base64,AA=='}
+]};
+if (!recordHasCompleteEvidence(validSaved,shotFile,extraFiles) ||
+    recordHasCompleteEvidence({...validSaved,orderScreenshot:{name:'order.png',data:''}},shotFile,extraFiles) ||
+    recordHasCompleteEvidence({...validSaved,supportingEvidence:validSaved.supportingEvidence.slice(0,1)},shotFile,extraFiles) ||
+    recordHasCompleteEvidence({...validSaved,supportingEvidence:[{name:'wrong.png',data:'data:image/png;base64,AA=='},validSaved.supportingEvidence[1]]},shotFile,extraFiles)) {
+  throw new Error('Saved evidence verification failed valid, missing-file, incomplete-count or filename-mismatch cases.');
+}
+const submitAt = appSource.indexOf("const persisted=await getLocalRecord(record.id)");
+if (submitAt < 0 || appSource.indexOf('Incident, order screenshot and ', submitAt) < 0 ||
+    appSource.indexOf('Reload the page to refresh the saved-record list.', submitAt) < 0) {
+  throw new Error('Submission success and saved-record refresh failures are not reported separately.');
+}
+
 if (!html.includes('id="ocrConfidence"') ||
     !appSource.includes('function estimateOcrConfidence(words)') ||
     !appSource.includes('confidence:estimateOcrConfidence(r.words)') ||
