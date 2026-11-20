@@ -156,4 +156,45 @@ if (extractOrderId('123456789012345678') !== null) {
 if (!privacy.includes('Device-local storage') || !privacy.includes('SOP &amp; Proof Hub')) {
   throw new Error('Privacy policy content is missing its required identity or storage disclosure.');
 }
+const imageHelperStart = appSource.indexOf('function isImageFile(file){');
+const imageHelperEnd = appSource.indexOf('async function readFile(file){', imageHelperStart);
+if (imageHelperStart < 0 || imageHelperEnd <= imageHelperStart) throw new Error('Mobile image file detector could not be located.');
+const imageHelper = appSource.slice(imageHelperStart, imageHelperEnd);
+const isImageFile = new Function(imageHelper + '; return isImageFile;')();
+if (!isImageFile({name:'camera-photo.jpg',type:''}) ||
+    !isImageFile({name:'evidence.PNG',type:'application/octet-stream'}) ||
+    !isImageFile({name:'photo.webp',type:'image/webp'}) ||
+    isImageFile({name:'document.pdf',type:'application/pdf'})) {
+  throw new Error('Mobile camera images with missing or generic MIME types must be accepted by their filename extension.');
+}
+if (!imageHelper.includes('/\\\\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i')) {
+  throw new Error('Image filename extension detection must use a literal-dot regular expression.');
+}
+
+const pdfStart = appSource.indexOf('function pdfAscii(value){');
+const pdfEnd = appSource.indexOf('async function sharePdf(rows){', pdfStart);
+if (pdfStart < 0 || pdfEnd <= pdfStart) throw new Error('Offline PDF generator could not be located.');
+const pdfSource = appSource.slice(pdfStart, pdfEnd);
+if (pdfSource.includes('loadPdfLibrary') || !pdfSource.includes('xref\\\\n') || !pdfSource.includes('%%EOF')) {
+  throw new Error('PDF generation must not depend on a remote library and must write a complete PDF structure.');
+}
+const createEvidencePdfBlob = new Function('imageAsJpeg', pdfSource + '; return createEvidencePdfBlob;')(
+  async () => ({dataUrl:'data:image/jpeg;base64,/9j/2Q==',width:2,height:2})
+);
+const sampleRecord = {
+  category:'Test incident',orderId:'OD123456789012345678',store:'Test hub',
+  incidentAt:'2026-11-20T10:00:00.000Z',notes:'Test report',
+  orderScreenshot:{data:'data:image/jpeg;base64,AA=='},
+  supportingEvidence:[{data:'data:image/jpeg;base64,AA=='},{data:'data:image/jpeg;base64,AA=='}]
+};
+const generatedPdf = await createEvidencePdfBlob([sampleRecord]);
+const generatedPdfText = new TextDecoder('latin1').decode(await generatedPdf.arrayBuffer());
+if (generatedPdf.type !== 'application/pdf' || generatedPdf.size < 500 ||
+    !generatedPdfText.startsWith('%PDF-1.4') || !generatedPdfText.includes('%%EOF') ||
+    !generatedPdfText.includes('/Count 1') ||
+    (generatedPdfText.split('/Subtype /Image').length-1) !== 3) {
+  throw new Error('PDF generator failed to create a valid report containing the order screenshot and both evidence photos.');
+}
+
+
 console.log('Web checks passed: application syntax, startup order, unique IDs, bilingual controls, OCR loading safeguards, draft recovery, duplicate detection and IndexedDB migration checks, Order ID parser cases and privacy policy.');
