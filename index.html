@@ -1393,19 +1393,19 @@ function pdfJoin(parts){
  return out;
 }
 function pdfText(value){
- return String(value??'').replace(/[\\r\\n]+/g,' ').replace(/[^\\x20-\\x7E]/g,' ')
-  .replace(/\\\\/g,'\\\\\\\\').replace(/\\(/g,'\\\\(').replace(/\\)/g,'\\\\)');
+ return String(value??'').replace(/[\r\n]+/g,' ').replace(/[^\x20-\x7E]/g,' ')
+  .replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
 }
 function pdfTextLine(value,x,y,size=10,bold=false){
- return 'BT /'+(bold?'F2':'F1')+' '+size+' Tf 1 0 0 1 '+x+' '+y+' Tm ('+pdfText(value)+') Tj ET\\n';
+ return 'BT /'+(bold?'F2':'F1')+' '+size+' Tf 1 0 0 1 '+x+' '+y+' Tm ('+pdfText(value)+') Tj ET\n';
 }
 function pdfImagePlacement(name,image,x,y,maxW,maxH){
  const scale=Math.min(maxW/image.width,maxH/image.height);
  const w=image.width*scale,h=image.height*scale;
- return 'q '+w.toFixed(2)+' 0 0 '+h.toFixed(2)+' '+(x+(maxW-w)/2).toFixed(2)+' '+(y+(maxH-h)/2).toFixed(2)+' cm /'+name+' Do Q\\n';
+ return 'q '+w.toFixed(2)+' 0 0 '+h.toFixed(2)+' '+(x+(maxW-w)/2).toFixed(2)+' '+(y+(maxH-h)/2).toFixed(2)+' cm /'+name+' Do Q\n';
 }
 function pdfStream(dictionary,bytes){
- return pdfJoin([pdfAscii(dictionary+' /Length '+bytes.length+' >>\\nstream\\n'),bytes,pdfAscii('\\nendstream')]);
+ return pdfJoin([pdfAscii(dictionary+' /Length '+bytes.length+' >>\nstream\n'),bytes,pdfAscii('\nendstream')]);
 }
 async function createEvidencePdfBlob(rows){
  if(!Array.isArray(rows)||!rows.length)throw new Error('There are no saved incidents to include in the PDF.');
@@ -1431,11 +1431,10 @@ async function createEvidencePdfBlob(rows){
   }
   const pageId=nextId++,contentId=nextId++;
   pageIds.push(pageId);
-  const xObjects=[];
   let content='';
   content+=pdfTextLine('SOP & EVIDENCE HUB',40,798,15,true);
   content+=pdfTextLine('Incident '+(i+1)+' of '+rows.length,430,800,9,false);
-  content+='0.09 0.29 0.23 RG 40 786 m 555 786 l S\\n';
+  content+='0.09 0.29 0.23 RG 40 786 m 555 786 l S\n';
   const fields=[
    ['Issue category',r.category],['Order ID',r.orderId],['Store / hub',r.store],
    ['Incident date & time',new Date(r.incidentAt).toLocaleString()],['Description',r.notes||'—']
@@ -1443,13 +1442,13 @@ async function createEvidencePdfBlob(rows){
   let y=762;
   for(const [label,value] of fields){
    content+=pdfTextLine(label,40,y,9,true);
-   const clean=String(value??'—').replace(/[\\r\\n]+/g,' ');
+   const clean=String(value??'—').replace(/[\r\n]+/g,' ');
    const max=label==='Description'?64:58;
    const shown=clean.length>max?clean.slice(0,max-1)+'…':clean;
    content+=pdfTextLine(shown,165,y,10,false);
    y-=24;
   }
-  content+='0.86 0.90 0.87 RG 40 632 m 555 632 l S\\n';
+  content+='0.86 0.90 0.87 RG 40 632 m 555 632 l S\n';
   const imageIds=[];
   for(let j=0;j<images.length;j++){
    const image=images[j],imageId=nextId++,resource='Im'+j;
@@ -1466,17 +1465,17 @@ async function createEvidencePdfBlob(rows){
   objects.set(pageId,pdfAscii('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> /XObject << '+xObjectDictionary+' >> >> /Contents '+contentId+' 0 R >>'));
  }
  objects.set(2,pdfAscii('<< /Type /Pages /Kids ['+pageIds.map(id=>id+' 0 R').join(' ')+'] /Count '+pageIds.length+' >>'));
- const maxId=Math.max(...objects.keys()),parts=[pdfAscii('%PDF-1.4\\n% SOP Proof Hub\\n')],offsets=[0];
+ const maxId=Math.max(...objects.keys()),parts=[pdfAscii('%PDF-1.4\n% SOP Proof Hub\n')],offsets=[0];
  let total=parts[0].length;
  for(let id=1;id<=maxId;id++){
   const body=objects.get(id);if(!body)throw new Error('PDF assembly failed: missing object '+id);
-  const prefix=pdfAscii(id+' 0 obj\\n'),suffix=pdfAscii('\\nendobj\\n');
+  const prefix=pdfAscii(id+' 0 obj\n'),suffix=pdfAscii('\nendobj\n');
   offsets[id]=total;parts.push(prefix,body,suffix);total+=prefix.length+body.length+suffix.length;
  }
  const xrefOffset=total;
- let xref='xref\\n0 '+(maxId+1)+'\\n0000000000 65535 f \\n';
- for(let id=1;id<=maxId;id++)xref+=String(offsets[id]).padStart(10,'0')+' 00000 n \\n';
- parts.push(pdfAscii(xref+'trailer\\n<< /Size '+(maxId+1)+' /Root 1 0 R >>\\nstartxref\\n'+xrefOffset+'\\n%%EOF'));
+ let xref='xref\n0 '+(maxId+1)+'\n0000000000 65535 f \n';
+ for(let id=1;id<=maxId;id++)xref+=String(offsets[id]).padStart(10,'0')+' 00000 n \n';
+ parts.push(pdfAscii(xref+'trailer\n<< /Size '+(maxId+1)+' /Root 1 0 R >>\nstartxref\n'+xrefOffset+'\n%%EOF'));
  const blob=new Blob([pdfJoin(parts)],{type:'application/pdf'});
  if(blob.size<500)throw new Error('The PDF file was unexpectedly empty.');
  return blob;
