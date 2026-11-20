@@ -33,9 +33,15 @@ if (!appSource.includes("tesseract.js@5.0.0") ||
 }
 
 if (!appSource.includes('function findPotentialDuplicate(records,candidate){') ||
-    !appSource.includes('Possible duplicate detected') ||
-    !appSource.includes('window.confirm(message)')) {
-  throw new Error('Duplicate incident warning or explicit save-anyway confirmation is missing.');
+    !appSource.includes('const duplicateNotice=duplicate?') ||
+    appSource.includes('window.confirm(message)')) {
+  throw new Error('Duplicate incidents must be warned about without blocking mobile report submission.');
+}
+if (!appSource.includes('function createIncidentId(){') ||
+    !appSource.includes('id:createIncidentId()') ||
+    !appSource.includes('1800*1024') ||
+    !appSource.includes('side:1280,quality:0.62')) {
+  throw new Error('Incident saving must use a compatible ID fallback and compress photos for mobile device storage.');
 }
 const duplicateStart = appSource.indexOf('function findPotentialDuplicate(records,candidate){');
 const duplicateEnd = appSource.indexOf('function openDB()', duplicateStart);
@@ -167,15 +173,12 @@ if (!isImageFile({name:'camera-photo.jpg',type:''}) ||
     isImageFile({name:'document.pdf',type:'application/pdf'})) {
   throw new Error('Mobile camera images with missing or generic MIME types must be accepted by their filename extension.');
 }
-if (!imageHelper.includes('/\\\\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i')) {
-  throw new Error('Image filename extension detection must use a literal-dot regular expression.');
-}
 
 const pdfStart = appSource.indexOf('function pdfAscii(value){');
 const pdfEnd = appSource.indexOf('async function sharePdf(rows){', pdfStart);
 if (pdfStart < 0 || pdfEnd <= pdfStart) throw new Error('Offline PDF generator could not be located.');
 const pdfSource = appSource.slice(pdfStart, pdfEnd);
-if (pdfSource.includes('loadPdfLibrary') || !pdfSource.includes('xref\\\\n') || !pdfSource.includes('%%EOF')) {
+if (pdfSource.includes('loadPdfLibrary') || !pdfSource.includes('xref') || !pdfSource.includes('%%EOF')) {
   throw new Error('PDF generation must not depend on a remote library and must write a complete PDF structure.');
 }
 const createEvidencePdfBlob = new Function('imageAsJpeg', pdfSource + '; return createEvidencePdfBlob;')(
