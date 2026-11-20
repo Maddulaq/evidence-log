@@ -52,7 +52,7 @@ if (!findPotentialDuplicate([{...duplicateBase,id:'old'}],duplicateBase) ||
 if (!html.includes("indexedDB.open(DB_NAME,1)") ||
     !html.includes("const DB_NAME='deliveryEvidenceHub_v3'") ||
     !appSource.includes('async function migrateLegacyDatabase()') ||
-    !appSource.includes('const LEGACY_DB_NAME=\'deliveryEvidenceHub\'') ||
+    !appSource.includes("LEGACY_DB_NAME='deliveryEvidenceHub'") ||
     !appSource.includes('browser print-to-PDF fallback') ||
     !html.includes('Build 2026.11.20 · Storage v3') ||
     !html.includes("createObjectStore(DRAFT_STORE") ||
