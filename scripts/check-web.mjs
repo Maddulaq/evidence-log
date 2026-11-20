@@ -188,7 +188,7 @@ const generatedPdfText = new TextDecoder('latin1').decode(await generatedPdf.arr
 if (generatedPdf.type !== 'application/pdf' || generatedPdf.size < 500 ||
     !generatedPdfText.startsWith('%PDF-1.4') || !generatedPdfText.includes('%%EOF') ||
     !generatedPdfText.includes('/Count 1') ||
-    (generatedPdfText.match(/\\/Subtype \\/Image/g)||[]).length !== 3) {
+    (generatedPdfText.split('/Subtype /Image').length-1) !== 3) {
   throw new Error('PDF generator failed to create a valid report containing the order screenshot and both evidence photos.');
 }
 
