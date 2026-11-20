@@ -1367,90 +1367,126 @@ function loadPdfLibrary(){
  return pdfLibPromise;
 }
 function imageAsJpeg(dataUrl){
-  return new Promise((resolve,reject)=>{
-    const img=new Image();
-    img.onload=()=>{
-      try{
-        const scale=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));
-        const canvas=document.createElement('canvas');
-        canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
-        canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
-        const ctx=canvas.getContext('2d');
-        ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.drawImage(img,0,0,canvas.width,canvas.height);
-        resolve(canvas.toDataURL('image/jpeg',0.84));
-      }catch(e){reject(e);}
-    };
-    img.onerror=()=>reject(new Error('An evidence image could not be read'));
-    img.src=dataUrl;
-  });
+ return new Promise((resolve,reject)=>{
+  const img=new Image();
+  img.onload=()=>{
+   try{
+    const scale=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+    canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+    const ctx=canvas.getContext('2d');
+    if(!ctx)throw new Error('Image processing is unavailable.');
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+    resolve({dataUrl:canvas.toDataURL('image/jpeg',0.82),width:canvas.width,height:canvas.height});
+   }catch(error){reject(error);}
+  };
+  img.onerror=()=>reject(new Error('An evidence image could not be decoded for the PDF.'));
+  img.src=dataUrl;
+ });
+}
+function pdfAscii(value){return new TextEncoder().encode(String(value));}
+function pdfJoin(parts){
+ const size=parts.reduce((n,p)=>n+p.length,0),out=new Uint8Array(size);let offset=0;
+ for(const part of parts){out.set(part,offset);offset+=part.length;}
+ return out;
+}
+function pdfText(value){
+ return String(value??'').replace(/[\\r\\n]+/g,' ').replace(/[^\\x20-\\x7E]/g,' ')
+  .replace(/\\\\/g,'\\\\\\\\').replace(/\\(/g,'\\\\(').replace(/\\)/g,'\\\\)');
+}
+function pdfTextLine(value,x,y,size=10,bold=false){
+ return 'BT /'+(bold?'F2':'F1')+' '+size+' Tf 1 0 0 1 '+x+' '+y+' Tm ('+pdfText(value)+') Tj ET\\n';
+}
+function pdfImagePlacement(name,image,x,y,maxW,maxH){
+ const scale=Math.min(maxW/image.width,maxH/image.height);
+ const w=image.width*scale,h=image.height*scale;
+ return 'q '+w.toFixed(2)+' 0 0 '+h.toFixed(2)+' '+(x+(maxW-w)/2).toFixed(2)+' '+(y+(maxH-h)/2).toFixed(2)+' cm /'+name+' Do Q\\n';
+}
+function pdfStream(dictionary,bytes){
+ return pdfJoin([pdfAscii(dictionary+' /Length '+bytes.length+' >>\\nstream\\n'),bytes,pdfAscii('\\nendstream')]);
 }
 async function createEvidencePdfBlob(rows){
-  const lib=await loadPdfLibrary();
-  const {PDFDocument,StandardFonts,rgb}=lib;
-  const pdf=await PDFDocument.create();
-  const font=await pdf.embedFont(StandardFonts.Helvetica);
-  const bold=await pdf.embedFont(StandardFonts.HelveticaBold);
-  const W=595.28,H=841.89,margin=38,green=rgb(0.09,0.29,0.23),muted=rgb(0.39,0.46,0.43),line=rgb(0.86,0.90,0.87);
-  const fit=(w,h,bw,bh)=>{const scale=Math.min(bw/w,bh/h);return {width:w*scale,height:h*scale};};
-  for(let i=0;i<rows.length;i++){
-    const r=rows[i],page=pdf.addPage([W,H]);
-    page.drawRectangle({x:0,y:H-58,width:W,height:58,color:green});
-    page.drawText('SOP & EVIDENCE HUB',{x:margin,y:H-36,size:14,font:bold,color:rgb(1,1,1)});
-    page.drawText('Record '+(i+1)+' of '+rows.length,{x:W-130,y:H-36,size:9,font,color:rgb(1,1,1)});
-    let y=H-82;
-    const field=(label,value)=>{
-      page.drawText(label,{x:margin,y:y-11,size:9,font:bold,color:muted});
-      const text=String(value||'—').replace(/[\r\n]+/g,' ');
-      const maxWidth=W-2*margin-118,words=text.split(/\s+/),lines=[];
-      let lineText='';
-      for(const word of words){
-        const candidate=lineText?lineText+' '+word:word;
-        if(lineText&&font.widthOfTextAtSize(candidate,10)>maxWidth){lines.push(lineText);lineText=word;}
-        else lineText=candidate;
-      }
-      if(lineText)lines.push(lineText);
-      lines.forEach((t,j)=>page.drawText(t,{x:margin+118,y:y-11-j*13,size:10,font,color:rgb(0.10,0.16,0.13)}));
-      y-=Math.max(22,lines.length*13+8);
-    };
-    field('Issue category',r.category);
-    field('Order ID',r.orderId);
-    field('Store / hub',r.store);
-    field('Incident date & time',new Date(r.incidentAt).toLocaleString());
-    field('Description',r.notes||'—');
-    y-=4;
-    page.drawLine({start:{x:margin,y},end:{x:W-margin,y},thickness:1,color:line});
-    y-=18;
-    const shots=[{name:'Order screenshot',data:r.orderScreenshot&&r.orderScreenshot.data}].concat((r.supportingEvidence||[]).map((x,j)=>({name:'Supporting evidence '+(j+1),data:x.data}))).filter(x=>x.data);
-    for(let j=0;j<shots.length;j++){
-      const sh=shots[j];
-      const attachmentTop=y-8;
-      const availableHeight=Math.max(100,attachmentTop-68);
-      const mainImageHeight=shots.length>1?Math.min(190,availableHeight*0.58):Math.min(300,availableHeight);
-      const supportImageHeight=shots.length>1?Math.max(48,Math.min(120,availableHeight-mainImageHeight-28)):0;
-      const bw=j===0?W-2*margin:(W-2*margin-14)/2;
-      const bh=j===0?mainImageHeight:supportImageHeight;
-      const x=j===0?margin:margin+(j-1)*(bw+14);
-      const top=j===0?attachmentTop:attachmentTop-18-mainImageHeight-12;
-      page.drawText(sh.name,{x,y:top-11,size:9,font:bold,color:green});
-      const jpeg=await imageAsJpeg(sh.data);
-      const bytes=Uint8Array.from(atob(jpeg.split(',')[1]),c=>c.charCodeAt(0));
-      const embedded=await pdf.embedJpg(bytes);
-      const dims=fit(embedded.width,embedded.height,bw,Math.max(30,bh-18));
-      page.drawImage(embedded,{x:x+(bw-dims.width)/2,y:top-18-dims.height,width:dims.width,height:dims.height});
-    }
-    page.drawLine({start:{x:margin,y:26},end:{x:W-margin,y:26},thickness:0.7,color:line});
-    page.drawText('Prepared by: Maddula Venkata Ramana',{x:margin,y:13,size:8,font:bold,color:muted});
+ if(!Array.isArray(rows)||!rows.length)throw new Error('There are no saved incidents to include in the PDF.');
+ const objects=new Map();
+ objects.set(1,pdfAscii('<< /Type /Catalog /Pages 2 0 R >>'));
+ objects.set(3,pdfAscii('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'));
+ objects.set(4,pdfAscii('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>'));
+ const pageIds=[];
+ let nextId=5;
+ for(let i=0;i<rows.length;i++){
+  const r=rows[i];
+  const shotRecords=[{name:'Order screenshot',data:r.orderScreenshot&&r.orderScreenshot.data}]
+   .concat((r.supportingEvidence||[]).map((item,j)=>({name:'Supporting evidence '+(j+1),data:item&&item.data})));
+  if(shotRecords.some(item=>typeof item.data!=='string'||!item.data.startsWith('data:image/')))
+   throw new Error('Incident '+(i+1)+' is missing an image. Reopen the report and check its attachments.');
+  const images=[];
+  for(const item of shotRecords){
+   const jpeg=await imageAsJpeg(item.data);
+   const base64=jpeg.dataUrl.split(',')[1];
+   const binary=atob(base64),bytes=new Uint8Array(binary.length);
+   for(let j=0;j<binary.length;j++)bytes[j]=binary.charCodeAt(j);
+   images.push({name:item.name,width:jpeg.width,height:jpeg.height,bytes});
   }
-  const bytes=await pdf.save();
-  const blob=new Blob([bytes],{type:'application/pdf'});
-  return blob;
-
+  const pageId=nextId++,contentId=nextId++;
+  pageIds.push(pageId);
+  const xObjects=[];
+  let content='';
+  content+=pdfTextLine('SOP & EVIDENCE HUB',40,798,15,true);
+  content+=pdfTextLine('Incident '+(i+1)+' of '+rows.length,430,800,9,false);
+  content+='0.09 0.29 0.23 RG 40 786 m 555 786 l S\\n';
+  const fields=[
+   ['Issue category',r.category],['Order ID',r.orderId],['Store / hub',r.store],
+   ['Incident date & time',new Date(r.incidentAt).toLocaleString()],['Description',r.notes||'—']
+  ];
+  let y=762;
+  for(const [label,value] of fields){
+   content+=pdfTextLine(label,40,y,9,true);
+   const clean=String(value??'—').replace(/[\\r\\n]+/g,' ');
+   const max=label==='Description'?64:58;
+   const shown=clean.length>max?clean.slice(0,max-1)+'…':clean;
+   content+=pdfTextLine(shown,165,y,10,false);
+   y-=24;
+  }
+  content+='0.86 0.90 0.87 RG 40 632 m 555 632 l S\\n';
+  const imageIds=[];
+  for(let j=0;j<images.length;j++){
+   const image=images[j],imageId=nextId++,resource='Im'+j;
+   imageIds.push({resource,id:imageId});
+   objects.set(imageId,pdfStream('<< /Type /XObject /Subtype /Image /Width '+image.width+' /Height '+image.height+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode',image.bytes));
+   content+=pdfTextLine(image.name,40,j===0?610:365,9,true);
+   if(j===0)content+=pdfImagePlacement(resource,image,40,390,515,205);
+   else content+=pdfImagePlacement(resource,image,j===1?40:305,175,250,170);
+  }
+  content+=pdfTextLine('Prepared by: SOP & Proof Hub',40,38,8,false);
+  const contentBytes=pdfAscii(content);
+  objects.set(contentId,pdfStream('<<',contentBytes));
+  const xObjectDictionary=imageIds.map(item=>'/'+item.resource+' '+item.id+' 0 R').join(' ');
+  objects.set(pageId,pdfAscii('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> /XObject << '+xObjectDictionary+' >> >> /Contents '+contentId+' 0 R >>'));
+ }
+ objects.set(2,pdfAscii('<< /Type /Pages /Kids ['+pageIds.map(id=>id+' 0 R').join(' ')+'] /Count '+pageIds.length+' >>'));
+ const maxId=Math.max(...objects.keys()),parts=[pdfAscii('%PDF-1.4\\n% SOP Proof Hub\\n')],offsets=[0];
+ let total=parts[0].length;
+ for(let id=1;id<=maxId;id++){
+  const body=objects.get(id);if(!body)throw new Error('PDF assembly failed: missing object '+id);
+  const prefix=pdfAscii(id+' 0 obj\\n'),suffix=pdfAscii('\\nendobj\\n');
+  offsets[id]=total;parts.push(prefix,body,suffix);total+=prefix.length+body.length+suffix.length;
+ }
+ const xrefOffset=total;
+ let xref='xref\\n0 '+(maxId+1)+'\\n0000000000 65535 f \\n';
+ for(let id=1;id<=maxId;id++)xref+=String(offsets[id]).padStart(10,'0')+' 00000 n \\n';
+ parts.push(pdfAscii(xref+'trailer\\n<< /Size '+(maxId+1)+' /Root 1 0 R >>\\nstartxref\\n'+xrefOffset+'\\n%%EOF'));
+ const blob=new Blob([pdfJoin(parts)],{type:'application/pdf'});
+ if(blob.size<500)throw new Error('The PDF file was unexpectedly empty.');
+ return blob;
 }
 function downloadPdfBlob(blob){
+ if(!(blob instanceof Blob)||blob.type!=='application/pdf'||blob.size<500)throw new Error('The PDF file is invalid or empty.');
  const url=URL.createObjectURL(blob),a=document.createElement('a');
  a.href=url;a.download='sop-proof-hub-report-'+new Date().toISOString().slice(0,10)+'.pdf';
- a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+ a.rel='noopener';a.style.display='none';document.body.appendChild(a);
+ a.click();a.remove();
  setTimeout(()=>URL.revokeObjectURL(url),120000);
 }
 async function sharePdf(rows){
@@ -1483,7 +1519,7 @@ function printRecords(rows){
   download.addEventListener('click',async()=>{
     download.disabled=true;download.textContent='Creating PDF…';
     try{const blob=await createEvidencePdfBlob(rows);downloadPdfBlob(blob);}
-    catch(err){alert('PDF could not be created. Please check your internet connection and try again. You can still use Print / Save as PDF.');}
+    catch(err){alert('PDF generation failed: '+(err&&err.message?err.message:'Unknown error')+'. Please use Print / Save as PDF if available.');}
     finally{download.disabled=false;download.textContent='Download PDF';}
   });
   const print=document.createElement('button');
