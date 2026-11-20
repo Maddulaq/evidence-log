@@ -163,7 +163,7 @@ if (!isImageFile({name:'camera-photo.jpg',type:''}) ||
     isImageFile({name:'document.pdf',type:'application/pdf'})) {
   throw new Error('Mobile camera images with missing or generic MIME types must be accepted by their filename extension.');
 }
-if (!imageHelper.includes(String.raw\`/\\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i\`)) {
+if (!imageHelper.includes('/\\\\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i')) {
   throw new Error('Image filename extension detection must use a literal-dot regular expression.');
 }
 
@@ -171,7 +171,7 @@ const pdfStart = appSource.indexOf('function pdfAscii(value){');
 const pdfEnd = appSource.indexOf('async function sharePdf(rows){', pdfStart);
 if (pdfStart < 0 || pdfEnd <= pdfStart) throw new Error('Offline PDF generator could not be located.');
 const pdfSource = appSource.slice(pdfStart, pdfEnd);
-if (pdfSource.includes('loadPdfLibrary') || !pdfSource.includes(String.raw\`xref\\n\`) || !pdfSource.includes('%%EOF')) {
+if (pdfSource.includes('loadPdfLibrary') || !pdfSource.includes('xref\\\\n') || !pdfSource.includes('%%EOF')) {
   throw new Error('PDF generation must not depend on a remote library and must write a complete PDF structure.');
 }
 const createEvidencePdfBlob = new Function('imageAsJpeg', pdfSource + '; return createEvidencePdfBlob;')(
