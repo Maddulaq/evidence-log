@@ -518,7 +518,7 @@ body[data-theme="dark"] .draft-status{background:#183b36;border-color:#326b60;co
 <div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
 <div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div class="selection-tools no-print"><div><strong id="selectionCount">0 complaints selected</strong><small id="selectionHelp">Select multiple complaints to combine them into one PDF, with a separate section for each complaint.</small></div><div class="actions"><button class="secondary" id="selectAllBtn" type="button">Select all</button><button id="combinedPdfBtn" type="button" disabled>Generate combined PDF</button></div></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
 </section>
-<p class="hint " style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong> · <a href="privacy.html">Privacy policy</a></p>
+<p class="hint " style="text-align:center;margin:20px 0 24px">Created by <strong>Maddula Venkata Ramana</strong> · <a href="privacy.html">Privacy policy</a> · <span id="appBuild">Build 2026.11.20 · Storage v3</span></p>
 </main>
 <nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggleMobile" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
 
@@ -633,7 +633,7 @@ document.getElementById('shareAppBtn').addEventListener('click',async()=>{
  }catch(e){if(e.name!=='AbortError')window.prompt(uiText[currentLanguage].shareFallback,url);}
 });
 
-const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=25*1024*1024, MAX_DRAFT_BYTES=8*1024*1024;
+const DB_NAME='deliveryEvidenceHub_v3', LEGACY_DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=25*1024*1024, MAX_DRAFT_BYTES=8*1024*1024;
 let db,dbPromise;
 async function ensureDB(){
  if(db)return db;
@@ -660,7 +660,38 @@ function findPotentialDuplicate(records,candidate){
  })||null;
 }
 
-function openDB(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){reject(new Error('This browser does not support local database storage.'));return;}const req=indexedDB.open(DB_NAME,2);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});if(!d.objectStoreNames.contains(DRAFT_STORE))d.createObjectStore(DRAFT_STORE,{keyPath:'id'});};req.onblocked=()=>{const el=document.getElementById('draftStatus');if(el)el.textContent='Storage is waiting for another SOP & Proof Hub tab to close. Close older app tabs, then this page will continue.';};req.onsuccess=()=>{const connection=req.result;connection.onversionchange=()=>{connection.close();if(db===connection)db=null;};resolve(connection);};req.onerror=()=>reject(req.error||new Error('Could not open the device database.'));});}
+function openDB(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){reject(new Error('This browser does not support local database storage.'));return;}let req;try{req=indexedDB.open(DB_NAME,1);}catch(error){reject(error);return;}req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});if(!d.objectStoreNames.contains(DRAFT_STORE))d.createObjectStore(DRAFT_STORE,{keyPath:'id'});};req.onblocked=()=>{const el=document.getElementById('draftStatus');if(el)el.textContent='The new report database is waiting for another app tab to close. Close older SOP & Proof Hub tabs and reload.';};req.onsuccess=()=>{const connection=req.result;connection.onversionchange=()=>{connection.close();if(db===connection)db=null;};resolve(connection);};req.onerror=()=>reject(req.error||new Error('Could not open the new report database.'));});}
+async function migrateLegacyDatabase(){
+ if(!('indexedDB' in window))return {records:0,draft:false};
+ if(typeof indexedDB.databases==='function'){
+  const names=await indexedDB.databases();
+  if(!names.some(item=>item.name===LEGACY_DB_NAME))return {records:0,draft:false};
+ }
+ const legacy=await new Promise((resolve,reject)=>{
+  let request;try{request=indexedDB.open(LEGACY_DB_NAME);}catch(error){reject(error);return;}
+  request.onupgradeneeded=()=>{const d=request.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});if(!d.objectStoreNames.contains(DRAFT_STORE))d.createObjectStore(DRAFT_STORE,{keyPath:'id'});};
+  request.onsuccess=()=>resolve(request.result);
+  request.onerror=()=>reject(request.error||new Error('Could not read the previous report database.'));
+ });
+ try{
+  const oldRecords=legacy.objectStoreNames.contains(STORE)?await new Promise((resolve,reject)=>{const tx=legacy.transaction(STORE,'readonly'),req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error||new Error('Could not read previous reports.'));tx.onerror=()=>reject(tx.error||new Error('Could not read previous reports.'));}):[];
+  const oldDraft=legacy.objectStoreNames.contains(DRAFT_STORE)?await new Promise((resolve,reject)=>{const tx=legacy.transaction(DRAFT_STORE,'readonly'),req=tx.objectStore(DRAFT_STORE).get(DRAFT_ID);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error||new Error('Could not read the previous draft.'));tx.onerror=()=>reject(tx.error||new Error('Could not read the previous draft.'));}):null;
+  const currentRecords=await localRecords(),currentIds=new Set(currentRecords.map(record=>record.id));
+  const currentDraft=await draftStoreRequest('readonly','get');
+  const recordsToCopy=oldRecords.filter(record=>record&&record.id&&!currentIds.has(record.id));
+  if(recordsToCopy.length||(!currentDraft&&oldDraft)){
+   const connection=await ensureDB();
+   await new Promise((resolve,reject)=>{
+    const stores=recordsToCopy.length&&(!currentDraft&&oldDraft)?[STORE,DRAFT_STORE]:recordsToCopy.length?[STORE]:[DRAFT_STORE];
+    const tx=connection.transaction(stores,'readwrite');
+    if(recordsToCopy.length){const store=tx.objectStore(STORE);recordsToCopy.forEach(record=>store.put(record));}
+    if(!currentDraft&&oldDraft)tx.objectStore(DRAFT_STORE).put(oldDraft);
+    tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error||new Error('Could not migrate previous reports.'));tx.onabort=()=>reject(tx.error||new Error('Previous report migration was interrupted.'));
+   });
+  }
+  return {records:recordsToCopy.length,draft:!!(!currentDraft&&oldDraft)};
+ }finally{legacy.close();}
+}
 async function putRecord(record){const connection=await ensureDB();return new Promise((resolve,reject)=>{
  let tx;
  try{tx=connection.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);}
@@ -1483,7 +1514,7 @@ function printRecords(rows){
   download.addEventListener('click',async()=>{
     download.disabled=true;download.textContent='Creating PDF…';
     try{const blob=await createEvidencePdfBlob(rows);downloadPdfBlob(blob);}
-    catch(err){alert('PDF could not be created. Please check your internet connection and try again. You can still use Print / Save as PDF.');}
+    catch(err){console.error('Direct PDF creation failed; opening the browser print-to-PDF fallback.',err);try{frame.contentWindow.focus();frame.contentWindow.print();alert('The direct PDF download was unavailable. Use the print screen and choose Save as PDF to create your report.');}catch(printError){alert('PDF creation failed: '+(err.message||'Unknown PDF error')+'. The report preview is still open; use the Print button to save it as PDF.');}}
     finally{download.disabled=false;download.textContent='Download PDF';}
   });
   const print=document.createElement('button');
@@ -1534,7 +1565,7 @@ themeToggle?.addEventListener('click',()=>{
   try{localStorage.setItem('deliveryEvidenceTheme',next);}catch(e){}
 });
 
-(async()=>{try{await ensureDB();setupDraftAutosave();await restoreDraft();await render();}catch(e){console.error(e);setStatus('Device storage could not start: '+(e.message||'Please check browser storage permissions.'),true);}})();
+(async()=>{try{await ensureDB();try{const migrated=await migrateLegacyDatabase();if(migrated.records||migrated.draft)setStatus('Recovered '+migrated.records+' previous report(s) and '+(migrated.draft?'an unfinished draft.':'saved your existing data.'));}catch(migrationError){console.error('Previous report migration warning:',migrationError);setStatus('New report storage is ready, but previous reports could not be copied: '+(migrationError.message||'Please keep the old app data.'),true);}setupDraftAutosave();await restoreDraft();await render();}catch(e){console.error(e);setStatus('Report storage could not start: '+(e.message||'Please check browser storage permissions.'),true);}})();
 
 /* Dashboard count and instant record search */
 const dashboardCount=document.getElementById('dashboardCount');
