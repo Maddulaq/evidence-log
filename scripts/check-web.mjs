@@ -32,6 +32,23 @@ if (!appSource.includes("tesseract.js@5.0.0") ||
   throw new Error('OCR loader or label-anchored Order ID recognition safeguards are missing.');
 }
 
+if (!appSource.includes('function findPotentialDuplicate(records,candidate){') ||
+    !appSource.includes('Possible duplicate detected') ||
+    !appSource.includes('window.confirm(message)')) {
+  throw new Error('Duplicate incident warning or explicit save-anyway confirmation is missing.');
+}
+const duplicateStart = appSource.indexOf('function findPotentialDuplicate(records,candidate){');
+const duplicateEnd = appSource.indexOf('function openDB()', duplicateStart);
+if (duplicateStart < 0 || duplicateEnd <= duplicateStart) throw new Error('Duplicate detection helper could not be located.');
+const duplicateSource = appSource.slice(duplicateStart, duplicateEnd);
+const findPotentialDuplicate = new Function(duplicateSource + '; return findPotentialDuplicate;')();
+const duplicateBase = {orderId:'OD123456789012345678',category:'Wrong item given',store:'Hub A',incidentAt:'2026-11-20T10:00'};
+if (!findPotentialDuplicate([{...duplicateBase,id:'old'}],duplicateBase) ||
+    findPotentialDuplicate([{...duplicateBase,store:'Hub B'}],duplicateBase) !== null ||
+    findPotentialDuplicate([{...duplicateBase,category:'Manager misconduct'}],duplicateBase) !== null ||
+    findPotentialDuplicate([{...duplicateBase,incidentAt:'2026-11-19T10:00'}],duplicateBase) !== null) {
+  throw new Error('Duplicate detection failed exact-match or non-duplicate boundary cases.');
+}
 if (!html.includes("indexedDB.open(DB_NAME,2)") ||
     !html.includes("createObjectStore(DRAFT_STORE") ||
     !html.includes("function scheduleDraftSave()") ||
@@ -95,4 +112,4 @@ if (extractOrderId('123456789012345678') !== null) {
 if (!privacy.includes('Device-local storage') || !privacy.includes('SOP &amp; Proof Hub')) {
   throw new Error('Privacy policy content is missing its required identity or storage disclosure.');
 }
-console.log('Web checks passed: application syntax, startup order, unique IDs, bilingual controls, OCR loading safeguards, draft recovery and IndexedDB migration checks, Order ID parser cases and privacy policy.');
+console.log('Web checks passed: application syntax, startup order, unique IDs, bilingual controls, OCR loading safeguards, draft recovery, duplicate detection and IndexedDB migration checks, Order ID parser cases and privacy policy.');
