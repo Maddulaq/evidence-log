@@ -453,6 +453,10 @@ body[data-theme="dark"] .card{box-shadow:0 8px 28px #0002}
 .ocr-confidence{margin-top:7px;padding:9px 11px;border:1px solid #b8ddd4;border-radius:9px;background:#eef8f5;color:#185f55;font-size:11px;line-height:1.5}
 .ocr-confidence[hidden]{display:none}
 body[data-theme="dark"] .ocr-confidence{background:#183b36;border-color:#326b60;color:#c8eee4}
+
+/* Local draft recovery */
+.draft-status{margin:9px 0 0;padding:9px 11px;border:1px solid #cfe4df;border-radius:10px;background:#f0f8f6;color:#23665c;font-size:11px;line-height:1.5}
+body[data-theme="dark"] .draft-status{background:#183b36;border-color:#326b60;color:#c8eee4}
 </style>
 </head>
 <body>
@@ -478,6 +482,7 @@ body[data-theme="dark"] .ocr-confidence{background:#183b36;border-color:#326b60;
 <form id="incidentForm">
 <div class="guided-intro"><div><strong id="guidedStatus">Step 1 of 4 · Add the order screenshot</strong><small id="guidedHint">Start with the original order screenshot.</small></div><span class="pill" id="guidedPercent">0% complete</span></div>
 <nav class="guided-progress" aria-label="Report creation steps"><a href="#stageScreenshot" data-guide-step="1" class="is-current"><span>1</span> Screenshot</a><a href="#stageDetails" data-guide-step="2"><span>2</span> Details</a><a href="#stageEvidence" data-guide-step="3"><span>3</span> Evidence</a><a href="#stageReview" data-guide-step="4"><span>4</span> Review &amp; save</a></nav>
+<div class="draft-status" id="draftStatus" role="status" aria-live="polite">Your unfinished report is saved automatically on this device, including selected evidence photos.</div>
 <div class="guided-check" id="guidedChecklist" role="status" aria-live="polite"><strong>0 of 4 checks complete</strong> · Add screenshot, details and evidence.</div>
 <div class="form-stage" id="stageScreenshot"><h3 class="form-stage-title"><span>1</span> Add order screenshot</h3>
 <div class="form-divider"></div><label for="orderShot">Order screenshot <span class="pill">Required</span></label>
@@ -632,10 +637,128 @@ const DB_NAME='deliveryEvidenceHub', STORE='incidents', MAX_BYTES=8*1024*1024;
 let db;
 function localRecords(){return new Promise((resolve,reject)=>{if(!db){reject(new Error('Device database is not ready'));return;}const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error||new Error('Could not read device records'));tx.onerror=()=>reject(tx.error||new Error('Could not read device records'));});}
 async function allRecords(){return await localRecords();}
-function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,2);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'});if(!d.objectStoreNames.contains(DRAFT_STORE))d.createObjectStore(DRAFT_STORE,{keyPath:'id'});};req.onblocked=()=>{const el=document.getElementById('draftStatus');if(el)el.textContent='Storage is waiting for another SOP & Proof Hub tab to close. Close older app tabs, then this page will continue.';};req.onsuccess=()=>{db=req.result;db.onversionchange=()=>{db.close();db=null;};resolve(req.result);};req.onerror=()=>reject(req.error);});}
 function putRecord(record){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(record);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
 function deleteLocalRecord(id){return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}
 function readFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file);});}
+const DRAFT_STORE='drafts',DRAFT_ID='active';
+let draftTimer=null,draftSaveChain=Promise.resolve(),draftRestoring=false;
+let draftFiles={orderScreenshot:null,supportingEvidence:[]};
+function draftStoreRequest(mode,action,value){
+ return new Promise((resolve,reject)=>{
+  if(!db){reject(new Error('Device database is not ready'));return;}
+  const tx=db.transaction(DRAFT_STORE,mode),store=tx.objectStore(DRAFT_STORE);
+  const req=action==='get'?store.get(DRAFT_ID):action==='delete'?store.delete(DRAFT_ID):store.put(value);
+  req.onsuccess=()=>resolve(req.result);
+  req.onerror=()=>reject(req.error||new Error('Draft storage failed'));
+  tx.onerror=()=>reject(tx.error||new Error('Draft storage failed'));
+ });
+}
+function draftFileSnapshot(file){
+ return file?{name:file.name,type:file.type||'image/jpeg',lastModified:file.lastModified||Date.now(),blob:file.slice(0,file.size,file.type||'image/jpeg')}:null;
+}
+function setDraftStatus(message,isError=false){
+ const el=document.getElementById('draftStatus');
+ if(el){el.textContent=message;el.classList.toggle('error',!!isError);}
+}
+function captureDraft(){
+ return {
+  id:DRAFT_ID,updatedAt:new Date().toISOString(),
+  fields:{category:$('category').value,orderId:$('orderId').value,store:$('store').value,incidentAt:$('incidentAt').value,notes:$('notes').value},
+  orderScreenshot:draftFiles.orderScreenshot,
+  supportingEvidence:draftFiles.supportingEvidence
+ };
+}
+function draftHasContent(draft){
+ const f=draft.fields||{};
+ return !!(f.category||f.orderId||f.store||f.notes||draft.orderScreenshot||(draft.supportingEvidence||[]).length);
+}
+function persistDraft(){
+ if(draftRestoring)return Promise.resolve();
+ draftSaveChain=draftSaveChain.then(async()=>{
+  const snapshot=captureDraft();
+  if(!draftHasContent(snapshot)){await draftStoreRequest('readwrite','delete');setDraftStatus('No unfinished report is stored.');return;}
+  try{
+   await draftStoreRequest('readwrite','put',snapshot);
+   setDraftStatus(currentLanguage==='te'?'మీ అసంపూర్ణ రిపోర్ట్ మరియు ఫోటోలు ఈ పరికరంలో ఆటోమేటిక్‌గా సేవ్ అయ్యాయి.':'Draft saved on this device · selected photos included.');
+  }catch(error){
+   console.warn('Draft autosave failed',error);
+   setDraftStatus('Draft could not be saved. Check available device storage and keep the original photos until the report is submitted.',true);
+  }
+ });
+ return draftSaveChain;
+}
+function scheduleDraftSave(){
+ if(draftRestoring)return;
+ clearTimeout(draftTimer);
+ setDraftStatus(currentLanguage==='te'?'సేవ్ చేస్తోంది…':'Saving draft…');
+ draftTimer=setTimeout(()=>{persistDraft();},650);
+}
+function setRestoredFiles(input,items){
+ if(!items||!items.length)return false;
+ try{
+  const transfer=new DataTransfer();
+  items.forEach(item=>transfer.items.add(new File([item.blob],item.name,{type:item.type||'image/jpeg',lastModified:item.lastModified||Date.now()})));
+  input.files=transfer.files;
+  return input.files.length===items.length;
+ }catch(error){return false;}
+}
+async function restoreDraft(){
+ const draft=await draftStoreRequest('readonly','get');
+ if(!draft||!draftHasContent(draft))return;
+ draftRestoring=true;
+ try{
+  const f=draft.fields||{};
+  $('category').value=f.category||'';
+  $('orderId').value=f.orderId||'';
+  $('store').value=f.store||'';
+  $('incidentAt').value=f.incidentAt||$('incidentAt').value;
+  $('notes').value=f.notes||'';
+  draftFiles.orderScreenshot=draft.orderScreenshot||null;
+  draftFiles.supportingEvidence=Array.isArray(draft.supportingEvidence)?draft.supportingEvidence:[];
+  const orderOk=setRestoredFiles($('orderShot'),draftFiles.orderScreenshot?[draftFiles.orderScreenshot]:[]);
+  const supportOk=setRestoredFiles($('supporting'),draftFiles.supportingEvidence);
+  if(orderOk){
+   const file=$('orderShot').files[0];
+   $('orderPreview').innerHTML='<small>Recovered screenshot: '+esc(file.name)+'</small>';
+  }
+  clearImagePreviews($('supportPreview'));
+  if(supportOk){
+   [...$('supporting').files].forEach(file=>{const img=document.createElement('img');img.alt='Recovered evidence preview';img.src=URL.createObjectURL(file);$('supportPreview').append(img);});
+  }
+  if(window.updateGuidedReport)window.updateGuidedReport();
+  const missing=[];
+  if(draftFiles.orderScreenshot&&!orderOk)missing.push('order screenshot');
+  if(draftFiles.supportingEvidence.length&&!supportOk)missing.push('supporting photos');
+  setDraftStatus(missing.length
+   ?'Your report details were recovered. Please reselect the '+missing.join(' and ')+' before submitting.'
+   :(currentLanguage==='te'?'మునుపటి అసంపూర్ణ రిపోర్ట్ మరియు ఫోటోలు తిరిగి పొందబడ్డాయి. కొనసాగించవచ్చు.':'Unfinished report recovered, including its photos. You can continue where you left off.'));
+ }finally{draftRestoring=false;}
+}
+function setupDraftAutosave(){
+ const form=$('incidentForm');
+ ['category','orderId','store','incidentAt','notes'].forEach(id=>{
+  const el=$(id);el.addEventListener('input',scheduleDraftSave);el.addEventListener('change',scheduleDraftSave);
+ });
+ $('orderShot').addEventListener('change',()=>{
+  const file=$('orderShot').files[0];
+  draftFiles.orderScreenshot=file&&file.type.startsWith('image/')&&file.size<=MAX_BYTES?draftFileSnapshot(file):null;
+  scheduleDraftSave();
+ });
+ $('supporting').addEventListener('change',()=>{
+  draftFiles.supportingEvidence=[...$('supporting').files].filter(file=>file.type.startsWith('image/')&&file.size<=MAX_BYTES).slice(0,2).map(draftFileSnapshot);
+  scheduleDraftSave();
+ });
+ form.addEventListener('reset',()=>{
+  clearTimeout(draftTimer);
+  setTimeout(()=>{
+   if(draftRestoring)return;
+   draftFiles={orderScreenshot:null,supportingEvidence:[]};
+   draftStoreRequest('readwrite','delete').then(()=>setDraftStatus('Draft cleared.')).catch(error=>{console.warn('Could not clear draft',error);});
+  },0);
+ });
+}
+
 function clearImagePreviews(container){if(!container)return;container.querySelectorAll('img').forEach(img=>{if(img.src&&img.src.startsWith('blob:'))URL.revokeObjectURL(img.src);});container.replaceChildren();}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function setStatus(msg,isError=false){$('formStatus').textContent=msg;$('formStatus').className='status'+(isError?' error':'');}
@@ -1070,7 +1193,7 @@ $('incidentForm').addEventListener('reset',()=>{
 $('orderId').addEventListener('input',()=>{$('orderId').value=$('orderId').value.toUpperCase().replace(/\s+/g,'');});
 $('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[0];$('orderPreview').innerHTML='';if(!f)return;if(!f.type.startsWith('image/')){setStatus('Please choose an image file.',true);return;}if(f.size>MAX_BYTES){setStatus('Order screenshot is larger than 8 MB.',true);$('orderShot').value='';return;}$('orderPreview').innerHTML='<small>Screenshot selected: '+esc(f.name)+'</small>';runOrderOcr(f);});$('rereadBtn').addEventListener('click',()=>{const f=$('orderShot').files[0];if(!f){setStatus('Choose an order screenshot first.',true);return;}runOrderOcr(f);});window.addEventListener('load',()=>{warmOcr();});
 $('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];clearImagePreviews($('supportPreview'));if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!f.type.startsWith('image/')||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 8 MB.',true);$('supporting').value='';clearImagePreviews($('supportPreview'));return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
-$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(!$('category').value){setStatus('Please select an issue category.',true);return;}if(!/^OD[0-9]{18}$/.test($('orderId').value.trim().toUpperCase())){setStatus('Enter a valid Order ID: OD followed by exactly 18 digits.',true);$('orderId').focus();return;}if(!$('store').value.trim()){setStatus('Enter the actual store or hub name.',true);$('store').focus();return;}if(!$('incidentAt').value||Number.isNaN(new Date($('incidentAt').value).getTime())){setStatus('Enter a valid incident date and time.',true);$('incidentAt').focus();return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='';$('orderPreview').innerHTML='';clearImagePreviews($('supportPreview'));setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
+$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(!$('category').value){setStatus('Please select an issue category.',true);return;}if(!/^OD[0-9]{18}$/.test($('orderId').value.trim().toUpperCase())){setStatus('Enter a valid Order ID: OD followed by exactly 18 digits.',true);$('orderId').focus();return;}if(!$('store').value.trim()){setStatus('Enter the actual store or hub name.',true);$('store').focus();return;}if(!$('incidentAt').value||Number.isNaN(new Date($('incidentAt').value).getTime())){setStatus('Enter a valid incident date and time.',true);$('incidentAt').focus();return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!f.type.startsWith('image/')||f.size>MAX_BYTES)){setStatus('All evidence files must be images no larger than 8 MB each.',true);return;}const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:crypto.randomUUID(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);try{await draftStoreRequest('readwrite','delete');}catch(draftError){console.warn('Saved report, but could not clear its draft',draftError);}draftFiles={orderScreenshot:null,supportingEvidence:[]};$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='';$('orderPreview').innerHTML='';clearImagePreviews($('supportPreview'));setStatus('Incident and evidence saved on this device.');await render();}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
 const selectedRecordIds=new Set();
 function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' complaint'+(n===1?'':'s')+' selected');if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');}
 function updateDashboardMetrics(rows){
@@ -1344,7 +1467,7 @@ themeToggle?.addEventListener('click',()=>{
   try{localStorage.setItem('deliveryEvidenceTheme',next);}catch(e){}
 });
 
-(async()=>{try{db=await openDB();await render();}catch(e){console.error(e);setStatus('Device storage could not start. Please check browser storage permissions.',true);}})();
+(async()=>{try{db=await openDB();setupDraftAutosave();await restoreDraft();await render();}catch(e){console.error(e);setStatus('Device storage could not start. Please check browser storage permissions.',true);}})();
 
 /* Dashboard count and instant record search */
 const dashboardCount=document.getElementById('dashboardCount');
