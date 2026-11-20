@@ -713,7 +713,7 @@ function recordHasCompleteEvidence(saved,expectedShot,expectedExtras){
  return saved.supportingEvidence.every((item,index)=>item&&item.name===expectedExtras[index].name&&typeof item.data==='string'&&item.data.startsWith('data:image/')&&item.data.length>0);
 }
 async function deleteLocalRecord(id){const connection=await ensureDB();return new Promise((resolve,reject)=>{const tx=connection.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('Deleting the report was interrupted'));});}
-function isImageFile(file){return !!file&&((typeof file.type==='string'&&file.type.toLowerCase().startsWith('image/'))||/\\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i.test(file.name||''));}
+function isImageFile(file){return !!file&&((typeof file.type==='string'&&file.type.toLowerCase().startsWith('image/'))||/\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i.test(file.name||''));}
 async function readFile(file){
  if(!file||!file.size)throw new Error('One of the selected image files is empty or unavailable.');
  if(file.size>MAX_BYTES)throw new Error(file.name+' is larger than 25 MB. Choose a smaller image.');
