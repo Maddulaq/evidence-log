@@ -49,7 +49,12 @@ if (!findPotentialDuplicate([{...duplicateBase,id:'old'}],duplicateBase) ||
     findPotentialDuplicate([{...duplicateBase,incidentAt:'2026-11-19T10:00'}],duplicateBase) !== null) {
   throw new Error('Duplicate detection failed exact-match or non-duplicate boundary cases.');
 }
-if (!html.includes("indexedDB.open(DB_NAME,2)") ||
+if (!html.includes("indexedDB.open(DB_NAME,1)") ||
+    !html.includes("const DB_NAME='deliveryEvidenceHub_v3'") ||
+    !appSource.includes('async function migrateLegacyDatabase()') ||
+    !appSource.includes('const LEGACY_DB_NAME=\'deliveryEvidenceHub\'') ||
+    !appSource.includes('browser print-to-PDF fallback') ||
+    !html.includes('Build 2026.11.20 · Storage v3') ||
     !html.includes("createObjectStore(DRAFT_STORE") ||
     !html.includes("function scheduleDraftSave()") ||
     !html.includes("async function restoreDraft()") ||
