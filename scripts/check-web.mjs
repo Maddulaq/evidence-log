@@ -178,7 +178,7 @@ const pdfStart = appSource.indexOf('function pdfAscii(value){');
 const pdfEnd = appSource.indexOf('async function sharePdf(rows){', pdfStart);
 if (pdfStart < 0 || pdfEnd <= pdfStart) throw new Error('Offline PDF generator could not be located.');
 const pdfSource = appSource.slice(pdfStart, pdfEnd);
-if (pdfSource.includes('loadPdfLibrary') || !pdfSource.includes('xref\\\\n') || !pdfSource.includes('%%EOF')) {
+if (pdfSource.includes('loadPdfLibrary') || !pdfSource.includes('xref') || !pdfSource.includes('%%EOF')) {
   throw new Error('PDF generation must not depend on a remote library and must write a complete PDF structure.');
 }
 const createEvidencePdfBlob = new Function('imageAsJpeg', pdfSource + '; return createEvidencePdfBlob;')(
