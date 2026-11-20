@@ -68,7 +68,15 @@ if (draftHasContent({fields:{orderId:'OD123'},orderScreenshot:null,supportingEvi
     draftHasContent({fields:{},orderScreenshot:null,supportingEvidence:[{name:'photo.jpg'}]}) !== true) {
   throw new Error('Draft content guard failed its empty and populated draft cases.');
 }
-if (!appSource.includes('MAX_BYTES=25*1024*1024') || !appSource.includes('MAX_DRAFT_BYTES=8*1024*1024') || !appSource.includes('function isImageFile(file){') || !appSource.includes('canvas.toBlob') || !appSource.includes("$('incidentForm').setAttribute('novalidate','')")) {\n  throw new Error('Mobile evidence submission must accept larger camera images, normalize image MIME types, optimize image payloads, and route validation through the form handler.');\n}\n\nif (!appSource.includes('Could not check saved reports on this device:')) {\n  throw new Error('Saved-record lookup failures must be shown instead of silently blocking submission.');\n}\n\nif (!html.includes('pattern="[Oo][Dd][0-9]{18}"') ||
+if (!appSource.includes('MAX_BYTES=25*1024*1024') || !appSource.includes('MAX_DRAFT_BYTES=8*1024*1024') || !appSource.includes('function isImageFile(file){') || !appSource.includes('canvas.toBlob') || !appSource.includes("$('incidentForm').setAttribute('novalidate','')")) {
+  throw new Error('Mobile evidence submission must accept larger camera images, normalize image MIME types, optimize image payloads, and route validation through the form handler.');
+}
+
+if (!appSource.includes('Could not check saved reports on this device:')) {
+  throw new Error('Saved-record lookup failures must be shown instead of silently blocking submission.');
+}
+
+if (!html.includes('pattern="[Oo][Dd][0-9]{18}"') ||
     !appSource.includes('function getLocalRecord(id){') ||
     !appSource.includes('function recordHasCompleteEvidence(saved,expectedShot,expectedExtras){') ||
     !appSource.includes('const persisted=await getLocalRecord(record.id)') ||
