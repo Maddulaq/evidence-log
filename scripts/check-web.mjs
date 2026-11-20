@@ -33,9 +33,15 @@ if (!appSource.includes("tesseract.js@5.0.0") ||
 }
 
 if (!appSource.includes('function findPotentialDuplicate(records,candidate){') ||
-    !appSource.includes('Possible duplicate detected') ||
-    !appSource.includes('window.confirm(message)')) {
-  throw new Error('Duplicate incident warning or explicit save-anyway confirmation is missing.');
+    !appSource.includes('const duplicateNotice=duplicate?') ||
+    appSource.includes('window.confirm(message)')) {
+  throw new Error('Duplicate incidents must be warned about without blocking mobile report submission.');
+}
+if (!appSource.includes('function createIncidentId(){') ||
+    !appSource.includes('id:createIncidentId()') ||
+    !appSource.includes('1800*1024') ||
+    !appSource.includes('side:1280,quality:0.62')) {
+  throw new Error('Incident saving must use a compatible ID fallback and compress photos for mobile device storage.');
 }
 const duplicateStart = appSource.indexOf('function findPotentialDuplicate(records,candidate){');
 const duplicateEnd = appSource.indexOf('function openDB()', duplicateStart);
