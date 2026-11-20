@@ -32,6 +32,25 @@ if (!appSource.includes("tesseract.js@5.0.0") ||
   throw new Error('OCR loader or label-anchored Order ID recognition safeguards are missing.');
 }
 
+if (!html.includes("indexedDB.open(DB_NAME,2)") ||
+    !html.includes("createObjectStore(DRAFT_STORE") ||
+    !html.includes("function scheduleDraftSave()") ||
+    !html.includes("async function restoreDraft()") ||
+    !html.includes("setupDraftAutosave();await restoreDraft();") ||
+    !html.includes('id="draftStatus"') ||
+    !appSource.includes("function draftHasContent(draft)")) {
+  throw new Error('Automatic draft recovery, IndexedDB v2 migration, or draft status UI is missing.');
+}
+const draftStart = appSource.indexOf('function draftHasContent(draft){');
+const draftEnd = appSource.indexOf('function persistDraft(){', draftStart);
+if (draftStart < 0 || draftEnd <= draftStart) throw new Error('Draft content guard could not be located.');
+const draftSource = appSource.slice(draftStart, draftEnd);
+const draftHasContent = new Function(draftSource + '; return draftHasContent;')();
+if (draftHasContent({fields:{orderId:'OD123'},orderScreenshot:null,supportingEvidence:[]}) !== true ||
+    draftHasContent({fields:{},orderScreenshot:null,supportingEvidence:[]}) !== false ||
+    draftHasContent({fields:{},orderScreenshot:null,supportingEvidence:[{name:'photo.jpg'}]}) !== true) {
+  throw new Error('Draft content guard failed its empty and populated draft cases.');
+}
 if (!html.includes('id="ocrConfidence"') ||
     !appSource.includes('function estimateOcrConfidence(words)') ||
     !appSource.includes('confidence:estimateOcrConfidence(r.words)') ||
@@ -76,4 +95,4 @@ if (extractOrderId('123456789012345678') !== null) {
 if (!privacy.includes('Device-local storage') || !privacy.includes('SOP &amp; Proof Hub')) {
   throw new Error('Privacy policy content is missing its required identity or storage disclosure.');
 }
-console.log('Web checks passed: application syntax, startup order, unique IDs, bilingual controls, OCR loading safeguards, Order ID parser cases and privacy policy.');
+console.log('Web checks passed: application syntax, startup order, unique IDs, bilingual controls, OCR loading safeguards, draft recovery and IndexedDB migration checks, Order ID parser cases and privacy policy.');
