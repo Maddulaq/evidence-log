@@ -85,7 +85,7 @@ if (!html.includes('pattern="[Oo][Dd][0-9]{18}"') ||
   throw new Error('Evidence submission must accept lowercase Order IDs, handle interrupted file reads/writes, and verify the saved files.');
 }
 const evidenceStart = appSource.indexOf('function recordHasCompleteEvidence(saved,expectedShot,expectedExtras){');
-const evidenceEnd = appSource.indexOf('function deleteLocalRecord', evidenceStart);
+const evidenceEnd = appSource.indexOf('async function deleteLocalRecord', evidenceStart);
 if (evidenceStart < 0 || evidenceEnd <= evidenceStart) throw new Error('Saved evidence verification helper could not be located.');
 const evidenceSource = appSource.slice(evidenceStart, evidenceEnd);
 const recordHasCompleteEvidence = new Function(evidenceSource + '; return recordHasCompleteEvidence;')();
