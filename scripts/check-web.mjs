@@ -60,7 +60,7 @@ if (!html.includes("indexedDB.open(DB_NAME,1)") ||
     !appSource.includes('async function migrateLegacyDatabase()') ||
     !appSource.includes("LEGACY_DB_NAME='deliveryEvidenceHub'") ||
     !appSource.includes('browser print-to-PDF fallback') ||
-    !html.includes('Build 2026.11.25 · Storage v3') ||
+    !html.includes('Build 2026.11.25 · Full portrait') ||
     !html.includes("createObjectStore(DRAFT_STORE") ||
     !html.includes("function scheduleDraftSave()") ||
     !html.includes("async function restoreDraft()") ||
