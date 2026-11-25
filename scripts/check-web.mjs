@@ -60,14 +60,14 @@ if (!html.includes("indexedDB.open(DB_NAME,1)") ||
     !appSource.includes('async function migrateLegacyDatabase()') ||
     !appSource.includes("LEGACY_DB_NAME='deliveryEvidenceHub'") ||
     !appSource.includes('browser print-to-PDF fallback') ||
-    !html.includes('Build 2026.11.20 · Storage v3') ||
+    !html.includes('Build 2026.11.25 · Storage v3') ||
     !html.includes("createObjectStore(DRAFT_STORE") ||
     !html.includes("function scheduleDraftSave()") ||
     !html.includes("async function restoreDraft()") ||
     !html.includes("setupDraftAutosave();await restoreDraft();") ||
     !html.includes('id="draftStatus"') ||
     !appSource.includes("function draftHasContent(draft)")) {
-  throw new Error('Automatic draft recovery, IndexedDB v2 migration, or draft status UI is missing.');
+  throw new Error('Automatic draft recovery, fresh IndexedDB migration, or draft status UI is missing.');
 }
 const draftStart = appSource.indexOf('function draftHasContent(draft){');
 const draftEnd = appSource.indexOf('function persistDraft(){', draftStart);
