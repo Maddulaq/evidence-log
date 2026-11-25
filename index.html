@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#12283f">
+<meta name="theme-color" content="#11172b">
 <title>SOP &amp; Proof Hub</title>
 <style>
 
@@ -464,6 +464,85 @@ body[data-theme="dark"] .draft-status{background:#183b36;border-color:#326b60;co
 .creator-copy{display:flex;flex-direction:column;gap:5px;min-width:0}.creator-eyebrow{font-size:10px;font-weight:800;letter-spacing:.13em;color:#23816b}.creator-copy>strong{font-size:17px;color:var(--text,#172a25)}.creator-copy>span:not(.creator-eyebrow){font-size:13px;color:var(--muted,#687a73)}.creator-links{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:5px;font-size:11px;color:var(--muted,#687a73)}.creator-links a{color:inherit}
 body[data-theme="dark"] .creator-card{background:#172820;border-color:#345247}body[data-theme="dark"] .creator-photo{border-color:#345b4d}
 @media(max-width:420px){.creator-card{margin:22px 12px;padding:15px;gap:13px}.creator-photo{width:98px;height:123px;flex-basis:98px}.creator-copy>strong{font-size:15px}}
+
+/* SOP & Proof Hub — Vice City cinematic theme */
+:root{--bg:#0b1020;--surface:#121a2d;--surface-soft:#19233a;--ink:#f5f2f7;--muted:#a9aec5;--line:#303a58;--brand:#ff4f9a;--brand-dark:#e63280;--brand-soft:#34203e;--accent:#48e1dc;--warning-bg:#35283a;--warning-line:#88516c;--warning-ink:#ffd4e8;--danger:#ff819a;--radius:17px;--shadow:0 16px 42px rgba(0,0,0,.28);color-scheme:dark}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse at 14% 5%,rgba(255,72,148,.19),transparent 31rem),radial-gradient(ellipse at 88% 22%,rgba(55,220,224,.13),transparent 34rem),linear-gradient(180deg,#0b1020 0%,#10162a 48%,#0a1020 100%);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.16;background-image:linear-gradient(transparent 96%,rgba(255,255,255,.12) 97%),linear-gradient(90deg,transparent 96%,rgba(255,255,255,.1) 97%);background-size:46px 46px;mask-image:linear-gradient(to bottom,black,transparent 70%)}
+header{position:relative;overflow:hidden;background:linear-gradient(110deg,#10172b 0%,#1b1b3b 52%,#292044 100%);color:#fff;border-bottom:1px solid #5c3d68;padding-top:23px;padding-bottom:22px;box-shadow:0 12px 38px #0005}
+header:after{content:"";position:absolute;right:-5%;top:-160px;width:430px;height:270px;pointer-events:none;background:radial-gradient(ellipse,rgba(255,76,151,.27),rgba(58,221,224,.08) 48%,transparent 72%)}
+header h1{position:relative;z-index:1;color:#fff;font-size:clamp(21px,3vw,27px);letter-spacing:-.8px;text-transform:uppercase}
+header h1:before{content:"SP";width:39px;height:39px;border-radius:12px;background:linear-gradient(145deg,#ff4f9a,#8e53d8 65%,#39d9dd);box-shadow:0 0 24px #ff4f9a55;border:1px solid #ffffff50}
+header h1:after{content:"VICE CITY EDITION";align-self:center;margin-left:5px;padding:4px 7px;border:1px solid #ff6eaa77;border-radius:5px;color:#ff9ac3;font-size:8px;letter-spacing:1.5px;font-weight:900}
+header .sub{position:relative;z-index:1;color:#c4c4db}
+.top-actions{position:relative;z-index:1}.top-actions a,.top-actions button{border-radius:9px;letter-spacing:.15px}
+.top-actions a:first-child{background:linear-gradient(110deg,#ff4f9a,#c743ad);color:#fff;box-shadow:0 5px 18px #ff4f9a3d}
+.top-actions a.outline,.top-actions button.outline{background:#ffffff0b;color:#f2eefa;border-color:#ffffff35;backdrop-filter:blur(8px)}
+.top-actions a.outline:hover,.top-actions button.outline:hover{background:#ffffff18;border-color:#ff80b7}
+main{max-width:1180px}
+.command-center{position:relative;isolation:isolate;overflow:hidden;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);background:linear-gradient(115deg,rgba(15,18,40,.97),rgba(37,23,59,.95) 54%,rgba(15,57,72,.94));border:1px solid #7d4a79;border-radius:22px;padding:clamp(21px,4vw,34px);box-shadow:0 18px 48px #0005,0 0 34px #f34d9920}
+.command-center:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.62;background:linear-gradient(160deg,transparent 43%,#ff4f9a12 44%,transparent 67%),radial-gradient(ellipse at 83% 7%,#38dce033,transparent 37%)}
+.command-center:after{content:"";position:absolute;right:8%;bottom:-60px;width:240px;height:125px;z-index:-1;border-top:2px solid #ff72ad55;transform:skewY(-12deg);box-shadow:0 -14px 0 -12px #43dce055,0 -30px 0 -28px #ff72ad44}
+.eyebrow{color:#ff9dc7;letter-spacing:1.7px}.live-dot{background:#49e4dc;box-shadow:0 0 0 5px #49e4dc22,0 0 15px #49e4dc}
+.command-copy h2{font-size:clamp(29px,4.8vw,43px);letter-spacing:-1.5px;text-shadow:0 4px 25px #0007}.command-copy h2 em{color:#ff78b3;text-shadow:0 0 23px #ff4f9a55}.command-copy p{color:#d2d1e3}
+.command-primary{background:linear-gradient(110deg,#ff4f9a,#d548b5);color:#fff;box-shadow:0 7px 20px #ff4f9a40}.command-primary:hover{filter:brightness(1.1)}
+.command-secondary{border:1px solid #55dce0;color:#c9ffff;background:#38dce00c}
+.overview-panel{background:#080f22a8;border:1px solid #63dce055;border-radius:15px;backdrop-filter:blur(12px)}
+.overview-top{color:#c9d9ed}.storage-indicator{color:#77e7d7}.overview-stat strong{color:#fff;text-shadow:0 0 25px #ff4f9a55}.overview-stat span,.overview-bottom{color:#c2c9dd}.overview-bottom b{color:#ff82b7}
+.dashboard-metric{background:#ffffff0a;border-color:#ffffff26}.dashboard-metric span{color:#b9c5dc}.dashboard-metric strong{color:#fff}
+.notice{background:linear-gradient(110deg,#332137,#25223a);border:1px solid #8b526e;color:#f6d7e7;border-radius:12px;box-shadow:0 8px 22px #0002}
+.card{background:linear-gradient(150deg,rgba(22,30,52,.98),rgba(17,25,45,.98));color:var(--ink);border:1px solid #39415f;border-radius:17px;box-shadow:0 12px 32px #0003,0 0 0 1px #ffffff04 inset}
+.card h2,.record h3{color:#fff}.section-number{background:linear-gradient(145deg,#ff4f9a,#9a54c7);color:#fff;border:0;box-shadow:0 4px 15px #ff4f9a38}
+.section-subtitle,.hint,small,.record p{color:#aeb8cf}.form-divider{background:linear-gradient(90deg,#ff5b9d66,#42dce055,transparent)}label{color:#e9e5f3}
+input,select,textarea{background:#0d1528;color:#f7f2fa;border:1px solid #46516f;border-radius:10px}input::placeholder,textarea::placeholder{color:#8792ad}
+input:focus,select:focus,textarea:focus{outline:3px solid #ff4f9a25;border-color:#ff75ae}
+input[type=file]{background:#111b30;border:1px dashed #55bfc4;color:#e4f3f7}input[type=file]::file-selector-button{background:#392342;color:#ffb3d1;border:1px solid #9b527a}select option{background:#121a2d;color:#fff}
+.pill{background:#34203e;color:#ff9fc8;border:1px solid #8c4e79}
+.guided-intro,.selection-tools{background:#111b30;border:1px solid #394865;color:#f3edf7}.guided-intro strong,.selection-tools strong{color:#fff}
+.guided-progress a{background:#101a2e;border-color:#3b4663;color:#b8c1d7}.guided-progress a span{background:#29334d;color:#dbe5f4}
+.guided-progress a.is-current{border-color:#ff65a7;color:#fff;box-shadow:0 0 0 1px #ff65a722}.guided-progress a.is-complete{background:#17343b;border-color:#43cfc5;color:#baf8ed}.guided-progress a.is-complete span{background:#168e91;color:#fff}
+.guided-check{color:#bac5d9}.guided-check strong{color:#ff9bc4}.draft-status,.ocr-confidence{background:#142f38;border-color:#3a8583;color:#bff7ec}
+button{background:linear-gradient(110deg,#ff4f9a,#c743ad);border:1px solid #ff6aaa;color:#fff;border-radius:10px;box-shadow:0 5px 16px #ff4f9a2b}
+button:hover{background:linear-gradient(110deg,#ff70ad,#dc58bd);filter:brightness(1.04)}
+button.secondary{background:#17233a;color:#e8edf7;border:1px solid #53617e;box-shadow:none}button.secondary:hover{background:#23314e;border-color:#54d7d8}
+button.danger{background:#3a202e;color:#ffb3c2;border-color:#9d5267;box-shadow:none}
+#saveBtn{background:linear-gradient(105deg,#ff4f9a,#c743ad 60%,#7c55d9);border:1px solid #ff8fbd;box-shadow:0 7px 22px #ff4f9a44}#saveBtn:hover{filter:brightness(1.12)}
+.status{color:#67e4d5}.error{color:#ff91a9}.record{border-color:#39445f}.record-tools input{background:#0d1528}.search-symbol{color:#ff91c0}
+.bottom-nav{background:rgba(15,22,41,.97);border-color:#46516f;box-shadow:0 9px 30px #0008;backdrop-filter:blur(14px)}
+.bottom-nav a{background:#202943;color:#e8edf7}.bottom-nav a.primary{background:linear-gradient(110deg,#ff4f9a,#c743ad);color:#fff}.bottom-nav button{background:#202943;color:#e8edf7;border-color:#46516f}
+.creator-card{background:linear-gradient(145deg,#171e35,#20213e);border-color:#4a4269;box-shadow:0 12px 30px #0004}.creator-eyebrow{color:#ff91bf}.creator-copy>strong{color:#fff}.creator-copy>span:not(.creator-eyebrow),.creator-links{color:#b5bfd4}
+.creator-photo{border-color:#ff75b2;background:#0b1020;box-shadow:0 0 0 3px #ff4f9a20,0 8px 24px #0005}
+#records{color:var(--ink)}.record{background:#10192d;border:1px solid #333f5d;border-radius:13px;padding:15px;margin:10px 0}.record h3{color:#fff}.record p{color:#b1bdd2}.record .pill{background:#34203e;color:#ff9fc8}
+a{accent-color:#ff4f9a}:focus-visible{outline-color:#50e0dd!important;outline-offset:3px}
+@keyframes vicePulse{0%,100%{box-shadow:0 0 0 0 #ff4f9a00}50%{box-shadow:0 0 0 5px #ff4f9a12}}.command-primary{animation:vicePulse 4s ease-in-out infinite}
+@media(max-width:680px){header{padding:17px 14px}header h1{font-size:18px;gap:8px;flex-wrap:wrap}header h1:before{width:34px;height:34px}header h1:after{font-size:7px}.top-actions{gap:6px}.top-actions a,.top-actions button{font-size:11px;padding:8px 9px}.theme-toggle{margin-left:0}main{padding-left:11px;padding-right:11px}.command-center{grid-template-columns:1fr;gap:17px;padding:19px;border-radius:16px}.command-copy h2{font-size:30px}.overview-panel{padding:14px}.card{padding:16px 14px}.bottom-nav{left:9px;right:9px;bottom:max(8px,env(safe-area-inset-bottom));gap:5px;padding:7px}}
+@media(prefers-reduced-motion:reduce){.command-primary{animation:none!important}}
+body[data-theme="light"]{color-scheme:light;--bg:#f4edf5;--surface:#fffaff;--surface-soft:#f8f1f8;--ink:#241a32;--muted:#75677f;--line:#e7d6e7;--brand:#d93486;--brand-dark:#b82b72;--brand-soft:#f8e5f0;--shadow:0 12px 30px rgba(77,32,76,.09);background:radial-gradient(ellipse at 10% 0%,#ffd6e9 0,transparent 34rem),radial-gradient(ellipse at 90% 18%,#c9f7f3 0,transparent 32rem),#f4edf5;color:var(--ink)}
+body[data-theme="light"] header{background:linear-gradient(110deg,#201b38,#49305d 58%,#28566a);color:#fff}
+body[data-theme="light"] .card{background:linear-gradient(150deg,#fffaff,#f9f2fa);border-color:#e6d4e8}
+body[data-theme="light"] .card h2,body[data-theme="light"] .record h3{color:#2b1c3a}
+body[data-theme="light"] label{color:#493653}
+body[data-theme="light"] input,body[data-theme="light"] select,body[data-theme="light"] textarea{background:#fffaff;color:#2b1c3a;border-color:#ddcde0}
+body[data-theme="light"] .guided-intro,body[data-theme="light"] .selection-tools{background:#f9eff8;border-color:#e4d2e5;color:#34233f}
+body[data-theme="light"] .guided-intro strong,body[data-theme="light"] .selection-tools strong{color:#34233f}
+body[data-theme="light"] .guided-progress a{background:#fff8ff;border-color:#e3d4e8;color:#65516f}
+body[data-theme="light"] .guided-progress a span{background:#efe4f1;color:#5a4267}
+body[data-theme="light"] .guided-progress a.is-current{border-color:#d93486;color:#3c2343}
+body[data-theme="light"] .guided-progress a.is-complete{background:#e4f8f4;border-color:#69c9bb;color:#176c68}
+body[data-theme="light"] .guided-check{color:#74657d}
+body[data-theme="light"] .notice{background:#fff3f8;color:#6b3152;border-color:#edbfd5}
+body[data-theme="light"] .record{background:#fffaff;border-color:#e6d6e8}
+body[data-theme="light"] .record h3{color:#2b1c3a}
+body[data-theme="light"] .record p{color:#74657d}
+body[data-theme="light"] .creator-card{background:#fffaff;border-color:#e6d6e8}
+body[data-theme="light"] .creator-copy>strong{color:#2b1c3a}
+body[data-theme="light"] .creator-copy>span:not(.creator-eyebrow),body[data-theme="light"] .creator-links{color:#74657d}
+body[data-theme="light"] .bottom-nav{background:rgba(255,250,255,.97);border-color:#e6d6e8}
+body[data-theme="light"] .bottom-nav a{background:#f6edf8;color:#392746}
+body[data-theme="light"] .bottom-nav button{background:#f6edf8;color:#392746;border-color:#e0d1e5}
+body[data-theme="light"] .bottom-nav a.primary{background:linear-gradient(110deg,#ff4f9a,#c743ad);color:#fff}
+
 </style>
 </head>
 <body>
