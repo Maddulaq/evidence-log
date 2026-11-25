@@ -646,6 +646,45 @@ body[data-theme="dark"] .pill,body[data-theme="dark"] .section-number{background
  button:hover{transform:translateY(-1px);filter:saturate(1.12)}
 }
 
+
+/* Cinematic Vice City scene layer: decorative CSS/SVG only; no app behavior changed */
+.command-center{
+ min-height:300px;
+ background-color:#15132f;
+ background-image:
+  linear-gradient(90deg,rgba(11,13,34,.96) 0%,rgba(19,16,48,.83) 46%,rgba(16,21,48,.50) 100%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 430'%3E%3Cdefs%3E%3ClinearGradient id='sky' x2='0' y2='1'%3E%3Cstop stop-color='%23f64ca8'/%3E%3Cstop offset='.55' stop-color='%23734ce2'/%3E%3Cstop offset='1' stop-color='%23111d43'/%3E%3C/linearGradient%3E%3ClinearGradient id='road' x2='0' y2='1'%3E%3Cstop stop-color='%23131b3d'/%3E%3Cstop offset='1' stop-color='%23080d22'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='430' fill='url(%23sky)'/%3E%3Ccircle cx='260' cy='175' r='90' fill='%23ffc36b' opacity='.95'/%3E%3Cpath d='M0 250h1200v180H0z' fill='url(%23road)'/%3E%3Cg fill='%23131a3b' stroke='%23ff70c0' stroke-opacity='.5' stroke-width='3'%3E%3Cpath d='M500 250V125h70v125m18 0V75h85v175m15 0V145h50v105m22 0V45h82v205m20 0V110h62v140m20 0V85h80v165m20 0V155h65v95'/%3E%3C/g%3E%3Cg fill='%23ffd1f0' opacity='.8'%3E%3Cpath d='M520 145h8v10h-8zm20 0h8v10h-8zm68-45h9v12h-9zm24 0h9v12h-9zm56 75h8v10h-8zm78-110h9v13h-9zm25 0h9v13h-9zm66 65h8v10h-8zm24 0h8v10h-8z'/%3E%3C/g%3E%3Cpath d='M0 295q260-45 510 0t690 0' fill='none' stroke='%23ff4ca7' stroke-width='5' opacity='.7'/%3E%3Cg transform='translate(35 265)'%3E%3Cpath d='M15 74l28-46q15-20 49-22l128-2q28 1 48 24l33 46 25 10v37H0V91z' fill='%23e92c91' stroke='%23ffb1df' stroke-width='5'/%3E%3Cpath d='M77 10h136q17 0 29 17l23 35H49l19-38q3-10 9-14' fill='%23132240' stroke='%23a8dfff' stroke-width='4'/%3E%3Cpath d='M0 87h325' stroke='%23ff527e' stroke-width='10'/%3E%3Ccircle cx='68' cy='119' r='28' fill='%23060b1a' stroke='%238ba7ff' stroke-width='7'/%3E%3Ccircle cx='260' cy='119' r='28' fill='%23060b1a' stroke='%238ba7ff' stroke-width='7'/%3E%3Cpath d='M28 86h48m170 0h60' stroke='%23fff0a6' stroke-width='9'/%3E%3C/g%3E%3Cg fill='%230a1229' opacity='.95'%3E%3Cpath d='M0 0h28l-5 150 25-40-20 54 5 50H0z'/%3E%3Cpath d='M1120 0h28l-4 145 30-44-22 60 4 54h-36z'/%3E%3C/g%3E%3C/svg%3E");
+ background-size:cover;
+ background-position:center 46%;
+ border:1px solid #9b4d9d;
+ box-shadow:0 22px 55px #030817bb,0 0 0 1px #ff5ca433 inset;
+}
+.command-center:before{
+ content:"";position:absolute;z-index:-1;inset:0;border-radius:inherit;pointer-events:none;
+ background:linear-gradient(180deg,rgba(8,11,30,.08),rgba(8,11,30,.62));
+ box-shadow:inset 0 0 70px rgba(255,70,170,.16);
+}
+.command-center:after{
+ content:"VICE CITY  •  NIGHT DRIVE";position:absolute;right:22px;bottom:14px;
+ width:auto;height:auto;clip-path:none;background:none;
+ color:#ff9acb;font-size:10px;font-weight:900;letter-spacing:2px;
+ text-shadow:0 0 12px #ff4f9a;opacity:.9;
+}
+.command-copy,.overview-panel{position:relative;z-index:1}
+.command-copy h2{max-width:560px;text-shadow:0 4px 24px #080b20,0 0 22px #ff4f9a55}
+.overview-panel{box-shadow:0 12px 32px #03081777,0 0 0 1px #ff7cce22 inset}
+.card{backdrop-filter:blur(9px)}
+/* Give the existing form and record cards a subtle neon-glass finish */
+.card:not(.command-center){background:linear-gradient(145deg,rgba(22,29,57,.96),rgba(13,20,42,.96));border-color:#55416f}
+.section-number{box-shadow:0 0 13px #ff4f9a25}
+#saveBtn,.command-primary{filter:drop-shadow(0 0 9px #ff4f9a55)}
+.record{background:linear-gradient(120deg,rgba(24,29,57,.96),rgba(17,22,47,.96));border-color:#694779!important}
+@media(max-width:680px){
+ .command-center{min-height:330px;background-position:48% center;padding:19px}
+ .command-center:after{right:12px;bottom:9px;font-size:8px}
+ .overview-panel{background:rgba(10,16,39,.84)}
+}
+
 </style>
 </head>
 <body>
