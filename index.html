@@ -460,10 +460,10 @@ body[data-theme="dark"] .draft-status{background:#183b36;border-color:#326b60;co
 
 /* Creator profile */
 .creator-card{display:flex;align-items:center;justify-content:center;gap:18px;max-width:520px;margin:26px auto 30px;padding:18px 22px;border:1px solid var(--border,#dce7e2);border-radius:18px;background:var(--surface,#fff);box-shadow:0 8px 26px rgba(17,54,43,.06)}
-.creator-photo{display:block;flex:0 0 104px;width:104px;height:104px;object-fit:cover;object-position:center 52%;border-radius:50%;border:3px solid #dcefe8;background:#e8f0ec}
+.creator-photo{display:block;flex:0 0 120px;width:120px;height:150px;object-fit:contain;object-position:center;border-radius:12px;border:2px solid #dcefe8;background:#f4f6f5}
 .creator-copy{display:flex;flex-direction:column;gap:5px;min-width:0}.creator-eyebrow{font-size:10px;font-weight:800;letter-spacing:.13em;color:#23816b}.creator-copy>strong{font-size:17px;color:var(--text,#172a25)}.creator-copy>span:not(.creator-eyebrow){font-size:13px;color:var(--muted,#687a73)}.creator-links{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:5px;font-size:11px;color:var(--muted,#687a73)}.creator-links a{color:inherit}
 body[data-theme="dark"] .creator-card{background:#172820;border-color:#345247}body[data-theme="dark"] .creator-photo{border-color:#345b4d}
-@media(max-width:420px){.creator-card{margin:22px 12px;padding:15px;gap:13px}.creator-photo{width:86px;height:86px;flex-basis:86px}.creator-copy>strong{font-size:15px}}
+@media(max-width:420px){.creator-card{margin:22px 12px;padding:15px;gap:13px}.creator-photo{width:98px;height:123px;flex-basis:98px}.creator-copy>strong{font-size:15px}}
 </style>
 </head>
 <body>
@@ -1619,15 +1619,9 @@ function printRecords(rows){
 $('exportBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to export.');return;}printRecords(rows);});
 $('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to back up.');return;}const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),records:rows},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='sop-proof-hub-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);});
 
-async function loadCreatorPhoto(){
+function loadCreatorPhoto(){
  const image=document.getElementById('creatorPhoto');if(!image)return;
- try{
-  const response=await fetch(new URL('assets/creator-photo-20261125.b64',document.baseURI),{cache:'force-cache'});
-  if(!response.ok)throw new Error('Creator image asset returned '+response.status);
-  const encoded=(await response.text()).trim();
-  if(!encoded||!/^[A-Za-z0-9+/=]+$/.test(encoded))throw new Error('Creator image asset is invalid');
-  image.src='data:image/jpeg;base64,'+encoded;
- }catch(error){console.error('Creator photo could not be loaded:',error);image.hidden=true;}
+ image.src=new URL('assets/creator-full-photo.jpg',document.baseURI).href;
 }
 loadCreatorPhoto();
 const themeToggle=document.getElementById('themeToggle');
