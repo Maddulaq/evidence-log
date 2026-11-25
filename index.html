@@ -527,7 +527,7 @@ body[data-theme="dark"] .creator-card{background:#172820;border-color:#345247}bo
 </section>
 <section class="creator-card" aria-label="About the creator">
   <img id="creatorPhoto" class="creator-photo" alt="Portrait of the creator" width="112" height="112" loading="lazy">
-  <div class="creator-copy"><span class="creator-eyebrow">ABOUT THE CREATOR</span><strong>Maddula Venkata Ramana</strong><span>Creator of SOP &amp; Proof Hub</span><div class="creator-links"><a href="privacy.html">Privacy policy</a><span aria-hidden="true">·</span><span id="appBuild">Build 2026.11.25 · Storage v3</span></div></div>
+  <div class="creator-copy"><span class="creator-eyebrow">ABOUT THE CREATOR</span><strong>Maddula Venkata Ramana</strong><span>Creator of SOP &amp; Proof Hub</span><div class="creator-links"><a href="privacy.html">Privacy policy</a><span aria-hidden="true">·</span><span id="appBuild">Build 2026.11.25 · Full portrait</span></div></div>
 </section>
 </main>
 <nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggleMobile" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
@@ -1619,9 +1619,9 @@ function printRecords(rows){
 $('exportBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to export.');return;}printRecords(rows);});
 $('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to back up.');return;}const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),records:rows},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='sop-proof-hub-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);});
 
-function loadCreatorPhoto(){
+async function loadCreatorPhoto(){
  const image=document.getElementById('creatorPhoto');if(!image)return;
- image.src=new URL('assets/creator-full-photo.jpg',document.baseURI).href;
+ try{const response=await fetch(new URL('assets/creator-photo-20261125.b64',document.baseURI),{cache:'no-store'});if(!response.ok)throw new Error('Portrait asset unavailable');const encoded=(await response.text()).trim();if(!encoded.startsWith('/9j/')||!encoded.endsWith('/9k='))throw new Error('Portrait image data is invalid');image.src='data:image/jpeg;base64,'+encoded;}catch(error){console.error('Creator portrait could not be loaded:',error);image.hidden=true;}
 }
 loadCreatorPhoto();
 const themeToggle=document.getElementById('themeToggle');
