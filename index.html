@@ -527,7 +527,7 @@ body[data-theme="dark"] .creator-card{background:#172820;border-color:#345247}bo
 </section>
 <section class="creator-card" aria-label="About the creator">
   <img id="creatorPhoto" class="creator-photo" alt="Portrait of the creator" width="112" height="112" loading="lazy">
-  <div class="creator-copy"><span class="creator-eyebrow">ABOUT THE CREATOR</span><strong>Maddula Venkata Ramana</strong><span>Creator of SOP &amp; Proof Hub</span><div class="creator-links"><a href="privacy.html">Privacy policy</a><span aria-hidden="true">·</span><span id="appBuild">Build 2026.11.20 · Storage v3</span></div></div>
+  <div class="creator-copy"><span class="creator-eyebrow">ABOUT THE CREATOR</span><strong>Maddula Venkata Ramana</strong><span>Creator of SOP &amp; Proof Hub</span><div class="creator-links"><a href="privacy.html">Privacy policy</a><span aria-hidden="true">·</span><span id="appBuild">Build 2026.11.25 · Storage v3</span></div></div>
 </section>
 </main>
 <nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggleMobile" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
@@ -1622,7 +1622,7 @@ $('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();
 async function loadCreatorPhoto(){
  const image=document.getElementById('creatorPhoto');if(!image)return;
  try{
-  const response=await fetch(new URL('assets/creator-photo.b64',document.baseURI),{cache:'force-cache'});
+  const response=await fetch(new URL('assets/creator-photo-20261125.b64',document.baseURI),{cache:'force-cache'});
   if(!response.ok)throw new Error('Creator image asset returned '+response.status);
   const encoded=(await response.text()).trim();
   if(!encoded||!/^[A-Za-z0-9+/=]+$/.test(encoded))throw new Error('Creator image asset is invalid');
