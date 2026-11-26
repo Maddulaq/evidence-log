@@ -1919,6 +1919,122 @@ main{
   .dashboard-metric strong{font-size:19px!important}
 }
 
+
+/* FINAL FIX: load the exact approved photographic artwork from the repository root.
+   Previous overrides referenced smaller alternate files, leaving the mobile hero blank. */
+html,body{background:#100817!important}
+header,body[data-theme="light"] header,body[data-theme="dark"] header{
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  height:auto!important;min-height:700px!important;
+  padding:34px clamp(22px,5vw,74px) 190px!important;
+  border:0!important;border-bottom:2px solid #f04bb4!important;
+  background-color:#100817!important;
+  background-image:
+    linear-gradient(90deg,rgba(12,5,23,.84) 0%,rgba(12,5,23,.70) 30%,rgba(12,5,23,.20) 58%,rgba(12,5,23,.02) 100%),
+    linear-gradient(0deg,rgba(12,5,23,.68),transparent 48%),
+    url("./vice-city-cinematic-replacement.webp?v=20261126-2")!important;
+  background-repeat:no-repeat!important;background-size:cover!important;
+  background-position:center 48%!important;box-shadow:none!important;
+}
+header:after{
+  content:""!important;position:absolute!important;inset:0!important;z-index:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg,rgba(12,5,23,.02) 45%,rgba(12,5,23,.18) 72%,rgba(12,5,23,.58) 100%)!important;
+}
+header h1,header .sub,.top-actions{position:relative!important;z-index:1!important}
+header h1{color:#fff!important;text-shadow:0 3px 20px #100817!important}
+header .sub{color:#fff7fc!important;text-shadow:0 2px 14px #100817!important}
+.top-actions a,.top-actions button{backdrop-filter:blur(10px)!important}
+main{
+  position:relative!important;z-index:2!important;
+  width:min(1160px,100%)!important;margin:-118px auto 0!important;
+  padding:0 22px 90px!important;
+}
+.command-center{
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  min-height:430px!important;padding:34px 38px!important;
+  border:2px solid #ed4bb5!important;border-radius:30px!important;
+  background:
+    linear-gradient(90deg,rgba(19,9,34,.97) 0%,rgba(19,9,34,.91) 46%,rgba(19,9,34,.38) 100%),
+    url("./vice-city-cinematic-replacement.webp?v=20261126-2") 76% 54%/cover no-repeat,
+    #1a102e!important;
+  box-shadow:0 0 28px #ec3fae30,0 22px 52px #0008!important;
+}
+.command-center:after{display:none!important;content:none!important}
+.command-copy{position:relative!important;z-index:1!important;max-width:740px!important}
+.command-copy h2{
+  color:#fff!important;font-style:italic!important;font-weight:950!important;
+  text-shadow:0 4px 22px #08030e88!important;
+}
+.command-copy h2 em{color:#ff4eae!important;font-style:italic!important}
+.command-copy p{color:#fff1f9!important}
+.workspace-overview{
+  background:rgba(15,8,29,.97)!important;color:#fff!important;
+  border-color:#a94891!important;
+}
+@media(max-width:680px){
+  header,body[data-theme="light"] header,body[data-theme="dark"] header{
+    height:auto!important;min-height:0!important;
+    padding:20px 15px 112px!important;
+    background-size:cover!important;background-position:63% center!important;
+    background-image:
+      linear-gradient(90deg,rgba(12,5,23,.86) 0%,rgba(12,5,23,.68) 40%,rgba(12,5,23,.16) 100%),
+      linear-gradient(0deg,rgba(12,5,23,.70),transparent 54%),
+      url("./vice-city-cinematic-replacement.webp?v=20261126-2")!important;
+  }
+  header h1{
+    max-width:360px!important;gap:11px!important;
+    font-size:clamp(25px,7vw,32px)!important;line-height:.98!important;
+    letter-spacing:-1.2px!important;
+  }
+  header h1:before{
+    width:58px!important;height:58px!important;flex:0 0 58px!important;
+    border-radius:18px!important;
+  }
+  header .sub{
+    max-width:355px!important;margin:17px 0 0!important;
+    font-size:15px!important;line-height:1.5!important;
+  }
+  .top-actions{
+    display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    gap:9px!important;margin:19px 0 0!important;max-width:100%!important;
+  }
+  .top-actions a,.top-actions button{
+    min-width:0!important;min-height:49px!important;padding:10px 7px!important;
+    margin:0!important;border-radius:15px!important;font-size:12px!important;
+    line-height:1.22!important;white-space:normal!important;text-align:center!important;
+  }
+  .top-actions>:nth-child(1),.top-actions>:nth-child(2){grid-column:span 3!important}
+  .top-actions>:nth-child(3),.top-actions>:nth-child(4),.top-actions>:nth-child(5){grid-column:span 2!important}
+  main{width:100%!important;margin:-78px auto 0!important;padding:0 11px 70px!important}
+  .command-center{
+    min-height:0!important;padding:24px 18px!important;margin-bottom:14px!important;
+    border-radius:23px!important;
+    background:
+      linear-gradient(90deg,rgba(19,9,34,.96) 0%,rgba(19,9,34,.88) 58%,rgba(19,9,34,.50) 100%),
+      url("./vice-city-cinematic-replacement.webp?v=20261126-2") 76% 55%/cover no-repeat,
+      #1a102e!important;
+  }
+  .command-copy h2{
+    position:relative!important;z-index:1!important;
+    font-size:clamp(34px,9vw,44px)!important;line-height:1.02!important;
+    letter-spacing:-1.4px!important;margin:17px 0 14px!important;
+  }
+  .command-copy p{position:relative!important;z-index:1!important;font-size:15px!important}
+  .command-actions{
+    position:relative!important;z-index:2!important;display:grid!important;
+    grid-template-columns:1fr 1fr!important;gap:10px!important;margin-top:22px!important;
+  }
+  .command-actions a{
+    min-width:0!important;min-height:58px!important;padding:12px 8px!important;
+    border-radius:15px!important;font-size:14px!important;text-align:center!important;
+  }
+  .workspace-overview{padding:18px 16px!important;border-radius:20px!important;margin-bottom:14px!important}
+  .workspace-overview .overview-stat strong{font-size:48px!important}
+  .dashboard-metrics{gap:7px!important}
+  .dashboard-metric{padding:10px 7px!important}
+}
+
 </style>
 </head>
 <body>
