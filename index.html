@@ -1181,6 +1181,49 @@ body[data-theme="dark"] header{
  .card{margin-top:13px}
 }
 
+
+/* Mobile correction after real-device review: compact hero, clean actions,
+   and no duplicate fixed navigation covering the workspace. */
+@media(max-width:680px){
+ header,body[data-theme="light"] header,body[data-theme="dark"] header{
+  min-height:0 !important;
+  height:auto !important;
+  padding:20px 15px 26px !important;
+  background:
+   linear-gradient(90deg,rgba(13,8,30,.94) 0%,rgba(18,9,35,.78) 48%,rgba(18,9,35,.24) 100%),
+   linear-gradient(0deg,rgba(12,9,29,.66),transparent 60%),
+   url("assets/vice-city-hero.svg") 70% center/cover no-repeat !important;
+ }
+ header h1{font-size:clamp(18px,5.3vw,22px) !important;line-height:1.15;gap:10px}
+ header h1:before{flex:0 0 42px;width:42px;height:42px}
+ header .sub{margin:12px 0 0 !important;max-width:520px;font-size:13px;line-height:1.55}
+ .top-actions{
+  display:grid !important;
+  grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+  gap:8px !important;
+  margin:17px 0 0 !important;
+  max-width:100%;
+ }
+ .top-actions a,.top-actions button{
+  display:flex;align-items:center;justify-content:center;
+  min-width:0;min-height:44px;padding:10px 7px !important;
+  margin:0 !important;border-radius:12px;font-size:11px !important;
+  line-height:1.25;text-align:center;white-space:normal;
+ }
+ .top-actions > :nth-child(1),.top-actions > :nth-child(2){grid-column:span 3}
+ .top-actions > :nth-child(3),.top-actions > :nth-child(4),.top-actions > :nth-child(5){grid-column:span 2}
+ main{padding:14px 11px 42px !important;margin:0 auto !important}
+ .command-center{margin-top:0;grid-template-columns:minmax(0,1fr);gap:15px;padding:18px 15px}
+ .command-copy h2{font-size:clamp(29px,8vw,35px);line-height:1.08}
+ .command-copy p{font-size:13px;line-height:1.55}
+ .command-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}
+ .command-actions a{display:flex;align-items:center;justify-content:center;min-width:0;min-height:46px;padding:10px 8px;font-size:11px;text-align:center}
+ .overview-panel{padding:14px}
+ .overview-bottom{flex-wrap:wrap}
+ .bottom-nav{display:none !important}
+ body.has-selection .selection-tools{bottom:12px !important}
+}
+
 </style>
 </head>
 <body>
