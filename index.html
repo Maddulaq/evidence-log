@@ -2143,6 +2143,45 @@ header h1{
   }
 }
 
+
+/* Brand mark refinement: remove the oversized SP tile from the cinematic hero */
+header h1:before{
+  content:none!important;display:none!important;
+}
+header h1{
+  display:block!important;
+  width:fit-content!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:0 0 11px!important;
+  border-bottom:3px solid #f044b2!important;
+  border-radius:0!important;
+  font-size:clamp(31px,5.2vw,46px)!important;
+  line-height:1.02!important;
+  letter-spacing:-1.5px!important;
+  font-style:italic!important;
+  font-weight:950!important;
+  text-shadow:0 3px 20px rgba(12,5,23,.8)!important;
+}
+header .sub{
+  margin:18px 0 0!important;
+}
+@media(max-width:680px){
+  header h1{
+    display:block!important;
+    width:fit-content!important;
+    max-width:100%!important;
+    margin:0!important;
+    padding:0 0 8px!important;
+    border-bottom:2px solid #f044b2!important;
+    font-size:clamp(27px,7.1vw,39px)!important;
+    line-height:1.05!important;
+    letter-spacing:-1.1px!important;
+  }
+  header h1:before{display:none!important;content:none!important}
+  header .sub{margin:15px 0 0!important}
+}
+
 </style>
 </head>
 <body>
