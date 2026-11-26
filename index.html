@@ -1698,6 +1698,29 @@ main{position:relative!important;z-index:2!important;margin:-92px auto 0!importa
   .command-center{padding:20px 17px!important;border-radius:19px!important;margin-bottom:13px!important}
 }
 
+
+/* Search icon alignment fix: anchor to the search input, not the wrapped tools row */
+.record-tools{position:relative!important}
+.record-tools>.search-symbol{
+  position:absolute!important;
+  left:16px!important;
+  top:24px!important;
+  transform:translateY(-50%)!important;
+  z-index:3!important;
+  display:block!important;
+  height:24px!important;
+  line-height:24px!important;
+  font-size:24px!important;
+  margin:0!important;
+  padding:0!important;
+  pointer-events:none!important;
+}
+.record-tools>#recordSearch{padding-left:48px!important;min-height:48px!important}
+@media(max-width:680px){
+  .record-tools>.search-symbol{left:17px!important;top:24px!important}
+  .record-tools>#recordSearch{padding-left:48px!important}
+}
+
 </style>
 </head>
 <body>
