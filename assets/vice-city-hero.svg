@@ -53,7 +53,7 @@
  <path d="M320 8l30 6" stroke="#ffd6a0" stroke-width="8"/>
 </g>
 <!-- stylized foreground figures -->
-<g transform="translate(980 120)">
+<g transform="translate(730 120)">
  <!-- man torso -->
  <path d="M70 330q35-95 130-102 95 12 145 95l70 360-410 0z" fill="url(#jacket)" stroke="#281a3a" stroke-width="15"/>
  <path d="M105 295q-20 100 30 210l65-15 45-170-75-60z" fill="#f4d39a" opacity=".9"/>
