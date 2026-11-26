@@ -1224,6 +1224,73 @@ body[data-theme="dark"] header{
  body.has-selection .selection-tools{bottom:12px !important}
 }
 
+
+/* Visual consistency pass: restore the neon magenta palette in dark mode
+   and frame the illustrated characters inside a phone-sized crop. */
+@media(max-width:680px){
+ header,body[data-theme="light"] header,body[data-theme="dark"] header{
+  background:
+   linear-gradient(90deg,rgba(13,8,30,.96) 0%,rgba(18,9,35,.84) 42%,rgba(18,9,35,.34) 100%),
+   linear-gradient(0deg,rgba(12,9,29,.70),transparent 62%),
+   url("assets/vice-city-hero.svg") 50% center/cover no-repeat !important;
+ }
+ header .sub{max-width:490px}
+ .top-actions{gap:7px !important}
+ .top-actions a,.top-actions button{min-height:42px !important}
+ .command-center{padding:17px 14px !important}
+ .command-copy h2{font-size:clamp(28px,7.5vw,33px) !important}
+ .overview-panel{padding:12px !important}
+ .overview-stat{margin:10px 0 !important}
+ .dashboard-metric{padding:8px 6px !important}
+}
+body[data-theme="dark"]{
+ --bg:#100d20 !important;
+ --surface:#1b1530 !important;
+ --surface-soft:#251b3b !important;
+ --ink:#f8f0fb !important;
+ --muted:#c9b9d3 !important;
+ --line:#51385e !important;
+ --brand:#ed3ca8 !important;
+ --brand-dark:#b944dc !important;
+ --brand-soft:#351b43 !important;
+ background:var(--bg) !important;
+ color:var(--ink) !important;
+}
+body[data-theme="dark"] .top-actions a:first-child,
+body[data-theme="dark"] .top-actions a[href="#incidentSection"]{
+ background:linear-gradient(110deg,#ff3ca8 0%,#a13fe0 100%) !important;
+ color:#fff !important;border:1px solid #f37ac7 !important;
+ box-shadow:0 7px 22px rgba(235,55,165,.25) !important;
+}
+body[data-theme="dark"] .top-actions a.outline,
+body[data-theme="dark"] .top-actions button.outline{
+ background:rgba(24,17,43,.94) !important;
+ color:#f8effb !important;
+ border:1px solid #80528c !important;
+}
+body[data-theme="dark"] .top-actions a.outline:hover,
+body[data-theme="dark"] .top-actions button.outline:hover{
+ background:#302044 !important;border-color:#ed65bd !important;
+}
+body[data-theme="dark"] .command-primary{
+ background:linear-gradient(110deg,#ff3ca8 0%,#a13fe0 100%) !important;
+ color:#fff !important;border:1px solid #f37ac7 !important;
+}
+body[data-theme="dark"] .command-secondary{
+ background:rgba(15,12,32,.78) !important;
+ color:#fff !important;border:1px solid #a85b9b !important;
+}
+body[data-theme="dark"] .command-copy h2 em{color:#ff78bd !important}
+body[data-theme="dark"] .eyebrow{color:#f29bd0 !important}
+body[data-theme="dark"] .overview-panel{
+ background:rgba(10,9,28,.82) !important;
+ border-color:rgba(255,119,198,.38) !important;
+}
+body[data-theme="dark"] .dashboard-metric{
+ background:rgba(255,255,255,.045) !important;
+ border-color:rgba(255,255,255,.13) !important;
+}
+
 </style>
 </head>
 <body>
