@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#301044"/><stop offset=".42" stop-color="#a62980"/><stop offset=".72" stop-color="#ff704e"/><stop offset="1" stop-color="#ffbd65"/></linearGradient>
+ <linearGradient id="water" x2="0" y2="1"><stop stop-color="#6c236c"/><stop offset="1" stop-color="#10152f"/></linearGradient>
+ <linearGradient id="sun" x2="0" y2="1"><stop stop-color="#fff5a8"/><stop offset="1" stop-color="#ff8c62"/></linearGradient>
+ <linearGradient id="jacket" x2="1" y2="1"><stop stop-color="#f7d18a"/><stop offset=".5" stop-color="#e99a57"/><stop offset="1" stop-color="#55355c"/></linearGradient>
+ <linearGradient id="pink" x2="1" y2="1"><stop stop-color="#ff78bd"/><stop offset="1" stop-color="#9c2e8e"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="18"/></filter>
+ <filter id="soft"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<rect width="1600" height="900" fill="url(#sky)"/>
+<circle cx="520" cy="520" r="190" fill="#ffb66c" opacity=".38" filter="url(#glow)"/>
+<circle cx="520" cy="520" r="112" fill="url(#sun)"/>
+<path d="M0 475 Q220 420 410 460 T820 440 T1200 465 T1600 420 V620 H0Z" fill="#ff8a78" opacity=".16"/>
+<!-- skyline -->
+<g fill="#251b4a">
+ <path d="M0 545V440h42v-42h24v147h22V470h38v-75h20v-44h28v194h35V455h22v-80h40v170h27V425h40v-66h22v-47h24v234h30V440h27v-85h35v190h24V420h44v-64h20v-36h23v210h25V452h42v-90h20v-46h24v234h26V420h36v-63h25v-38h22v240h24V450h35v-74h30v170h30V445h34v-90h24v-50h23v225h28V420h32v-75h25v-42h25v250h32V450h37v-75h26v-50h22v220h32V440h40v-88h25v-44h25v237h35V445h37v-78h24v-39h24v217h35V445h35v-74h25v-42h24v212h38V430h40v-75h24v-48h25v238h35V455h30v-62h26v-34h24v186h32V430h38v-70h22v-38h28v223h34V450h35v-66h28v-35h22v196h38V445h32v-80h27v-42h22v222h40V445h42v-62h24v-40h24v202h50v-160h35v-52h26v212h55v-190h30v-55h24v245h60v-175h30v-44h28v219h60v-170h30v-45h30v215h60v-160h30v-38h25v198h45v-150h30v-44h24v194h40v-140h40v-48h25v188h50v-130h30v-48h30v178h50v-125h30v-40h28v165h40v-100h35v-45h24v145h60v-100h30v-35h30v135h60v-90h30v-32h30v122h50v-75h30v-30h30v105h50v-55h30v-24h30v79h30v-30h30v-30h30v60h20v120H0Z"/>
+</g>
+<!-- lit windows -->
+<g fill="#ffb36f" opacity=".75">
+ <path d="M42 455h8v10h-8zm35 40h8v12h-8zm82-105h8v10h-8zm54 72h8v12h-8zm82-90h8v12h-8zm54 48h8v11h-8zm74-61h8v12h-8zm53 63h8v12h-8zm91-92h8v12h-8zm54 65h8v12h-8zm105-44h8v12h-8zm57 59h8v12h-8zm87-88h8v12h-8zm62 66h8v12h-8zm97-51h8v12h-8zm64 62h8v12h-8zm105-80h8v12h-8zm65 62h8v12h-8zm95-45h8v12h-8zm68 60h8v12h-8z"/>
+</g>
+<!-- waterfront and reflections -->
+<path d="M0 600 Q240 575 470 610 T930 595 T1320 610 T1600 590 V900H0Z" fill="url(#water)"/>
+<path d="M0 625 Q250 604 520 630 T1050 620 T1600 625" fill="none" stroke="#ffb66e" stroke-width="4" opacity=".65"/>
+<g stroke-linecap="round" opacity=".45">
+ <path d="M300 680h420M390 704h250M450 735h390M950 670h340M1050 704h430M100 760h480M700 790h550M200 825h420M1120 850h380" stroke="#ff8e9f" stroke-width="3"/>
+ <path d="M460 640h180M500 660h140M470 690h230M420 720h300" stroke="#ffd08b" stroke-width="5"/>
+</g>
+<!-- distant helicopter -->
+<g transform="translate(810 230)" fill="#17152f" stroke="#17152f" stroke-width="8" stroke-linecap="round">
+ <path d="M-50 18q25-35 76-20l38 16-5 20-70 8-38-10z"/><path d="M50 12l70-18 8 8-64 25"/><path d="M-15 42l-15 20m60-17 16 18"/><path d="M0-5h150" fill="none" stroke-width="5"/><path d="M70-6l-18-24" fill="none" stroke-width="5"/>
+</g>
+<!-- palm silhouettes -->
+<g fill="none" stroke="#17152f" stroke-linecap="round">
+ <path d="M1450 900Q1430 510 1495 210" stroke-width="25"/>
+ <path d="M1495 220q-125-120-245-80 120-5 218 105-135-55-185-15 110-20 190 40-80-5-145 35 100-25 160-12-75 30-110 78 80-45 126-50" stroke-width="18"/>
+ <path d="M130 900Q120 590 40 390" stroke-width="21"/>
+ <path d="M42 392q-80-115-180-120 105 38 163 145-90-75-155-63 100 22 165 92-90-38-135-10 94-8 160 38-70-3-118 28 85-18 132 5" stroke-width="15"/>
+</g>
+<!-- foreground low barrier -->
+<path d="M0 795l620-70 160 175H0Z" fill="#17182f" opacity=".9"/>
+<path d="M0 795l620-70" stroke="#ff6d9f" stroke-width="8" opacity=".7"/>
+<!-- delivery scooter -->
+<g transform="translate(570 695)">
+ <circle cx="30" cy="130" r="48" fill="#0d1328" stroke="#d05a9b" stroke-width="10"/><circle cx="30" cy="130" r="17" fill="#6a5683"/>
+ <circle cx="270" cy="130" r="48" fill="#0d1328" stroke="#d05a9b" stroke-width="10"/><circle cx="270" cy="130" r="17" fill="#6a5683"/>
+ <path d="M28 126l55-85 95 8 90 78-110 2-75-44-35 41" fill="#211a3a" stroke="#f4a0bb" stroke-width="9"/>
+ <path d="M92 40l35-34 70 6 20 32" fill="none" stroke="#f4a0bb" stroke-width="10"/>
+ <path d="M170 14l70-12 45 25-12 75-115-4z" fill="#ff9b4f" stroke="#2b1d3c" stroke-width="10"/>
+ <path d="M178 26h84v50h-84z" fill="#ffbf64" opacity=".8"/>
+ <path d="M270 38l34-38 26 8" fill="none" stroke="#1a1833" stroke-width="9"/>
+ <path d="M320 8l30 6" stroke="#ffd6a0" stroke-width="8"/>
+</g>
+<!-- stylized foreground figures -->
+<g transform="translate(980 120)">
+ <!-- man torso -->
+ <path d="M70 330q35-95 130-102 95 12 145 95l70 360-410 0z" fill="url(#jacket)" stroke="#281a3a" stroke-width="15"/>
+ <path d="M105 295q-20 100 30 210l65-15 45-170-75-60z" fill="#f4d39a" opacity=".9"/>
+ <path d="M215 236q55 60 120 20l25 100-115 50-78-65z" fill="#1e3550"/>
+ <!-- neck and head -->
+ <path d="M165 190l-5 85 75 48 50-72-20-78z" fill="#a85d4e"/>
+ <ellipse cx="222" cy="125" rx="105" ry="130" fill="#c77c5c" stroke="#2b1b36" stroke-width="13"/>
+ <path d="M120 120q-8-120 100-145 100 0 112 105-65-50-135-25-35 18-77 65z" fill="#20192e"/>
+ <path d="M132 112q50-30 100-10l-5 35-90 5zM245 105q45-24 80 3l-12 34-67-4z" fill="#10182b" stroke="#ffcf9b" stroke-width="8"/>
+ <path d="M232 119l20 3" stroke="#2a1932" stroke-width="12"/>
+ <path d="M197 184q38 24 74-2" fill="none" stroke="#713e42" stroke-width="8"/>
+ <path d="M173 205q48 35 100 2" fill="none" stroke="#eaa07b" stroke-width="7"/>
+ <!-- woman behind -->
+ <g transform="translate(360 55)">
+  <path d="M30 320q30-105 115-125 95 8 150 115l70 375H-20z" fill="url(#pink)" stroke="#2a1739" stroke-width="14"/>
+  <path d="M90 180q-50-130 45-185 120-55 175 58 30 90-45 165-95 35-175-38z" fill="#25152e"/>
+  <ellipse cx="185" cy="95" rx="86" ry="112" fill="#bd725f" stroke="#2b1939" stroke-width="12"/>
+  <path d="M99 95q-15-115 90-150 105 0 116 104-55-38-105-20-50 28-101 66z" fill="#24172d"/>
+  <path d="M105 100q48-27 92-8l-5 32-85 5zm100-8q42-25 83 4l-10 34-70-4z" fill="#10182a" stroke="#ffcead" stroke-width="7"/>
+  <path d="M188 113l18 0" stroke="#2a1934" stroke-width="10"/>
+  <path d="M162 160q34 22 67-4" fill="none" stroke="#733d48" stroke-width="7"/>
+  <path d="M70 34q-65-90-10-145M90 8q-10-100 50-135M250 10q75-95 115-65" fill="none" stroke="#24172e" stroke-width="18"/>
+ </g>
+</g>
+<!-- neon glows and horizon -->
+<path d="M0 600h1600" stroke="#ff6cae" stroke-width="3" opacity=".6"/>
+<rect width="1600" height="900" fill="none" stroke="#ff8cbd" stroke-width="8" opacity=".14"/>
+</svg>
