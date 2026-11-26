@@ -1464,6 +1464,132 @@ header .sub{max-width:620px !important}
  .top-actions a:first-child,.top-actions a:nth-child(2){grid-column:span 3 !important}
 }
 
+
+/* Reference-matched cinematic hero composition.
+   The cinematic scene is one continuous stage; the headline card overlaps its lower edge. */
+body,body[data-theme="light"],body[data-theme="dark"]{
+ background:#100b20 !important;color:#fff5fb !important;
+}
+header,body[data-theme="light"] header,body[data-theme="dark"] header{
+ position:relative !important;isolation:isolate !important;overflow:hidden !important;
+ min-height:690px !important;height:auto !important;
+ padding:34px max(18px,calc((100% - 1040px)/2)) 230px !important;
+ border:0 !important;border-bottom:2px solid rgba(255,77,177,.78) !important;
+ background-color:#100817 !important;
+ background-image:
+  linear-gradient(90deg,rgba(12,6,24,.96) 0%,rgba(12,6,24,.84) 32%,rgba(12,6,24,.27) 62%,rgba(12,6,24,.04) 100%),
+  linear-gradient(0deg,rgba(12,6,24,.72),transparent 52%),
+  url("assets/vice-city-cinematic.webp") !important;
+ background-size:cover !important;
+ background-position:center 46% !important;
+ background-repeat:no-repeat !important;
+ box-shadow:none !important;
+}
+header:after{
+ content:"" !important;position:absolute !important;inset:0 !important;z-index:0 !important;
+ pointer-events:none !important;opacity:1 !important;
+ background:linear-gradient(180deg,rgba(10,6,24,.02) 48%,rgba(10,6,24,.12) 72%,rgba(10,6,24,.68) 100%) !important;
+}
+header h1,header .sub,.top-actions{position:relative !important;z-index:1 !important}
+header h1{max-width:510px !important;font-size:clamp(25px,3vw,34px) !important}
+header .sub{max-width:470px !important;margin:15px 0 0 64px !important;font-size:15px !important;line-height:1.55 !important;color:#fff1fa !important}
+.top-actions{display:flex !important;flex-wrap:wrap !important;gap:10px !important;margin:22px 0 0 64px !important;max-width:720px !important}
+.top-actions a,.top-actions button{
+ flex:0 1 auto !important;min-height:48px !important;padding:11px 18px !important;
+ border-radius:13px !important;background:rgba(18,11,34,.9) !important;
+ border:1px solid rgba(238,135,207,.78) !important;color:#fff !important;
+ font-size:13px !important;box-shadow:0 7px 22px rgba(0,0,0,.24) !important;
+ backdrop-filter:blur(8px) !important;
+}
+.top-actions a:first-child{
+ background:linear-gradient(110deg,#ff35a8,#a72de0) !important;
+ border-color:#ff9bd8 !important;box-shadow:0 0 22px #ed37a855 !important;
+}
+.top-actions .theme-toggle{margin-left:0 !important}
+main{
+ position:relative !important;z-index:2 !important;
+ width:min(1040px,100%) !important;margin:-165px auto 0 !important;
+ padding:0 18px 90px !important;
+}
+.command-center{
+ display:block !important;min-height:0 !important;margin:0 0 16px !important;
+ padding:28px 30px !important;border:2px solid #df55b2 !important;
+ border-radius:25px !important;overflow:hidden !important;
+ background:
+  linear-gradient(90deg,rgba(23,13,39,.97) 0%,rgba(23,13,39,.88) 56%,rgba(23,13,39,.60) 100%),
+  radial-gradient(ellipse at 94% 50%,rgba(255,67,171,.18),transparent 48%),
+  #1a102e !important;
+ box-shadow:0 0 25px rgba(231,54,174,.15),0 20px 48px rgba(0,0,0,.42) !important;
+}
+.command-center:before{display:none !important}
+.command-center:after{
+ content:"" !important;position:absolute !important;z-index:0 !important;
+ right:0 !important;top:0 !important;bottom:0 !important;width:42% !important;
+ pointer-events:none !important;opacity:.28 !important;
+ background:
+  linear-gradient(90deg,#1a102e 0%,transparent 75%),
+  url("assets/vice-city-cinematic.webp") 83% 56%/auto 150% no-repeat !important;
+ clip-path:none !important;
+}
+.command-copy{position:relative !important;z-index:1 !important;max-width:690px !important}
+.command-copy h2{font-size:clamp(34px,4.5vw,52px) !important;line-height:1.04 !important;letter-spacing:-1.4px !important}
+.command-copy h2 em{color:#ff5eb7 !important}
+.command-copy p{max-width:620px !important;color:#f4e8f5 !important;font-size:16px !important;line-height:1.6 !important}
+.command-actions{display:flex !important;gap:12px !important;margin-top:24px !important}
+.command-actions a{min-width:210px !important;min-height:58px !important;padding:14px 22px !important;border-radius:15px !important;font-size:16px !important}
+.command-primary{background:linear-gradient(110deg,#ff35a8,#a72de0) !important;border:1px solid #ff9bd8 !important;box-shadow:0 0 20px #ed37a844 !important}
+.command-secondary{background:#120d25 !important;color:#fff !important;border:1px solid #ba6db1 !important}
+.workspace-overview{
+ display:block !important;position:relative !important;z-index:1 !important;
+ margin:0 0 18px !important;padding:20px !important;
+ border:1px solid rgba(255,125,201,.42) !important;border-radius:20px !important;
+ background:rgba(15,11,32,.94) !important;color:#fff !important;
+ box-shadow:0 12px 32px rgba(0,0,0,.25) !important;backdrop-filter:blur(14px) !important;
+}
+.workspace-overview .overview-top{color:#f0d8eb !important}
+.workspace-overview .overview-stat strong{font-size:48px !important;color:#fff !important}
+.workspace-overview .dashboard-metric{background:rgba(255,255,255,.045) !important;border-color:rgba(255,255,255,.13) !important}
+.workspace-overview .dashboard-metric span{color:#d7c5df !important}
+.workspace-overview .dashboard-metric strong{color:#fff !important}
+@media(max-width:680px){
+ header,body[data-theme="light"] header,body[data-theme="dark"] header{
+  min-height:0 !important;height:auto !important;
+  padding:20px 15px 205px !important;
+  background-position:63% 48% !important;background-size:auto 100% !important;
+  background-image:
+   linear-gradient(90deg,rgba(12,6,24,.96) 0%,rgba(12,6,24,.82) 36%,rgba(12,6,24,.38) 68%,rgba(12,6,24,.18) 100%),
+   linear-gradient(0deg,rgba(12,6,24,.80),transparent 56%),
+   url("assets/vice-city-cinematic.webp") !important;
+ }
+ header h1{font-size:22px !important;gap:10px !important}
+ header h1:before{width:46px !important;height:46px !important;flex:0 0 46px !important}
+ header .sub{margin:12px 0 0 !important;max-width:330px !important;font-size:13px !important;line-height:1.5 !important}
+ .top-actions{
+  display:grid !important;grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+  gap:8px !important;margin:17px 0 0 !important;max-width:100% !important;
+ }
+ .top-actions a,.top-actions button{
+  min-width:0 !important;min-height:44px !important;padding:9px 7px !important;
+  margin:0 !important;border-radius:12px !important;font-size:11px !important;
+  line-height:1.25 !important;text-align:center !important;white-space:normal !important;
+ }
+ .top-actions > :nth-child(1),.top-actions > :nth-child(2){grid-column:span 3 !important}
+ .top-actions > :nth-child(3),.top-actions > :nth-child(4),.top-actions > :nth-child(5){grid-column:span 2 !important}
+ main{margin:-145px auto 0 !important;padding:0 11px 65px !important}
+ .command-center{padding:20px 17px !important;border-radius:19px !important;margin-bottom:13px !important}
+ .command-center:after{width:52% !important;opacity:.16 !important;background-position:86% 50% !important}
+ .command-copy h2{font-size:clamp(30px,8vw,38px) !important;line-height:1.06 !important}
+ .command-copy p{font-size:13px !important;line-height:1.55 !important}
+ .command-actions{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;margin-top:17px !important}
+ .command-actions a{min-width:0 !important;min-height:48px !important;padding:10px 8px !important;font-size:12px !important}
+ .workspace-overview{padding:15px !important;margin-bottom:13px !important}
+ .workspace-overview .overview-stat strong{font-size:42px !important}
+ .dashboard-metrics{gap:6px !important}
+ .dashboard-metric{padding:8px 6px !important}
+ .dashboard-metric span{font-size:9px !important}
+ .dashboard-metric strong{font-size:18px !important}
+}
+
 </style>
 </head>
 <body>
@@ -1475,12 +1601,12 @@ header .sub{max-width:620px !important}
   <div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span><h2>Every issue.<br><em>Properly documented.</em></h2><p>Capture clear evidence, verify the order details, and keep a report ready when you need it.</p>
     <div class="command-actions"><a class="command-primary" href="#incidentSection">＋ New incident</a><a class="command-secondary" href="#recordsSection">Browse records <span aria-hidden="true">↗</span></a></div>
   </div>
-  <div class="overview-panel"><div class="overview-top"><span>YOUR WORKSPACE</span><span class="storage-indicator">● Saved on this device</span></div>
+</section>
+<section class="overview-panel workspace-overview" aria-label="Workspace overview"><div class="overview-top"><span>YOUR WORKSPACE</span><span class="storage-indicator">● Saved on this device</span></div>
     <div class="overview-stat"><strong id="dashboardCount">0</strong><span>Saved incident records</span></div>
     <div class="dashboard-metrics" aria-label="Report summary"><div class="dashboard-metric"><span>Added this week</span><strong id="dashboardWeek">0</strong></div><div class="dashboard-metric"><span>Issue categories</span><strong id="dashboardTypes">0</strong></div><div class="dashboard-metric"><span>Evidence photos</span><strong id="dashboardEvidence">0</strong></div></div>
     <div class="overview-rule" style="margin-top:15px"></div>
     <div class="overview-bottom"><span><b>01</b> Capture screenshot</span><span><b>02</b> Add evidence</span><span><b>03</b> Save report</span></div>
-  </div>
 </section>
 <div class="notice "><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
 <section class="card " id="incidentSection">
