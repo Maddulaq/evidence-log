@@ -809,6 +809,245 @@ body[data-theme="dark"] .bottom-nav a,body[data-theme="dark"] .bottom-nav button
 }
 @media(prefers-reduced-motion:reduce){.record{transition:none}}
 
+
+/* GTA VI / Vice City-inspired cinematic interface skin.
+   Keeps the existing report, OCR, language, storage and PDF logic intact. */
+:root{
+ --bg:#100e24;--surface:#19152f;--surface-soft:#211a3b;
+ --ink:#fff8ff;--muted:#c9b9d8;--line:#594064;
+ --brand:#ff3ea5;--brand-dark:#d91b82;--brand-soft:#442044;
+ --radius:19px;--shadow:0 18px 42px rgba(4,3,18,.38);
+}
+html{scroll-behavior:smooth}
+body,body[data-theme="light"]{
+ color-scheme:dark;color:#fff8ff;
+ background:
+  linear-gradient(180deg,rgba(12,9,30,.38),rgba(10,10,28,.92) 42%,#100e24 100%),
+  url("assets/vice-city-hero.webp") center top/100% auto no-repeat,
+  #100e24;
+}
+header,body[data-theme="light"] header{
+ position:relative;isolation:isolate;overflow:hidden;
+ background:linear-gradient(100deg,rgba(13,10,31,.97),rgba(40,17,57,.9) 55%,rgba(15,37,61,.94));
+ color:#fff;border-bottom:1px solid #ff55b7;
+ box-shadow:0 8px 35px #08061599;
+}
+header:after{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:
+  linear-gradient(110deg,transparent 0 55%,#ff3ea51a 56%,transparent 57%),
+  radial-gradient(ellipse at 80% 0%,#ff3ea533,transparent 42%),
+  radial-gradient(ellipse at 98% 100%,#24d9ef2b,transparent 38%);
+}
+header h1{color:#fff;font-weight:950;letter-spacing:-.9px;text-transform:uppercase}
+header h1:before{
+ content:"SP";display:inline-grid;place-items:center;flex:0 0 42px;width:42px;height:42px;
+ border:1px solid #ff8acb;border-radius:12px;
+ background:linear-gradient(145deg,#ff3ea5,#8c45e9 58%,#23c8df);
+ color:#fff;font-size:14px;font-style:italic;
+ box-shadow:0 0 24px #ff3ea555;
+}
+header .sub{color:#e5d6ed}
+.top-actions a:first-child,.command-primary{
+ background:linear-gradient(110deg,#ff3ea5,#c53bcb 58%,#7254e8);
+ color:#fff;box-shadow:0 7px 22px #ff3ea544;
+}
+.top-actions a.outline,.top-actions button.outline{
+ background:#1b1734d9;color:#fff;border:1px solid #82527f;
+}
+.top-actions .theme-toggle{margin-left:auto}
+main{max-width:1080px}
+.command-center{
+ position:relative;isolation:isolate;overflow:hidden;min-height:300px;
+ border:1px solid #fa68b9;border-radius:24px;
+ background:
+  linear-gradient(90deg,rgba(13,9,31,.95) 0%,rgba(21,12,39,.82) 48%,rgba(15,17,42,.46) 100%),
+  url("assets/vice-city-hero.webp") center 54%/cover no-repeat;
+ box-shadow:0 22px 55px #050311b8,0 0 30px #ff3ea522;
+}
+.command-center:before{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:linear-gradient(180deg,transparent 48%,rgba(8,8,26,.76)),
+ repeating-linear-gradient(115deg,transparent 0 42px,#fff1 43px 44px,transparent 45px 88px);
+}
+.command-center:after{
+ content:"VICE CITY • INCIDENT CONTROL";position:absolute;right:18px;bottom:13px;
+ color:#ffd5ed;font-size:9px;font-weight:900;letter-spacing:2.2px;opacity:.78;
+ text-shadow:0 0 12px #ff3ea5;
+}
+.eyebrow{color:#ff9bcf;letter-spacing:2px}
+.live-dot{background:#45e8e2;box-shadow:0 0 0 4px #45e8e233,0 0 17px #45e8e2}
+.command-copy h2{
+ color:#fff;font-weight:950;letter-spacing:-1.5px;
+ text-shadow:0 4px 25px #080516;
+}
+.command-copy h2 em{color:#ff76bd;text-shadow:0 0 22px #ff3ea566}
+.command-copy p{color:#f0dfef}
+.command-primary{border:1px solid #ff9acb}
+.command-secondary{background:#17142dc9;border:1px solid #a76ba6;color:#fff}
+.overview-panel{
+ background:rgba(12,10,31,.79);border:1px solid #a65d9a;
+ box-shadow:inset 0 0 24px #ff3ea510;backdrop-filter:blur(15px);
+}
+.overview-top{color:#f7d5ed}.overview-stat strong{color:#fff;text-shadow:0 0 22px #ff3ea566}
+.overview-bottom b{color:#55e5e2}
+.notice{background:#33251f;border:1px solid #b9814b;color:#ffe6b9}
+.card{
+ color:#fff;background:linear-gradient(145deg,rgba(29,22,53,.97),rgba(16,18,43,.97));
+ border:1px solid #684b7a;border-radius:21px;
+ box-shadow:0 14px 36px #03020f88,inset 0 1px #ffffff0b;
+}
+.card h2{color:#fff}
+.section-number{background:#442044;color:#ff9acb;border:1px solid #9a4e91}
+.section-subtitle,label{color:#e3d1e9}
+.form-divider{background:linear-gradient(90deg,#ff4da9,#35d8e2,transparent)}
+input,select,textarea{
+ background:#0e1027;color:#fff;border:1px solid #65517c;border-radius:11px;
+}
+input::placeholder,textarea::placeholder{color:#a99ab9}
+input:focus,select:focus,textarea:focus{border-color:#ff66b4;outline:3px solid #ff3ea52b}
+input[type=file]{background:#17142e;border:1px dashed #a35c9a}
+input[type=file]::file-selector-button{background:#48234a;color:#ffb8d9}
+button{
+ background:linear-gradient(110deg,#ff3ea5,#b93bca 60%,#7254e8);
+ color:#fff;border:1px solid #ff83c5;border-radius:11px;
+ box-shadow:0 5px 16px #ff3ea533;
+}
+button:hover{background:linear-gradient(110deg,#ff66b7,#d34cda 60%,#876cff)}
+button.secondary{background:#211b3c;color:#f6eafa;border:1px solid #705b85;box-shadow:none}
+button.secondary:hover{background:#30234d;border-color:#38d9e4}
+button.danger{background:#442033;color:#ffd9e9;border:1px solid #98506d;box-shadow:none}
+#saveBtn{background:linear-gradient(110deg,#ff3ea5,#b93bca 60%,#7254e8);border:1px solid #ff83c5}
+.status{color:#5ce8d9}.error{color:#ff91b7}
+.record-tools input{background:#0e1027;color:#fff;border-color:#65517c}
+.search-symbol{color:#ff85c2}
+.search-count,.pill{background:#432044;color:#ffb4d7;border:1px solid #875184}
+.selection-tools{background:#17142e;border:1px solid #624a7a;color:#fff}
+.selection-tools strong{color:#fff}.selection-tools small{color:#c5b6d4}
+#records{display:grid;gap:13px;margin-top:15px!important}
+.record{
+ position:relative;margin:0!important;padding:18px!important;
+ border:1px solid #70517f!important;border-radius:19px!important;
+ background:
+  radial-gradient(ellipse at 100% 0%,#ff3ea51b,transparent 45%),
+  linear-gradient(130deg,rgba(31,24,57,.98),rgba(13,20,43,.98))!important;
+ box-shadow:0 12px 30px #03020f88,inset 0 1px #ffffff0b!important;
+ transition:transform .18s,border-color .18s,box-shadow .18s;
+}
+.record:has([data-select-record]:checked){
+ border:1.5px solid #ff69b6!important;
+ box-shadow:0 0 0 1px #ff69b633,0 14px 35px #ff3ea522!important;
+}
+.record-heading{display:flex;align-items:center;gap:12px;min-width:0}
+.record-icon{
+ display:grid;place-items:center;flex:0 0 46px;width:46px;height:46px;
+ border-radius:14px;background:linear-gradient(145deg,#153a52,#442044);
+ border:1px solid #3ecedb;color:#52e4e7;font-size:23px;
+ box-shadow:0 0 18px #2adce322;
+}
+.record-title-wrap{flex:1;min-width:0}
+.record h3{color:#fff!important;font-size:16px!important;font-weight:950;letter-spacing:-.35px;margin:0 0 5px!important;text-transform:uppercase}
+.record-date{font-size:10px;color:#ff9dcd;font-weight:850;letter-spacing:1px}
+.record-select{position:relative;display:grid!important;place-items:center;flex:0 0 42px;width:42px;height:42px;margin:0!important;cursor:pointer}
+.record-select input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer}
+.selection-check{
+ display:grid;place-items:center;width:30px;height:30px;border:2px solid #866c94;
+ border-radius:9px;background:#17142e;color:transparent;font-size:18px;font-weight:900;
+}
+.record-select input:checked+.selection-check{
+ background:linear-gradient(145deg,#ff3ea5,#b63bd0);border-color:#ff8bc7;color:#fff;
+ box-shadow:0 0 17px #ff3ea566;
+}
+.record-meta{
+ display:flex;flex-wrap:wrap;gap:8px 18px;margin:13px 0 10px;padding:10px 12px;
+ border-radius:11px;background:#0e122a;border:1px solid #3f385d;
+ color:#f2e6f4;font-size:12px;overflow-wrap:anywhere;
+}
+.record-meta b{font-size:9px;letter-spacing:1px;color:#5be1e2;margin-right:5px}
+.record-description{margin:0!important;color:#e4d8e9!important;font-size:13px!important;line-height:1.6}
+.record-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:13px}
+.record-evidence{display:flex;gap:5px}
+.evidence-thumb{position:relative;width:54px;height:48px;border-radius:8px;overflow:hidden;background:#19142c;border:1px solid #775487}
+.evidence-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.evidence-more{position:absolute;inset:0;display:grid;place-items:center;background:#110e27cc;color:#fff;font-weight:900}
+.record-evidence-count,.record-submit-date{font-size:10px;color:#bcaacb}
+.record-submit-date{margin-left:auto}
+.record-actions{display:flex;gap:9px;margin-top:14px!important;padding-top:13px;border-top:1px solid #4a3b5c}
+.record-actions button{min-height:41px;border-radius:10px;flex:1}
+.record-actions button.secondary{background:#281b42;color:#ffb4d9;border:1px solid #92568c;box-shadow:none}
+.record-actions button.danger{background:#3b1d31;color:#ffd7e7;border:1px solid #8e4a68;box-shadow:none}
+body.has-selection .selection-tools{
+ position:fixed;z-index:1000;left:50%;bottom:86px;transform:translateX(-50%);
+ width:min(760px,calc(100% - 28px));margin:0;padding:13px 15px;
+ border:1px solid #ff6cb8;border-radius:17px;
+ background:rgba(20,14,39,.94);box-shadow:0 14px 42px #05020ecc,0 0 25px #ff3ea522;
+ backdrop-filter:blur(22px);
+}
+body.has-selection .selection-tools strong{font-size:14px;color:#fff}
+body.has-selection .selection-tools small{color:#d0c0dc}
+body.has-selection #combinedPdfBtn{
+ background:linear-gradient(110deg,#ffcf45,#ff9d2f);color:#24142b;
+ border:1px solid #ffe18a;border-radius:11px;min-height:46px;font-weight:950;
+ box-shadow:0 6px 20px #ffb52f33;
+}
+body.has-selection #combinedPdfBtn:disabled{opacity:.45}
+#selectAllBtn{min-height:42px;border-radius:10px}
+.bottom-nav{
+ z-index:1001;background:rgba(17,13,34,.96);border:1px solid #725080;
+ border-radius:16px;box-shadow:0 10px 35px #03020fbb;backdrop-filter:blur(22px);
+}
+.bottom-nav a{border-radius:10px;background:#241b3e;color:#f7eafa}
+.bottom-nav a.primary{background:linear-gradient(110deg,#ff3ea5,#bd3dcb);color:#fff}
+.bottom-nav button{border-radius:10px;background:#241b3e;color:#f7eafa;border-color:#725080}
+.creator-card{background:linear-gradient(120deg,#19152f,#282044);border-color:#79517f}
+.creator-copy>strong{color:#fff}.creator-copy>span:not(.creator-eyebrow),.creator-links{color:#cbb9d9}
+.creator-eyebrow{color:#ff8fc8}
+body[data-theme="dark"]{
+ --bg:#100e24;--surface:#19152f;--surface-soft:#211a3b;--ink:#fff8ff;--muted:#c9b9d8;
+ --line:#594064;--brand:#ff3ea5;--brand-dark:#d91b82;--brand-soft:#442044;
+ background:#100e24;color:#fff8ff;
+}
+body[data-theme="dark"] header{background:linear-gradient(100deg,#0d0a1f,#281139 55%,#0f253d);border-color:#ff55b7}
+body[data-theme="dark"] .card{background:linear-gradient(145deg,#1d1635,#10122b);border-color:#684b7a}
+body[data-theme="dark"] .record{background:linear-gradient(130deg,#1f1839,#0d142b)!important;border-color:#70517f!important}
+body[data-theme="dark"] .record h3,body[data-theme="dark"] .card h2{color:#fff!important}
+body[data-theme="dark"] label{color:#e3d1e9}
+body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{background:#0e1027;color:#fff;border-color:#65517c}
+body[data-theme="dark"] .selection-tools{background:#17142e;border-color:#624a7a}
+body[data-theme="dark"] .bottom-nav{background:rgba(17,13,34,.96);border-color:#725080}
+body[data-theme="dark"] .notice{background:#33251f;border-color:#b9814b;color:#ffe6b9}
+@media(max-width:680px){
+ body,body[data-theme="light"]{background-size:auto,auto 440px;background-position:center top,center top}
+ header{padding:16px 14px}
+ header h1{font-size:19px}
+ header .sub{margin-left:0}
+ .top-actions{margin-left:0;gap:6px}
+ .top-actions a,.top-actions button{font-size:11px;padding:8px 9px}
+ .top-actions .theme-toggle{margin-left:0}
+ main{padding:0 11px 150px}
+ .command-center{min-height:0;padding:20px;border-radius:17px;background-position:58% center}
+ .command-copy h2{font-size:31px}
+ .overview-panel{padding:14px}
+ .card{padding:16px 14px}
+ .record{padding:14px!important}
+ .record-meta{display:grid;gap:7px}
+ .record-submit-date{margin-left:0}
+ body.has-selection .selection-tools{bottom:78px;width:calc(100% - 20px);padding:10px 11px;gap:8px}
+ body.has-selection .selection-tools>div:first-child{flex:1 1 100%}
+ body.has-selection .selection-tools small{font-size:10px}
+ body.has-selection .selection-tools .actions{width:100%}
+ body.has-selection #selectAllBtn{flex:0 0 auto}
+ body.has-selection #combinedPdfBtn{flex:1}
+ .bottom-nav{left:9px;right:9px;bottom:max(8px,env(safe-area-inset-bottom));padding:7px;gap:5px}
+ .bottom-nav a,.bottom-nav button{font-size:10px}
+}
+@media(prefers-reduced-motion:no-preference){
+ .record{transition:transform .18s,border-color .18s,box-shadow .18s}
+ .record:hover{transform:translateY(-2px);border-color:#ff69b6!important}
+ .command-primary,#saveBtn{animation:vicePulse 4s ease-in-out infinite}
+}
+@media(prefers-reduced-motion:reduce){.record{transition:none}}
+
 </style>
 </head>
 <body>
