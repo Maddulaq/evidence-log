@@ -1646,6 +1646,58 @@ main{position:relative!important;z-index:2!important;margin:-150px auto 0!import
   }
 }
 
+
+/* FINAL MOBILE ART DIRECTION: use the previously approved GTA-inspired image,
+   show the full scene without extreme zoom, and keep the hero compact. */
+header,body[data-theme="light"] header,body[data-theme="dark"] header{
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  height:auto!important;min-height:0!important;
+  padding:22px max(18px,calc((100% - 1040px)/2)) 170px!important;
+  border:0!important;border-bottom:2px solid rgba(255,77,177,.82)!important;
+  background-color:#100817!important;
+  background-image:
+    linear-gradient(90deg,rgba(10,5,21,.78) 0%,rgba(10,5,21,.56) 38%,rgba(10,5,21,.12) 100%),
+    linear-gradient(0deg,rgba(10,5,21,.66),transparent 52%),
+    url("assets/gta6-approved-hero.jpg")!important;
+  background-repeat:no-repeat!important;
+  background-size:cover!important;
+  background-position:center 42%!important;
+  box-shadow:none!important;
+}
+header:after{
+  content:""!important;position:absolute!important;inset:0!important;z-index:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg,rgba(10,5,21,.04) 38%,rgba(10,5,21,.18) 68%,rgba(10,5,21,.62) 100%)!important;
+}
+header h1,header .sub,.top-actions{position:relative!important;z-index:1!important}
+header h1{color:#fff!important;text-shadow:0 2px 16px rgba(0,0,0,.5)!important}
+header .sub{color:#fff4fb!important;text-shadow:0 2px 12px rgba(0,0,0,.72)!important}
+.top-actions a,.top-actions button{box-shadow:0 8px 22px rgba(0,0,0,.34)!important}
+main{position:relative!important;z-index:2!important;margin:-92px auto 0!important}
+.command-center{
+  background:linear-gradient(112deg,rgba(22,12,38,.98),rgba(40,16,52,.94))!important;
+  box-shadow:0 16px 42px rgba(0,0,0,.42)!important;
+}
+.command-center:after{display:none!important;content:none!important}
+@media(max-width:680px){
+  header,body[data-theme="light"] header,body[data-theme="dark"] header{
+    min-height:0!important;height:auto!important;
+    padding:18px 15px 150px!important;
+    background-position:center 40%!important;
+    background-size:cover!important;
+    background-image:
+      linear-gradient(90deg,rgba(10,5,21,.76) 0%,rgba(10,5,21,.55) 45%,rgba(10,5,21,.16) 100%),
+      linear-gradient(0deg,rgba(10,5,21,.70),transparent 56%),
+      url("assets/gta6-approved-hero.jpg")!important;
+  }
+  header h1{font-size:22px!important;gap:10px!important}
+  header h1:before{width:46px!important;height:46px!important;flex:0 0 46px!important}
+  header .sub{margin:12px 0 0!important;max-width:350px!important;font-size:13px!important;line-height:1.5!important}
+  .top-actions{margin:16px 0 0!important}
+  main{margin:-82px auto 0!important;padding:0 11px 65px!important}
+  .command-center{padding:20px 17px!important;border-radius:19px!important;margin-bottom:13px!important}
+}
+
 </style>
 </head>
 <body>
