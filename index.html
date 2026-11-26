@@ -1072,6 +1072,115 @@ body[data-theme="dark"] .notice{background:#33251f;border-color:#b9814b;color:#f
  .command-center .overview-panel{background:rgba(8,8,28,.78)!important}
 }
 
+
+/* Layout refresh inspired by the approved mobile concept:
+   artwork gets its own clear stage; incident controls stay in a readable panel. */
+body,body[data-theme="light"]{
+ background:linear-gradient(180deg,#120d27 0%,#100e24 42%,#0d1022 100%) !important;
+}
+header,body[data-theme="light"] header{
+ min-height:470px;
+ padding:22px max(18px,calc((100% - 1040px)/2));
+ isolation:isolate;
+ overflow:hidden;
+ border-bottom:1px solid rgba(255,91,185,.7);
+ background:
+  linear-gradient(90deg,rgba(14,8,31,.98) 0%,rgba(20,9,37,.86) 38%,rgba(17,10,35,.28) 75%,rgba(12,14,36,.12) 100%),
+  linear-gradient(0deg,rgba(13,10,30,.78),transparent 48%),
+  url("assets/vice-city-hero.svg") 62% 47%/cover no-repeat !important;
+ box-shadow:0 18px 42px rgba(4,3,18,.38);
+}
+header:after{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:linear-gradient(180deg,rgba(8,7,25,.06),transparent 48%,rgba(8,7,25,.45));
+}
+header h1,header .sub,.top-actions{position:relative;z-index:1}
+header h1{font-size:clamp(23px,3vw,30px);max-width:720px}
+header .sub{margin:10px 0 0 54px;max-width:540px;color:#f3e5f4;font-size:14px;line-height:1.65}
+.top-actions{margin:20px 0 0 54px;max-width:680px;gap:9px}
+.top-actions a,.top-actions button{min-height:46px;padding:10px 15px;border-radius:13px;font-size:13px}
+.top-actions .theme-toggle{margin-left:0}
+main{padding-top:22px !important;max-width:1080px}
+.command-center{
+ min-height:0 !important;
+ display:grid;grid-template-columns:minmax(0,1.15fr) minmax(250px,.85fr);
+ gap:24px;align-items:center;
+ padding:26px;
+ margin:0 0 20px;
+ border:1px solid rgba(255,105,190,.8);
+ border-radius:24px;
+ background:
+  radial-gradient(ellipse at 100% 0%,rgba(220,50,160,.18),transparent 46%),
+  linear-gradient(145deg,rgba(29,17,51,.98),rgba(12,17,40,.98)) !important;
+ box-shadow:0 20px 50px rgba(2,3,17,.48),inset 0 1px rgba(255,255,255,.08);
+}
+.command-center:before{display:none !important}
+.command-center:after{content:"SOP & PROOF • INCIDENT CONTROL";right:18px;bottom:12px;opacity:.42}
+.command-copy{max-width:620px}
+.command-copy h2{font-size:clamp(32px,5vw,48px);line-height:1.06}
+.command-copy p{font-size:15px;line-height:1.7;max-width:560px}
+.command-actions{gap:11px;margin-top:22px}
+.command-actions a{min-height:50px;padding:12px 18px;border-radius:14px;font-size:14px}
+.command-primary{box-shadow:0 8px 24px rgba(255,62,165,.28)}
+.command-secondary{background:rgba(14,13,35,.82);border:1px solid #a85b9b}
+.overview-panel{
+ background:rgba(8,11,31,.78) !important;
+ border:1px solid rgba(255,125,201,.42) !important;
+ border-radius:19px;
+ padding:19px;
+ backdrop-filter:blur(16px);
+}
+.overview-stat strong{font-size:50px}
+.dashboard-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.dashboard-metric{padding:10px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.045)}
+.dashboard-metric span{display:block;color:#d7c5df;font-size:10px;line-height:1.4}
+.dashboard-metric strong{display:block;margin-top:5px;color:#fff;font-size:20px}
+.card{margin-top:18px}
+.bottom-nav{background:rgba(20,13,38,.95)!important;border-color:#80517e!important}
+.bottom-nav a,.bottom-nav button{background:#251b3c!important;color:#fff!important;border-color:#66466f!important}
+.bottom-nav a.primary{background:linear-gradient(110deg,#ff3ea5,#a53bd5)!important;color:#fff!important}
+body[data-theme="dark"] header{
+ background:
+  linear-gradient(90deg,rgba(14,8,31,.98) 0%,rgba(20,9,37,.86) 38%,rgba(17,10,35,.28) 75%,rgba(12,14,36,.12) 100%),
+  linear-gradient(0deg,rgba(13,10,30,.78),transparent 48%),
+  url("assets/vice-city-hero.svg") 62% 47%/cover no-repeat !important;
+}
+@media(max-width:680px){
+ header,body[data-theme="light"] header{
+  min-height:510px;
+  padding:18px 15px 24px;
+  background:
+   linear-gradient(90deg,rgba(13,8,30,.96) 0%,rgba(18,9,35,.82) 45%,rgba(18,9,35,.28) 100%),
+   linear-gradient(0deg,rgba(12,9,29,.8),transparent 55%),
+   url("assets/vice-city-hero.svg") 62% center/cover no-repeat !important;
+ }
+ header h1{font-size:21px;gap:10px}
+ header h1:before{flex-basis:42px;width:42px;height:42px}
+ header .sub{margin:10px 0 0 0;max-width:350px;font-size:13px;line-height:1.55}
+ .top-actions{margin:16px 0 0;gap:7px;max-width:100%}
+ .top-actions a,.top-actions button{min-height:43px;padding:9px 11px;font-size:11px}
+ .top-actions .theme-toggle{margin-left:0}
+ main{padding:16px 11px 145px !important}
+ .command-center{
+  grid-template-columns:minmax(0,1fr);
+  gap:17px;padding:20px 16px;
+  border-radius:20px;margin-bottom:15px;
+ }
+ .command-copy h2{font-size:34px;line-height:1.08}
+ .command-copy p{font-size:14px;line-height:1.65}
+ .command-actions{gap:8px;margin-top:18px}
+ .command-actions a{flex:1 1 auto;min-height:48px;padding:11px 12px;font-size:12px}
+ .overview-panel{padding:15px}
+ .overview-stat{margin:14px 0 13px}
+ .overview-stat strong{font-size:44px}
+ .dashboard-metrics{gap:6px}
+ .dashboard-metric{padding:8px 7px}
+ .dashboard-metric span{font-size:9px}
+ .dashboard-metric strong{font-size:18px}
+ .overview-bottom{font-size:10px;gap:7px}
+ .card{margin-top:13px}
+}
+
 </style>
 </head>
 <body>
