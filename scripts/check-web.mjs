@@ -15,8 +15,8 @@ const startupAt = html.indexOf('(function setupGuidedReport');
 if (helperAt < 0 || startupAt < 0 || helperAt > startupAt) {
   throw new Error('DOM helper must be initialized before guided report startup.');
 }
-if (html.includes('window.loadOcrLibFallback') || html.includes('Banjara Hills 150')) {
-  throw new Error('A stale OCR handler or hard-coded store default remains.');
+if (html.includes('window.loadOcrLibFallback') || !html.includes("const DEFAULT_STORE_NAME='Banjara Hills 150'")) {
+  throw new Error('The fixed Banjara Hills 150 store default or current OCR handler is missing.');
 }
 const required = ['incidentForm','orderShot','category','orderId','store','incidentAt','supporting','notes','records','recordSearch','languageToggle','languageToggleMobile'];
 for (const id of required) {
