@@ -1590,6 +1590,62 @@ main{
  .dashboard-metric strong{font-size:18px !important}
 }
 
+
+/* FINAL CINEMATIC HERO OVERRIDE — use the uploaded photographic artwork cleanly */
+html,body{background:#100817!important}
+header,body[data-theme="light"] header,body[data-theme="dark"] header{
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  min-height:700px!important;height:auto!important;
+  padding:34px max(18px,calc((100% - 1040px)/2)) 230px!important;
+  border:0!important;border-bottom:2px solid rgba(255,77,177,.82)!important;
+  background-color:#100817!important;
+  background-image:
+    linear-gradient(90deg,rgba(10,5,21,.88) 0%,rgba(10,5,21,.70) 34%,rgba(10,5,21,.18) 67%,rgba(10,5,21,.04) 100%),
+    linear-gradient(0deg,rgba(10,5,21,.52),transparent 48%),
+    url("assets/vice-city-cinematic.webp")!important;
+  background-repeat:no-repeat!important;background-size:cover!important;
+  background-position:center 44%!important;
+  box-shadow:none!important;
+}
+header:after{
+  content:""!important;position:absolute!important;inset:0!important;z-index:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg,rgba(10,5,21,.04) 45%,rgba(10,5,21,.42) 100%)!important;
+}
+header h1,header .sub,.top-actions{position:relative!important;z-index:1!important}
+header h1{color:#fff!important;text-shadow:0 2px 18px rgba(0,0,0,.45)!important}
+header .sub{color:#fff4fb!important;text-shadow:0 2px 12px rgba(0,0,0,.65)!important}
+.top-actions a,.top-actions button{box-shadow:0 8px 24px rgba(0,0,0,.34)!important}
+main{position:relative!important;z-index:2!important;margin:-150px auto 0!important}
+.command-center{
+  background:
+    linear-gradient(90deg,rgba(19,10,34,.97) 0%,rgba(19,10,34,.91) 58%,rgba(19,10,34,.72) 100%),
+    url("assets/vice-city-cinematic.webp") 82% 54%/auto 145% no-repeat,
+    #1a102e!important;
+}
+.command-center:after{opacity:.14!important}
+@media(max-width:680px){
+  header,body[data-theme="light"] header,body[data-theme="dark"] header{
+    min-height:560px!important;height:auto!important;
+    padding:22px 15px 190px!important;
+    background-size:cover!important;
+    background-position:68% center!important;
+    background-image:
+      linear-gradient(90deg,rgba(10,5,21,.82) 0%,rgba(10,5,21,.62) 42%,rgba(10,5,21,.20) 100%),
+      linear-gradient(0deg,rgba(10,5,21,.55),transparent 58%),
+      url("assets/vice-city-cinematic.webp")!important;
+  }
+  header .sub{max-width:350px!important;margin:12px 0 0!important}
+  .top-actions{margin:17px 0 0!important}
+  main{margin:-112px auto 0!important;padding:0 11px 65px!important}
+  .command-center{
+    background:
+      linear-gradient(90deg,rgba(19,10,34,.96),rgba(19,10,34,.88)),
+      url("assets/vice-city-cinematic.webp") 78% 52%/auto 135% no-repeat,
+      #1a102e!important;
+  }
+}
+
 </style>
 </head>
 <body>
