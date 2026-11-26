@@ -2035,6 +2035,114 @@ main{
   .dashboard-metric{padding:10px 7px!important}
 }
 
+
+/* MOBILE REFERENCE MATCH — brighter character scene + separate Vice City skyline card */
+header,body[data-theme="light"] header,body[data-theme="dark"] header{
+  background-image:
+    linear-gradient(90deg,rgba(12,5,23,.62) 0%,rgba(12,5,23,.43) 31%,rgba(12,5,23,.10) 59%,rgba(12,5,23,.02) 100%),
+    linear-gradient(0deg,rgba(12,5,23,.40),transparent 44%),
+    url("./vice-city-cinematic-replacement.webp?v=20261126-3")!important;
+  background-size:cover!important;
+  background-position:60% 48%!important;
+}
+header:after{
+  background:linear-gradient(180deg,rgba(12,5,23,.00) 40%,rgba(12,5,23,.10) 70%,rgba(12,5,23,.42) 100%)!important;
+}
+header h1{
+  max-width:570px!important;
+  font-size:clamp(34px,5.8vw,48px)!important;
+  letter-spacing:-1.8px!important;
+}
+.command-center{
+  background:
+    linear-gradient(90deg,rgba(19,9,34,.97) 0%,rgba(19,9,34,.90) 45%,rgba(19,9,34,.32) 100%),
+    url("./assets/vice-city-hero.webp?v=20261126-3") 78% center/cover no-repeat,
+    #1a102e!important;
+}
+@media(max-width:680px){
+  header,body[data-theme="light"] header,body[data-theme="dark"] header{
+    min-height:0!important;
+    padding:20px 15px 120px!important;
+    background-image:
+      linear-gradient(90deg,rgba(12,5,23,.58) 0%,rgba(12,5,23,.39) 40%,rgba(12,5,23,.08) 100%),
+      linear-gradient(0deg,rgba(12,5,23,.48),transparent 52%),
+      url("./vice-city-cinematic-replacement.webp?v=20261126-3")!important;
+    background-size:cover!important;
+    background-position:62% 46%!important;
+  }
+  header:after{
+    background:linear-gradient(180deg,rgba(12,5,23,.00) 42%,rgba(12,5,23,.12) 70%,rgba(12,5,23,.48) 100%)!important;
+  }
+  header h1{
+    max-width:540px!important;
+    gap:12px!important;
+    font-size:clamp(30px,6.7vw,43px)!important;
+    line-height:.98!important;
+    letter-spacing:-1.35px!important;
+  }
+  header h1:before{
+    width:78px!important;height:78px!important;flex:0 0 78px!important;
+    border-radius:22px!important;
+  }
+  header .sub{
+    max-width:510px!important;
+    margin:19px 0 0!important;
+    font-size:clamp(15px,2.5vw,18px)!important;
+    line-height:1.52!important;
+    text-shadow:0 2px 12px rgba(10,5,21,.75)!important;
+  }
+  .top-actions{
+    gap:9px!important;
+    margin:20px 0 0!important;
+  }
+  .top-actions a,.top-actions button{
+    min-height:54px!important;
+    padding:11px 9px!important;
+    font-size:13px!important;
+    border-radius:16px!important;
+  }
+  main{
+    margin:-72px auto 0!important;
+    padding:0 11px 70px!important;
+  }
+  .command-center{
+    min-height:0!important;
+    padding:24px 19px!important;
+    border-radius:24px!important;
+    background:
+      linear-gradient(90deg,rgba(19,9,34,.97) 0%,rgba(19,9,34,.90) 54%,rgba(19,9,34,.42) 100%),
+      url("./assets/vice-city-hero.webp?v=20261126-3") 82% center/cover no-repeat,
+      #1a102e!important;
+    box-shadow:0 0 28px #ec3fae30,0 22px 52px #0008!important;
+  }
+  .command-center:after{display:none!important;content:none!important}
+  .command-copy h2{
+    max-width:460px!important;
+    font-size:clamp(35px,8.6vw,48px)!important;
+    line-height:1.02!important;
+    letter-spacing:-1.5px!important;
+    margin:18px 0 15px!important;
+  }
+  .command-copy p{
+    max-width:490px!important;
+    font-size:clamp(15px,2.6vw,18px)!important;
+    line-height:1.58!important;
+  }
+  .command-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:10px!important;
+    margin-top:24px!important;
+  }
+  .command-actions a{
+    min-width:0!important;
+    min-height:62px!important;
+    padding:12px 9px!important;
+    font-size:clamp(14px,2.7vw,17px)!important;
+    border-radius:16px!important;
+  }
+}
+
 </style>
 </head>
 <body>
