@@ -2197,7 +2197,7 @@ const OCR_CDN_CONFIGS=[
  {script:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/tesseract.min.js',worker:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/worker.min.js',core:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0'},
  {script:'https://unpkg.com/tesseract.js@5.0.0/dist/tesseract.min.js',worker:'https://unpkg.com/tesseract.js@5.0.0/dist/worker.min.js',core:'https://unpkg.com/tesseract.js-core@5.0.0'}
 ];
-let ocrLibPromise=null,ocrWorkerPromise=null,ocrToken=0,lastAutoId='',ocrState='loading',ocrWorkerConfig=null;
+let ocrLibPromise=null,ocrWorkerPromise=null,ocrToken=0,lastAutoId='',lastAutoStore='',ocrState='loading',ocrWorkerConfig=null;
 function loadOcrLibrary(){
  if(window.Tesseract)return Promise.resolve(window.Tesseract);
  if(ocrLibPromise)return ocrLibPromise;
@@ -2472,6 +2472,61 @@ async function readScreenshotTimeFromImage(file){
   const result=await recognize(top,worker,'6');
   return {time:extractScreenshotTime(result.text),text:result.text||''};
 }
+function extractStoreNameFromText(rawText){
+  if(!rawText)return null;
+  const lines=String(rawText).replace(/\r/g,'\n').split(/\n+/).map(x=>x.replace(/[•|]/g,' ').replace(/\s+/g,' ').trim()).filter(Boolean);
+  const cleanCandidate=(value)=>{
+    let v=String(value||'').replace(/^[\s:：\-–—|]+|[\s|]+$/g,'').replace(/\s{2,}/g,' ').trim();
+    v=v.replace(/\b(?:order\s*(?:id|no|number)|OD\d{8,}|invoice|total|amount|date|time)\b.*$/i,'').trim();
+    if(v.length<3||v.length>70)return null;
+    if(/^(store|store name|hub|hub name|store\/hub|pickup|pick up|outlet|seller|order details|order summary)$/i.test(v))return null;
+    if(/^(?:OD)?\d{8,}$/i.test(v)||/^\d{1,2}[:.]\d{2}/.test(v))return null;
+    if(!/[a-zA-Z]/.test(v))return null;
+    return v;
+  };
+  const label=/^(?:store(?:\s*\/\s*hub)?(?:\s*name)?|hub(?:\s*name)?|pick[\s-]*up(?:\s*store)?|pickup\s*location|outlet)\s*[:：\-–—]\s*(.*)$/i;
+  for(let i=0;i<lines.length;i++){
+    const m=lines[i].match(label);
+    if(m){
+      const same=cleanCandidate(m[1]);
+      if(same)return same;
+      for(let j=i+1;j<Math.min(lines.length,i+3);j++){
+        const next=cleanCandidate(lines[j]);
+        if(next&&!/^(?:order|customer|delivery|address|phone|mobile)\b/i.test(next))return next;
+      }
+    }
+    if(/^(?:store(?:\s*\/\s*hub)?(?:\s*name)?|hub(?:\s*name)?|pick[\s-]*up(?:\s*store)?|pickup\s*location|outlet)$/i.test(lines[i])){
+      for(let j=i+1;j<Math.min(lines.length,i+3);j++){
+        const next=cleanCandidate(lines[j]);
+        if(next&&!/^(?:order|customer|delivery|address|phone|mobile)\b/i.test(next))return next;
+      }
+    }
+  }
+  return null;
+}
+async function readStoreNameFromImage(file){
+  const img=await loadImageEl(file);
+  if(!img.naturalWidth||!img.naturalHeight)return {store:null,text:''};
+  const worker=await getOcrWorker();
+  const seen=[];
+  const full=preprocess(drawRegion(img,null,1.65,3000),'grey');
+  for(const psm of ['11','6']){
+    const result=await recognize(full,worker,psm);
+    seen.push(result.text||'');
+    const store=extractStoreNameFromText(result.text);
+    if(store)return {store,text:seen.join('\n---\n')};
+  }
+  const upperHeight=Math.max(1,Math.round(img.naturalHeight*.72));
+  const upper=preprocess(drawRegion(img,{x:0,y:0,w:img.naturalWidth,h:upperHeight},2.0,3200),'grey');
+  for(const psm of ['11','6']){
+    const result=await recognize(upper,worker,psm);
+    seen.push(result.text||'');
+    const store=extractStoreNameFromText(result.text);
+    if(store)return {store,text:seen.join('\n---\n')};
+  }
+  return {store:null,text:seen.join('\n---\n')};
+}
+
 function applyScreenshotTime(time){
   if(!time)return false;
   const field=$('incidentAt'),current=field.value||localDateTime(new Date());
@@ -2503,6 +2558,24 @@ async function runOrderOcr(file){
     if(token!==ocrToken)return;
     const screenshotTime=timeRead.time||extractScreenshotTime(result.text||'');
     const timeApplied=applyScreenshotTime(screenshotTime);
+    let storeRead={store:null,text:''};
+    try{storeRead=await readStoreNameFromImage(file);}catch(storeErr){console.warn('Store-name OCR could not complete:',storeErr);}
+    if(token!==ocrToken)return;
+    if(storeRead.text)$('ocrText').textContent=(($('ocrText').textContent||'')+'\n--- STORE NAME SCAN ---\n'+storeRead.text).slice(0,9000);
+    const storeField=$('store');
+    let storeApplied=false;
+    if(storeRead.store&&storeField&&(!storeField.value.trim()||storeField.value===lastAutoStore)){
+      storeField.value=storeRead.store;
+      lastAutoStore=storeRead.store;
+      storeField.dispatchEvent(new Event('input',{bubbles:true}));
+      storeField.dispatchEvent(new Event('change',{bubbles:true}));
+      storeApplied=true;
+    }
+    const storeMessage=storeApplied
+      ? (currentLanguage==='te'?'స్టోర్ పేరు గుర్తించబడింది: ':'Store name detected: ')+storeRead.store+'. Please verify.'
+      : (storeRead.store
+          ? (currentLanguage==='te'?'స్టోర్ పేరు గుర్తించబడింది. ఇప్పటికే నమోదు చేసిన విలువ మార్చలేదు.':'Store name detected, but your existing entry was kept.')
+          : (currentLanguage==='te'?'స్టోర్ పేరు గుర్తించలేకపోయింది. దయచేసి మాన్యువల్‌గా నమోదు చేయండి.':'Store name not detected. Please enter it manually.'));
     if(result.id){
       const field=$('orderId');
       if(!field.value.trim()||field.value===lastAutoId){field.value=result.id;lastAutoId=result.id;field.dispatchEvent(new Event('input',{bubbles:true}));field.dispatchEvent(new Event('change',{bubbles:true}));}
@@ -2510,10 +2583,10 @@ async function runOrderOcr(file){
         confidenceEl.textContent=uiText[currentLanguage].ocrConfidence+': '+result.confidence+'% · '+uiText[currentLanguage].ocrVerify;
         confidenceEl.hidden=false;
       }
-      setOcrStatus(uiText[currentLanguage].ocrMessages.detected+(timeApplied?' '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0'):''),false,'detected');
+      setOcrStatus(uiText[currentLanguage].ocrMessages.detected+(timeApplied?' '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0'):'')+' · '+storeMessage,false,'detected');
     }else{
       $('ocrDebug').open=true;
-      setOcrStatus(uiText[currentLanguage].ocrMessages.notFound+(timeApplied?' '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0'):''),true,'notFound');
+      setOcrStatus(uiText[currentLanguage].ocrMessages.notFound+(timeApplied?' '+String(screenshotTime.hour).padStart(2,'0')+':'+String(screenshotTime.minute).padStart(2,'0'):'')+' · '+storeMessage,true,'notFound');
     }
   }catch(err){
     if(token!==ocrToken)return;
