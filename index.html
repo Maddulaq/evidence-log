@@ -670,6 +670,145 @@ body[data-theme="dark"] .pill,body[data-theme="dark"] .section-number{background
  .command-center .overview-panel{background:rgba(7,13,32,.68)}
 }
 
+
+/* Modern premium evidence workspace — visual layer only */
+:root{
+ --bg:#f5f2fb;--surface:#fffaff;--surface-soft:#f7f2fc;--ink:#211a36;
+ --muted:#766c89;--line:#e8dff1;--brand:#7137d5;--brand-dark:#5522b3;
+ --brand-soft:#eee5ff;--radius:22px;--shadow:0 12px 32px rgba(68,42,104,.09);
+}
+body,body[data-theme="light"]{
+ color-scheme:light;background:
+ radial-gradient(ellipse at 8% 0%,rgba(237,210,255,.8),transparent 34rem),
+ radial-gradient(ellipse at 95% 15%,rgba(210,239,255,.7),transparent 30rem),
+ #f5f2fb;color:var(--ink);
+}
+header,body[data-theme="light"] header{
+ position:relative;overflow:hidden;padding:20px max(18px,calc((100% - 1040px)/2));
+ background:linear-gradient(112deg,#fffaff 0%,#f1e9ff 55%,#e8f5ff 100%);
+ color:#24183d;border-bottom:1px solid #e4d8f3;box-shadow:0 8px 28px rgba(65,38,105,.06);
+}
+header:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.45;background:radial-gradient(circle at 82% 10%,#fff 0 2px,transparent 3px),radial-gradient(circle at 92% 70%,#c7a5ff 0 1px,transparent 2px)}
+header h1{display:flex;align-items:center;gap:12px;font-size:23px;letter-spacing:-.7px;color:#24183d}
+header h1:before{content:"";display:inline-grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#a66cff,#6028c7);box-shadow:0 8px 20px #7137d544}
+header h1:after{content:"";display:none}
+header .sub{margin:5px 0 0 54px;color:#76688d;font-size:13px}
+.top-actions{margin:14px 0 0 54px;gap:8px}
+.top-actions a:first-child{background:linear-gradient(110deg,#8b4be7,#602ac4);box-shadow:0 6px 16px #7137d533}
+.top-actions a.outline,.top-actions button.outline{background:#ffffffb8;color:#4d3b68;border:1px solid #e0d2ef;backdrop-filter:blur(12px)}
+.top-actions .theme-toggle{margin-left:auto}
+main{max-width:1040px;padding-bottom:145px}
+.command-center{border-radius:26px;border:1px solid #8861c4;box-shadow:0 18px 44px #21123c33}
+.card{border-radius:22px;background:rgba(255,252,255,.94);border:1px solid #e6d9ef;box-shadow:0 12px 32px rgba(68,42,104,.075);backdrop-filter:blur(14px)}
+.card h2{color:#2a2040}
+.section-number{background:#eee5ff;color:#6934c5;border:1px solid #ddcafa}
+.section-subtitle,label{color:#59496d}
+.record-tools{margin-top:20px;padding:0}
+.record-tools input{height:48px;padding-left:42px;border-radius:15px;background:#fff;border:1px solid #e4d9ef;box-shadow:0 5px 18px #3920540b;color:#251b3b}
+.search-symbol{left:15px;color:#8055c4}
+.search-count{padding:8px 12px;border-radius:99px;background:#f0e8fb;color:#6c4a9b;font-weight:700}
+.selection-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px;padding:13px 15px;border:1px solid #e7ddf1;border-radius:16px;background:#fffaff}
+.selection-tools strong{font-size:14px;color:#2b2042}
+.selection-tools small{color:#81758e}
+#records{margin-top:14px!important;display:grid;gap:13px}
+.record{
+ position:relative;display:block;padding:18px 18px 15px;margin:0!important;
+ border:1px solid #e8dff1!important;border-radius:20px!important;
+ background:linear-gradient(145deg,#fff 0%,#fcf9ff 100%)!important;
+ box-shadow:0 8px 24px rgba(57,34,87,.055)!important;transition:border-color .18s,box-shadow .18s,transform .18s;
+}
+.record:has([data-select-record]:checked){border:1.5px solid #8a50e5!important;box-shadow:0 10px 30px rgba(113,55,213,.12)!important}
+.record-heading{display:flex;align-items:center;gap:12px;min-width:0}
+.record-icon{display:grid;place-items:center;flex:0 0 46px;width:46px;height:46px;border-radius:15px;background:linear-gradient(145deg,#eee5ff,#e5f1ff);color:#7439d1;font-size:24px;font-weight:800}
+.record-title-wrap{flex:1;min-width:0}
+.record h3{margin:0 0 4px!important;color:#241a38!important;font-size:17px!important;line-height:1.3;letter-spacing:-.35px}
+.record-date{font-size:10px;font-weight:800;letter-spacing:.55px;color:#857895}
+.record-select{display:flex!important;align-items:center;justify-content:center;position:relative;flex:0 0 42px;width:42px;height:42px;margin:0!important;cursor:pointer}
+.record-select input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer}
+.selection-check{display:grid;place-items:center;width:30px;height:30px;border:2px solid #c9bfd5;border-radius:10px;color:transparent;font-size:19px;font-weight:900;background:#fff;transition:all .16s}
+.record-select input:checked+.selection-check{background:linear-gradient(145deg,#9255ed,#642bc6);border-color:#7c42d7;color:#fff;box-shadow:0 5px 13px #7137d544}
+.record-select input:focus-visible+.selection-check{outline:3px solid #a87bea;outline-offset:3px}
+.record-meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:14px 0 10px;padding:10px 12px;border-radius:12px;background:#f6f1fb;color:#57486c;font-size:12px;overflow-wrap:anywhere}
+.record-meta b{font-size:9px;letter-spacing:.7px;color:#907fa3;margin-right:5px}
+.record-description{margin:0!important;color:#5f536f!important;font-size:13px!important;line-height:1.6}
+.record-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:13px}
+.record-evidence{display:flex;gap:5px}
+.evidence-thumb{position:relative;width:54px;height:48px;border-radius:9px;overflow:hidden;background:#eee8f6;border:1px solid #e2d8eb}
+.evidence-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.evidence-more{position:absolute;inset:0;display:grid;place-items:center;background:#211735bb;color:white;font-weight:800;font-size:13px}
+.record-evidence-count,.record-submit-date{font-size:10px;color:#8a7d98}
+.record-submit-date{margin-left:auto}
+.record-actions{display:flex;gap:9px;margin-top:14px!important;padding-top:13px;border-top:1px solid #eee7f3}
+.record-actions button{min-height:40px;border-radius:12px;flex:1}
+.record-actions button.secondary{background:#eee7ff;color:#5428a7;border:1px solid #e1d2fa;box-shadow:none}
+.record-actions button.danger{background:#fff0f2;color:#bd4057;border:1px solid #f5d9df;box-shadow:none}
+.selection-tools{transition:opacity .18s,transform .18s}
+body.has-selection .selection-tools{
+ position:fixed;z-index:1000;left:50%;bottom:86px;transform:translateX(-50%);
+ width:min(760px,calc(100% - 28px));margin:0;padding:13px 15px;
+ border:1px solid #cbb4ef;border-radius:20px;
+ background:rgba(255,252,255,.92);box-shadow:0 14px 42px rgba(38,20,65,.2);
+ backdrop-filter:blur(22px);
+}
+body.has-selection .selection-tools strong{font-size:14px}
+body.has-selection .selection-tools .actions{gap:7px}
+body.has-selection #combinedPdfBtn{background:linear-gradient(110deg,#8748e5,#5e25c3);border:0;border-radius:13px;min-height:46px;padding:10px 18px;box-shadow:0 7px 18px #7137d533}
+body.has-selection #combinedPdfBtn:disabled{opacity:.45}
+#selectAllBtn{min-height:42px;border-radius:12px}
+.bottom-nav{z-index:1001;background:rgba(255,252,255,.94);border:1px solid #e7d9f1;border-radius:18px;box-shadow:0 10px 35px rgba(40,20,65,.15);backdrop-filter:blur(22px)}
+.bottom-nav a{border-radius:12px;background:#f0e9f8;color:#49375f}
+.bottom-nav a.primary{background:linear-gradient(110deg,#e34da4,#9c42d3);color:#fff}
+.bottom-nav button{border-radius:12px;background:#f0e9f8;color:#49375f;border-color:#e3d7eb}
+button{border-radius:12px}
+button:focus-visible,a:focus-visible{outline-color:#8c5be0!important}
+body[data-theme="dark"]{
+ --bg:#0d1020;--surface:#17152a;--surface-soft:#201b36;--ink:#f6f0ff;--muted:#b8aacb;--line:#403454;--brand:#a77aff;--brand-dark:#8e5de7;--brand-soft:#34254c;
+ background:radial-gradient(ellipse at 10% 0%,#3a2458,transparent 36rem),#0d1020;color:#f6f0ff;
+}
+body[data-theme="dark"] header{background:linear-gradient(112deg,#171329,#28203f 55%,#1b3044);border-color:#49345e;color:#fff}
+body[data-theme="dark"] header h1{color:#fff}
+body[data-theme="dark"] header .sub{color:#c7b9d9}
+body[data-theme="dark"] .card,body[data-theme="dark"] .record{background:linear-gradient(145deg,#1c1930,#17182c)!important;border-color:#45365b!important}
+body[data-theme="dark"] .record h3,body[data-theme="dark"] .card h2{color:#fff!important}
+body[data-theme="dark"] .record-date,body[data-theme="dark"] .record-description,body[data-theme="dark"] .record-evidence-count,body[data-theme="dark"] .record-submit-date{color:#b9abc9!important}
+body[data-theme="dark"] .record-meta{background:#29213d;color:#e0d5ed}
+body[data-theme="dark"] .record-meta b{color:#c0a5e9}
+body[data-theme="dark"] .selection-tools{background:#1d1930;border-color:#574272}
+body[data-theme="dark"] body.has-selection .selection-tools{background:rgba(29,25,48,.94)}
+body[data-theme="dark"] .selection-tools strong{color:#fff}
+body[data-theme="dark"] .selection-tools small{color:#b8aacb}
+body[data-theme="dark"] .record-select .selection-check{background:#201b32;border-color:#716181}
+body[data-theme="dark"] .record-select input:checked+.selection-check{background:#8b53e4;border-color:#a87bea}
+body[data-theme="dark"] .record-actions button.secondary{background:#33264c;color:#eadcff;border-color:#594276}
+body[data-theme="dark"] .record-actions button.danger{background:#482532;color:#ffdce4;border-color:#754052}
+body[data-theme="dark"] .record-tools input{background:#1c1930;color:#fff;border-color:#49395e}
+body[data-theme="dark"] .search-count{background:#302344;color:#e1c8ff}
+body[data-theme="dark"] .bottom-nav{background:rgba(25,21,42,.95);border-color:#49365e}
+body[data-theme="dark"] .bottom-nav a,body[data-theme="dark"] .bottom-nav button{background:#302640;color:#f2eaff;border-color:#51405f}
+@media(max-width:680px){
+ header{padding:16px 14px}
+ header h1{font-size:20px}
+ header .sub{margin-left:0}
+ .top-actions{margin-left:0;gap:6px}
+ .top-actions a,.top-actions button{font-size:11px;padding:8px 9px}
+ .top-actions .theme-toggle{margin-left:0}
+ main{padding:0 11px 150px}
+ .record{padding:15px 13px}
+ .record-icon{flex-basis:42px;width:42px;height:42px}
+ .record h3{font-size:15px!important}
+ .record-meta{gap:7px;display:grid}
+ .record-submit-date{margin-left:0}
+ body.has-selection .selection-tools{bottom:78px;width:calc(100% - 20px);padding:10px 11px;gap:8px}
+ body.has-selection .selection-tools>div:first-child{flex:1 1 100%}
+ body.has-selection .selection-tools small{font-size:10px}
+ body.has-selection .selection-tools .actions{width:100%}
+ body.has-selection #selectAllBtn{flex:0 0 auto}
+ body.has-selection #combinedPdfBtn{flex:1}
+ .bottom-nav{left:9px;right:9px;bottom:max(8px,env(safe-area-inset-bottom));padding:7px;gap:5px}
+ .bottom-nav a,.bottom-nav button{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.record{transition:none}}
+
 </style>
 </head>
 <body>
@@ -1541,7 +1680,7 @@ $('orderShot').addEventListener('change',async()=>{const f=$('orderShot').files[
 $('supporting').addEventListener('change',()=>{const fs=[...$('supporting').files];clearImagePreviews($('supportPreview'));if(fs.length>2){setStatus('Choose no more than 2 supporting photos.',true);$('supporting').value='';return;}for(const f of fs){if(!isImageFile(f)||f.size>MAX_BYTES){setStatus('Each supporting file must be an image no larger than 25 MB.',true);$('supporting').value='';clearImagePreviews($('supportPreview'));return;}const img=document.createElement('img');img.alt='Selected evidence preview';img.src=URL.createObjectURL(f);$('supportPreview').append(img);}setStatus(fs.length?'Selected '+fs.length+' supporting photo(s).':'');});
 $('incidentForm').setAttribute('novalidate','');$('incidentForm').addEventListener('submit',async e=>{e.preventDefault();const shot=$('orderShot').files[0],extras=[...$('supporting').files];if(!shot){setStatus('Order screenshot is mandatory.',true);return;}if(!$('category').value){setStatus('Please select an issue category.',true);return;}if(!/^OD[0-9]{18}$/.test($('orderId').value.trim().toUpperCase())){setStatus('Enter a valid Order ID: OD followed by exactly 18 digits.',true);$('orderId').focus();return;}if(!$('store').value.trim()){setStatus('Enter the actual store or hub name.',true);$('store').focus();return;}if(!$('incidentAt').value||Number.isNaN(new Date($('incidentAt').value).getTime())){setStatus('Enter a valid incident date and time.',true);$('incidentAt').focus();return;}if(extras.length<1||extras.length>2){setStatus('Please upload 1 or 2 supporting evidence photos.',true);return;}if([shot,...extras].some(f=>!isImageFile(f)||f.size>MAX_BYTES)){setStatus('All evidence files must be valid images no larger than 25 MB each.',true);return;}let existingRecords;try{existingRecords=await allRecords();}catch(storageReadError){setStatus('Could not check saved reports on this device: '+(storageReadError.message||'Please reload the page and try again.'),true);return;}const duplicate=findPotentialDuplicate(existingRecords,{orderId:$('orderId').value.trim().toUpperCase(),category:$('category').value,store:$('store').value.trim(),incidentAt:$('incidentAt').value});const duplicateNotice=duplicate?' A similar report already exists; this copy is being saved too.':'';const btn=$('saveBtn');btn.disabled=true;setStatus('Saving on this device…');try{const now=new Date().toISOString(),record={id:createIncidentId(),category:$('category').value,orderId:$('orderId').value.trim(),store:$('store').value.trim(),incidentAt:new Date($('incidentAt').value).toISOString(),submittedAt:now,notes:$('notes').value.trim(),orderScreenshot:{name:shot.name,data:await readFile(shot)},supportingEvidence:await Promise.all(extras.map(async f=>({name:f.name,data:await readFile(f)})))};await putRecord(record);const persisted=await getLocalRecord(record.id);if(!recordHasCompleteEvidence(persisted,shot,extras))throw new Error('The report details were written, but the screenshot or supporting photos could not be verified in device storage. Your form has been kept; please try again.');try{await clearDraftRecord();}catch(draftError){console.warn('Saved report, but could not clear its draft',draftError);}draftFiles={orderScreenshot:null,supportingEvidence:[]};$('incidentForm').reset();$('incidentAt').value=localDateTime(new Date());$('store').value='';$('orderPreview').innerHTML='';clearImagePreviews($('supportPreview'));setStatus('Incident, order screenshot and '+extras.length+' supporting photo(s) saved and verified on this device.'+duplicateNotice);try{await render();}catch(refreshError){console.error('Incident saved, but record list refresh failed:',refreshError);setStatus('Your incident and evidence were saved successfully. Reload the page to refresh the saved-record list.');}}catch(err){setStatus('Could not save report: '+(err.message||'Please try again.'),true);}finally{btn.disabled=false;}});
 const selectedRecordIds=new Set();
-function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' complaint'+(n===1?'':'s')+' selected');if(btn)btn.disabled=n===0;const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');}
+function updateSelectionUI(){const n=selectedRecordIds.size;const label=document.getElementById('selectionCount'),btn=document.getElementById('combinedPdfBtn');if(label)label.textContent=currentLanguage==='te'?(n+' ఫిర్యాదులు ఎంపికయ్యాయి'):(n+' report'+(n===1?'':'s')+' selected');if(btn){btn.disabled=n===0;btn.textContent=currentLanguage==='te'?'ఎంపిక చేసిన వాటికి PDF సృష్టించండి':'Generate combined PDF';}const all=document.getElementById('selectAllBtn');if(all)all.textContent=currentLanguage==='te'?(n?'ఎంపిక తొలగించండి':'అన్నీ ఎంచుకోండి'):(n?'Clear selection':'Select all');document.body.classList.toggle('has-selection',n>0);}
 function updateDashboardMetrics(rows){
  const week=document.getElementById('dashboardWeek'),types=document.getElementById('dashboardTypes'),evidence=document.getElementById('dashboardEvidence');
  const now=new Date(),start=new Date(now);start.setDate(now.getDate()-6);start.setHours(0,0,0,0);
@@ -1549,7 +1688,43 @@ function updateDashboardMetrics(rows){
  if(types)types.textContent=new Set(rows.map(r=>r.category).filter(Boolean)).size;
  if(evidence)evidence.textContent=rows.reduce((sum,r)=>sum+1+(Array.isArray(r.supportingEvidence)?r.supportingEvidence.length:0),0);
 }
-async function render(){const rows=await allRecords();$('count').textContent=rows.length;updateDashboardMetrics(rows);const host=$('records');host.innerHTML='';if(!rows.length){selectedRecordIds.clear();host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';updateSelectionUI();applyRecordSearch();return;}const validIds=new Set(rows.map(r=>r.id));for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);for(const r of rows){const div=document.createElement('article');div.className='record';const date=new Date(r.submittedAt).toLocaleString();const canDelete=true;div.innerHTML='<label class="record-select"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(selectedRecordIds.has(r.id)?'checked':'')+'><span>'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'</span></label><h3>'+esc(r.category)+'</h3><p>Order: '+esc(r.orderId)+' · Store: '+esc(r.store)+'</p><p>'+(currentLanguage==='te'?'ఘటన: ':'Incident: ')+esc(new Date(r.incidentAt).toLocaleString())+' · '+(currentLanguage==='te'?'సమర్పించిన సమయం: ':'Submitted: ')+esc(date)+'</p><p>'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+' · '+(1+(r.supportingEvidence||[]).length)+(currentLanguage==='te'?' ఫోటోలు':' image(s)')+'</p><div class="actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">'+(currentLanguage==='te'?'ఈ రికార్డ్ PDF':'Export this record')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">'+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';if(!canDelete){const del=div.querySelector('[data-delete]');if(del)del.remove();}host.append(div);}updateSelectionUI();applyRecordSearch();}
+async function render(){
+ const rows=await allRecords();
+ $('count').textContent=rows.length;
+ updateDashboardMetrics(rows);
+ const host=$('records');
+ host.innerHTML='';
+ if(!rows.length){
+  selectedRecordIds.clear();
+  host.innerHTML='<p class="hint">'+(currentLanguage==='te'?'ఇంకా రికార్డులు సేవ్ చేయలేదు.':'No records saved yet.')+'</p>';
+  updateSelectionUI();applyRecordSearch();return;
+ }
+ const validIds=new Set(rows.map(r=>r.id));
+ for(const id of selectedRecordIds)if(!validIds.has(id))selectedRecordIds.delete(id);
+ for(const r of rows){
+  const div=document.createElement('article');
+  div.className='record';
+  const incidentDate=new Date(r.incidentAt).toLocaleString();
+  const submittedDate=new Date(r.submittedAt).toLocaleString();
+  const isSelected=selectedRecordIds.has(r.id);
+  const extras=Array.isArray(r.supportingEvidence)?r.supportingEvidence:[];
+  const images=[r.orderScreenshot&&r.orderScreenshot.data?{data:r.orderScreenshot.data,label:currentLanguage==='te'?'ఆర్డర్ స్క్రీన్‌షాట్':'Order screenshot'}:null,...extras.map((x,i)=>x&&x.data?{data:x.data,label:(currentLanguage==='te'?'ఆధార చిత్రం ':'Evidence photo ')+(i+1)}:null)].filter(Boolean);
+  const thumbHtml=images.length?'<div class="record-evidence" aria-label="'+(currentLanguage==='te'?'ఆధార చిత్రాలు':'Evidence previews')+'">'+images.slice(0,3).map((x,i)=>'<div class="evidence-thumb"><img src="'+esc(x.data)+'" alt="'+esc(x.label)+'" loading="lazy">'+(i===2&&images.length>3?'<span class="evidence-more">+'+(images.length-3)+'</span>':'')+'</div>').join('')+'</div>':'';
+  const categoryIcon=/frozen|cold|చల్ల|ఫ్రోజెన్/i.test(r.category)?'❄':/bag|బ్యాగ్/i.test(r.category)?'▱':/wrong|incorrect|తప్పు/i.test(r.category)?'⚠':'▤';
+  div.innerHTML=
+   '<div class="record-heading">'+
+    '<span class="record-icon" aria-hidden="true">'+categoryIcon+'</span>'+
+    '<div class="record-title-wrap"><h3>'+esc(r.category)+'</h3><span class="record-date">'+(currentLanguage==='te'?'ఘటన సమయం · ':'INCIDENT · ')+esc(incidentDate)+'</span></div>'+
+    '<label class="record-select" title="'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Include in combined PDF')+'"><input type="checkbox" data-select-record="'+esc(r.id)+'" '+(isSelected?'checked':'')+' aria-label="'+(currentLanguage==='te'?'కలిపిన PDF కోసం ఎంచుకోండి':'Select for combined PDF')+'"><span class="selection-check" aria-hidden="true">✓</span></label>'+
+   '</div>'+
+   '<div class="record-meta"><span><b>'+(currentLanguage==='te'?'ఆర్డర్':'ORDER')+'</b> '+esc(r.orderId)+'</span><span><b>'+(currentLanguage==='te'?'స్టోర్':'STORE')+'</b> '+esc(r.store)+'</span></div>'+
+   '<p class="record-description">'+esc(r.notes||(currentLanguage==='te'?'వివరణ లేదు':'No description'))+'</p>'+
+   '<div class="record-foot">'+thumbHtml+'<span class="record-evidence-count">'+images.length+' '+(currentLanguage==='te'?'ఆధార ఫైళ్లు':'evidence files')+'</span><span class="record-submit-date">'+(currentLanguage==='te'?'సమర్పణ · ':'SAVED · ')+esc(submittedDate)+'</span></div>'+
+   '<div class="record-actions no-print"><button class="secondary" type="button" data-export="'+esc(r.id)+'">↓ '+(currentLanguage==='te'?'PDF డౌన్‌లోడ్':'Download PDF')+'</button><button class="danger" type="button" data-delete="'+esc(r.id)+'">⌫ '+(currentLanguage==='te'?'తొలగించు':'Delete')+'</button></div>';
+  host.append(div);
+ }
+ updateSelectionUI();applyRecordSearch();
+}
 $('records').addEventListener('change',e=>{const id=e.target.dataset.selectRecord;if(!id)return;if(e.target.checked)selectedRecordIds.add(id);else selectedRecordIds.delete(id);updateSelectionUI();});
 $('selectAllBtn').addEventListener('click',async()=>{const rows=await allRecords();if(selectedRecordIds.size){selectedRecordIds.clear();}else{rows.forEach(r=>selectedRecordIds.add(r.id));}await render();});
 $('combinedPdfBtn').addEventListener('click',async()=>{const rows=await allRecords();const selected=rows.filter(r=>selectedRecordIds.has(r.id)).sort((a,b)=>new Date(a.incidentAt)-new Date(b.incidentAt));if(!selected.length){alert('Select at least one complaint first.');return;}printRecords(selected);});
