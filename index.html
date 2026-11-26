@@ -1932,7 +1932,7 @@ header,body[data-theme="light"] header,body[data-theme="dark"] header{
   background-image:
     linear-gradient(90deg,rgba(12,5,23,.84) 0%,rgba(12,5,23,.70) 30%,rgba(12,5,23,.20) 58%,rgba(12,5,23,.02) 100%),
     linear-gradient(0deg,rgba(12,5,23,.68),transparent 48%),
-    url("./vice-city-cinematic-replacement.webp?v=20261126-2")!important;
+    url("./vice-city-cinematic.webp?v=20261126-2")!important;
   background-repeat:no-repeat!important;background-size:cover!important;
   background-position:center 48%!important;box-shadow:none!important;
 }
@@ -1956,7 +1956,7 @@ main{
   border:2px solid #ed4bb5!important;border-radius:30px!important;
   background:
     linear-gradient(90deg,rgba(19,9,34,.97) 0%,rgba(19,9,34,.91) 46%,rgba(19,9,34,.38) 100%),
-    url("./vice-city-cinematic-replacement.webp?v=20261126-2") 76% 54%/cover no-repeat,
+    url("./vice-city-cinematic.webp?v=20261126-2") 76% 54%/cover no-repeat,
     #1a102e!important;
   box-shadow:0 0 28px #ec3fae30,0 22px 52px #0008!important;
 }
@@ -1980,7 +1980,7 @@ main{
     background-image:
       linear-gradient(90deg,rgba(12,5,23,.86) 0%,rgba(12,5,23,.68) 40%,rgba(12,5,23,.16) 100%),
       linear-gradient(0deg,rgba(12,5,23,.70),transparent 54%),
-      url("./vice-city-cinematic-replacement.webp?v=20261126-2")!important;
+      url("./vice-city-cinematic.webp?v=20261126-2")!important;
   }
   header h1{
     max-width:360px!important;gap:11px!important;
@@ -2012,7 +2012,7 @@ main{
     border-radius:23px!important;
     background:
       linear-gradient(90deg,rgba(19,9,34,.96) 0%,rgba(19,9,34,.88) 58%,rgba(19,9,34,.50) 100%),
-      url("./vice-city-cinematic-replacement.webp?v=20261126-2") 76% 55%/cover no-repeat,
+      url("./vice-city-cinematic.webp?v=20261126-2") 76% 55%/cover no-repeat,
       #1a102e!important;
   }
   .command-copy h2{
@@ -2041,7 +2041,7 @@ header,body[data-theme="light"] header,body[data-theme="dark"] header{
   background-image:
     linear-gradient(90deg,rgba(12,5,23,.62) 0%,rgba(12,5,23,.43) 31%,rgba(12,5,23,.10) 59%,rgba(12,5,23,.02) 100%),
     linear-gradient(0deg,rgba(12,5,23,.40),transparent 44%),
-    url("./vice-city-cinematic-replacement.webp?v=20261126-3")!important;
+    url("./vice-city-cinematic.webp?v=20261126-3")!important;
   background-size:cover!important;
   background-position:60% 48%!important;
 }
@@ -2066,7 +2066,7 @@ header h1{
     background-image:
       linear-gradient(90deg,rgba(12,5,23,.58) 0%,rgba(12,5,23,.39) 40%,rgba(12,5,23,.08) 100%),
       linear-gradient(0deg,rgba(12,5,23,.48),transparent 52%),
-      url("./vice-city-cinematic-replacement.webp?v=20261126-3")!important;
+      url("./vice-city-cinematic.webp?v=20261126-3")!important;
     background-size:cover!important;
     background-position:62% 46%!important;
   }
@@ -2194,7 +2194,7 @@ header .sub{color:#c9c1dc}
 .top-actions{margin-top:12px}
 .top-actions a:first-child{background:linear-gradient(110deg,#ff3cae,#a500e8);color:white}
 .top-actions a.outline,.top-actions button.outline{background:#17152c;color:#f8efff;border-color:#8a4d9d}
-.command-center{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:440px;padding:26px;border:1px solid #b72e9d;border-radius:22px;overflow:hidden;background:linear-gradient(90deg,rgba(8,8,24,.96) 0%,rgba(10,8,25,.75) 42%,rgba(10,8,25,.08) 100%),linear-gradient(0deg,rgba(8,8,24,.94),transparent 56%),url('/evidence-log/vice-city-cinematic-replacement.webp') center 35%/cover no-repeat;box-shadow:0 18px 48px #0007}
+.command-center{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:440px;padding:26px;border:1px solid #b72e9d;border-radius:22px;overflow:hidden;background:linear-gradient(90deg,rgba(8,8,24,.96) 0%,rgba(10,8,25,.75) 42%,rgba(10,8,25,.08) 100%),linear-gradient(0deg,rgba(8,8,24,.94),transparent 56%),url('/evidence-log/vice-city-cinematic.webp') center 35%/cover no-repeat;box-shadow:0 18px 48px #0007}
 .command-center:before{display:none}
 .command-copy{max-width:570px;position:relative;z-index:1}
 .eyebrow{color:#ff9be3}.live-dot{background:#ff49c6;box-shadow:0 0 0 4px #ff49c622}
@@ -3302,21 +3302,7 @@ body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="da
     +'<main class="wrap"><p class="gen">Generated '+esc(when)+' &middot; Records: '+rows.length+'</p>'+recs
     +'<p class="sign">Prepared from records stored on the delivery partner\u2019s device. Each image is the original uploaded screenshot or photograph.<br>Prepared by: <strong>Maddula Venkata Ramana</strong></p>'
     +'</main><script>function printEvidenceReport(){const b=document.getElementById("printReportBtn");if(b){b.disabled=true;b.textContent="Preparing report…";}const imgs=Array.from(document.images);Promise.all(imgs.map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;}))).then(()=>{if(b){b.disabled=false;b.textContent="Print / Save as PDF";}setTimeout(()=>window.print(),250);});}</'+ '/script>
-<script>
-(function applyApprovedDashboard(){
- const main=document.querySelector('main'), overview=document.querySelector('.workspace-overview'), notice=document.querySelector('.notice');
- if(!main||!overview)return;
- const quick=document.createElement('nav');quick.className='quick-actions no-print';quick.setAttribute('aria-label','Quick actions');
- quick.innerHTML='<a class="quick-action" href="#stageEvidence"><span class="qa-icon">▧</span><span>Upload<br>Evidence</span></a><a class="quick-action" href="#recordsSection"><span class="qa-icon">▱</span><span>Saved<br>Reports</span></a><button class="quick-action" type="button" id="quickExport"><span class="qa-icon">⇩</span><span>Export<br>PDF</span></button><button class="quick-action" type="button" id="quickShare"><span class="qa-icon">↗</span><span>Share<br>App</span></button>';
- overview.insertAdjacentElement('afterend',quick);
- document.getElementById('quickExport').addEventListener('click',()=>document.getElementById('exportBtn')?.click());
- document.getElementById('quickShare').addEventListener('click',()=>document.getElementById('shareAppBtn')?.click());
- const nav=document.querySelector('.bottom-nav');
- if(nav){nav.innerHTML='<a class="primary" href="#">⌂<span>Home</span></a><a href="#incidentSection">▤<span>Report</span></a><a href="#recordsSection">▱<span>Records</span></a><button id="moreNav" type="button">☷<span>More</span></button>';
- document.getElementById('moreNav').addEventListener('click',()=>{const target=document.querySelector('.top-actions');target?.scrollIntoView({behavior:'smooth',block:'center'});});}
- const lang=document.getElementById('languageToggle');if(lang)lang.setAttribute('aria-label','Switch interface language');
-})();
-</script>
+
 
 </body></html>';
 }
@@ -3581,4 +3567,19 @@ if(searchInput)searchInput.addEventListener('input',applyRecordSearch);
 
 </script>
 
+<script>
+(function applyApprovedDashboard(){
+ const main=document.querySelector('main'), overview=document.querySelector('.workspace-overview'), notice=document.querySelector('.notice');
+ if(!main||!overview)return;
+ const quick=document.createElement('nav');quick.className='quick-actions no-print';quick.setAttribute('aria-label','Quick actions');
+ quick.innerHTML='<a class="quick-action" href="#stageEvidence"><span class="qa-icon">▧</span><span>Upload<br>Evidence</span></a><a class="quick-action" href="#recordsSection"><span class="qa-icon">▱</span><span>Saved<br>Reports</span></a><button class="quick-action" type="button" id="quickExport"><span class="qa-icon">⇩</span><span>Export<br>PDF</span></button><button class="quick-action" type="button" id="quickShare"><span class="qa-icon">↗</span><span>Share<br>App</span></button>';
+ overview.insertAdjacentElement('afterend',quick);
+ document.getElementById('quickExport').addEventListener('click',()=>document.getElementById('exportBtn')?.click());
+ document.getElementById('quickShare').addEventListener('click',()=>document.getElementById('shareAppBtn')?.click());
+ const nav=document.querySelector('.bottom-nav');
+ if(nav){nav.innerHTML='<a class="primary" href="#">⌂<span>Home</span></a><a href="#incidentSection">▤<span>Report</span></a><a href="#recordsSection">▱<span>Records</span></a><button id="moreNav" type="button">☷<span>More</span></button>';
+ document.getElementById('moreNav').addEventListener('click',()=>{const target=document.querySelector('.top-actions');target?.scrollIntoView({behavior:'smooth',block:'center'});});}
+ const lang=document.getElementById('languageToggle');if(lang)lang.setAttribute('aria-label','Switch interface language');
+})();
+</script>
 </body></html>
