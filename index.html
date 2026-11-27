@@ -2437,7 +2437,7 @@ body{margin:0;background:radial-gradient(ellipse at 50% -12%,#25203d 0,transpare
 body[data-theme="light"]{color-scheme:dark!important;background:var(--app-bg)!important;color:var(--app-text)!important}
 @media(min-width:700px){.app-shell{padding-top:20px}.command-center{min-height:430px}.command-copy{width:55%}.command-copy h2{font-size:58px}.shortcut-card{min-height:112px}}
 @media(max-width:390px){.app-shell{padding-left:10px;padding-right:10px}.command-center{min-height:350px;padding:18px 14px;background-position:61% center}.command-copy{width:76%}.command-copy h2{font-size:38px}.command-primary{font-size:15px!important;min-height:53px}.brand-words strong{font-size:13px}.brand-words small{font-size:8px}.shortcut-card{min-height:96px}.shortcut-card strong{font-size:10px}}
-</style>
+ .bottom-nav.app-bottom-nav .nav-item{border:0;background:transparent;font:inherit;cursor:pointer}.bottom-nav.app-bottom-nav .nav-item.active{background:#2b1d22}</style>
 </head>
 <body>
 <header class="app-topbar">
@@ -2520,7 +2520,7 @@ body[data-theme="light"]{color-scheme:dark!important;background:var(--app-bg)!im
   <a class="nav-item" href="#incidentSection"><span>▤</span><small>Report</small></a>
   <a class="nav-item nav-create" href="#incidentSection" aria-label="Create report"><span>＋</span></a>
   <a class="nav-item" href="#recordsSection"><span>▱</span><small>Records</small></a>
-  <a class="nav-item" href="privacy.html"><span>⠿</span><small>More</small></a>
+  <button class="nav-item" id="languageToggleMobile" type="button" aria-label="Switch language"><span>⠿</span><small>More</small></button>
 </nav><script>
 
 const $=id=>document.getElementById(id);
