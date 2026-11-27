@@ -88,32 +88,32 @@ body[data-screen="report"] #incidentSection,body[data-screen="records"] #records
 @media(max-width:380px){.app-shell{padding-left:12px;padding-right:12px}.command-center{margin-left:-12px;margin-right:-12px;padding-left:18px;padding-right:18px;min-height:540px}.shortcut-grid{gap:6px}.shortcut-card{min-height:92px}.dashboard-metric strong{font-size:24px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 @media print{body{background:#fff;color:#000}.app-topbar,.bottom-nav,.command-center,.shortcut-grid,.workspace-overview,.notice{display:none!important}.app-shell{padding:0;max-width:none}.card{background:#fff;color:#000;border:0;box-shadow:none}.record{break-inside:avoid;background:#fff;color:#000}}
+
+.guided-intro,.selection-tools{background:#111a28;border:1px solid #30394e;color:#edf1f8;border-radius:12px;padding:12px}
+.guided-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px 0}
+.guided-progress a{display:grid;justify-items:center;gap:5px;padding:8px 3px;border:1px solid #30394e;border-radius:10px;background:#101725;color:#c4ccda;text-decoration:none;font-size:10px}
+.guided-progress a span{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#263148}
+.guided-progress a.is-current{border-color:#ff4d9d;color:#fff}.guided-progress a.is-complete{border-color:#3b9b88;color:#9ff0d9}
+.draft-status,.guided-check,.ocr-confidence{padding:10px;border-radius:10px;background:#142a2c;color:#b9f4e6;font-size:11px;margin:8px 0}
+.form-stage{padding:13px 0;border-bottom:1px solid #29344a}.form-stage-title{font-size:14px;margin:0;color:#fff}.form-stage-title span{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:8px;background:#342039;color:#ffb0d5;margin-right:7px}
+.recent-label{font-size:13px;font-weight:850;color:#ffb1d2;margin-bottom:8px}
+body[data-screen="home"] #incidentSection,body[data-screen="home"] .notice{display:none}
+body[data-screen="report"] #homeHero,body[data-screen="report"] .shortcut-grid,body[data-screen="report"] .workspace-overview,body[data-screen="report"] #recordsSection,body[data-screen="report"] .creator-card{display:none}
+body[data-screen="records"] #homeHero,body[data-screen="records"] .shortcut-grid,body[data-screen="records"] .workspace-overview,body[data-screen="records"] #incidentSection,body[data-screen="records"] .notice,body[data-screen="records"] .creator-card{display:none}
+body[data-screen="records"] #recordsSection{display:block}
+body[data-screen="home"] #recordsSection .records-head .section-number,body[data-screen="home"] #recordsSection .records-head small,body[data-screen="home"] #recordsSection .record-tools,body[data-screen="home"] #recordsSection .selection-tools{display:none}
+body[data-screen="home"] #recordsSection .records-head .actions #exportBtn,body[data-screen="home"] #recordsSection .records-head .actions #backupBtn{display:none}
+body[data-screen="home"] #records .record:nth-child(n+2){display:none}
+body[data-screen="home"] #recordsSection{padding:13px}
+body[data-screen="home"] #recordsSection .records-head h2{font-size:15px}
+body[data-screen="report"] #incidentSection,body[data-screen="records"] #recordsSection{display:block}
+@media(max-width:380px){.shortcut-grid{gap:5px}.shortcut-card{min-height:88px}.dashboard-metric strong{font-size:23px}}
 </style>
 </head>
-<body>
-<header class="app-topbar">
-<a class="brand-lockup" href="#homeSection" aria-label="SOP and Proof Hub home"><span class="brand-mark">SP</span><span class="brand-words"><strong>SOP &amp; Proof Hub</strong><small>Capture · Document · Report · Resolve</small></span></a>
-<div class="top-actions"><button class="icon-action" type="button" data-focus-search aria-label="Search reports">⌕</button><button class="icon-action" id="shareAppBtn" type="button" aria-label="Share app">♧</button><button class="icon-action" id="languageToggle" type="button" aria-label="Switch language">తెలుగు</button><button class="icon-action theme-toggle" id="themeToggle" type="button" aria-label="Switch theme" aria-pressed="false">◐</button></div></header><main id="homeSection" class="app-shell">
-<section class="command-center" id="homeHero" aria-label="SOP and Proof Hub dashboard">
-<div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span><h2>LOG<br>PROOF<br><em>RESOLVE</em></h2><p>Create issue reports with evidence, track actions and keep everything ready.</p><div class="command-actions"><a class="command-primary" href="#incidentSection"><span class="cta-cross">＋</span> Create Report <span class="cta-arrow">→</span></a></div></div></section>
-<section class="shortcut-grid" aria-label="Quick actions">
-  <a class="shortcut-card" href="#incidentSection" data-upload-shortcut><span class="shortcut-icon">▣</span><strong>Upload<br>Evidence</strong></a>
-  <a class="shortcut-card" href="#recordsSection"><span class="shortcut-icon">▱</span><strong>My<br>Reports</strong></a>
-  <button class="shortcut-card" type="button" data-export-shortcut><span class="shortcut-icon">PDF</span><strong>Export<br>PDF</strong></button>
-  <button class="shortcut-card" type="button" data-share-shortcut><span class="shortcut-icon">⌯</span><strong>Share<br>App</strong></button>
-</section>
-<section class="overview-panel workspace-overview" aria-label="Workspace statistics">
-  <div class="overview-top"><span>▥ &nbsp; Workspace</span><span class="storage-indicator">● Saved on this device</span></div>
-  <div class="dashboard-metrics" aria-label="Report summary">
-    <div class="dashboard-metric"><strong id="dashboardCount">0</strong><span>Total Reports</span></div>
-    <div class="dashboard-metric"><strong id="dashboardTypes">0</strong><span>Categories</span></div>
-    <div class="dashboard-metric"><strong id="dashboardEvidence">0</strong><span>Evidence Photos</span></div>
-  </div>
-  <div class="overview-bottom"><span><b id="dashboardWeek">0</b> Added this week</span><span>Private device storage</span></div>
-</section><section class="card " id="recordsSection"><div class="recent-label">◷ &nbsp; Recent Incident</div>
-<div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="viewAllRecords" type="button">View All →</button><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
+<body><header class="app-topbar"><a class="brand-lockup" href="#homeSection" aria-label="SOP and Proof Hub home"><span class="brand-mark">SP</span><span class="brand-words"><strong>SOP &amp; Proof Hub</strong><small>Capture · Document · Report · Resolve</small></span></a><div class="top-actions"><button class="icon-action" type="button" data-focus-search aria-label="Search reports">⌕</button><button class="icon-action" id="shareAppBtn" type="button" aria-label="Share app">♧</button><button class="icon-action" id="languageToggle" type="button" aria-label="Switch language">తెలుగు</button><button class="icon-action theme-toggle" id="themeToggle" type="button" aria-label="Switch theme" aria-pressed="false">◐</button></div></header><main id="homeSection" class="app-shell"><section class="command-center" id="homeHero" aria-label="SOP and Proof Hub dashboard"><div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span><h2>LOG<br>PROOF<br><em>RESOLVE</em></h2><p>Create issue reports with evidence, track actions and keep everything ready.</p><div class="command-actions"><a class="command-primary" href="#incidentSection"><span class="cta-cross">＋</span> Create Report <span class="cta-arrow">→</span></a></div></div></section><section class="shortcut-grid" aria-label="Quick actions"><a class="shortcut-card" href="#incidentSection" data-upload-shortcut><span class="shortcut-icon">▣</span><strong>Upload<br>Evidence</strong></a><a class="shortcut-card" href="#recordsSection" data-screen-link="records"><span class="shortcut-icon">▱</span><strong>My<br>Reports</strong></a><button class="shortcut-card" type="button" data-export-shortcut><span class="shortcut-icon">PDF</span><strong>Export<br>PDF</strong></button><button class="shortcut-card" type="button" data-share-shortcut><span class="shortcut-icon">⌯</span><strong>Share<br>App</strong></button></section><section class="overview-panel workspace-overview" aria-label="Workspace statistics"><div class="overview-top"><span>▥ &nbsp; Workspace</span><span class="storage-indicator">● Saved on this device</span></div><div class="dashboard-metrics"><div class="dashboard-metric"><strong id="dashboardCount">0</strong><span>Total Reports</span></div><div class="dashboard-metric"><strong id="dashboardTypes">0</strong><span>Categories</span></div><div class="dashboard-metric"><strong id="dashboardEvidence">0</strong><span>Evidence Photos</span></div></div><div class="overview-bottom"><span><b id="dashboardWeek">0</b> Added this week</span><span>Private device storage</span></div></section><section class="card " id="recordsSection">
+<div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Recent Incident <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="viewAllRecords" type="button">View All →</button><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
 <div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div class="selection-tools no-print"><div><strong id="selectionCount">0 complaints selected</strong><small id="selectionHelp">Select multiple complaints to combine them into one PDF, with a separate section for each complaint.</small></div><div class="actions"><button class="secondary" id="selectAllBtn" type="button">Select all</button><button id="combinedPdfBtn" type="button" disabled>Generate combined PDF</button></div></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
-</section><section class="card " id="incidentSection">
+</section><div class="notice "><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div><section class="card " id="incidentSection">
 <div class="section-heading"><span class="section-number">01</span><h2>Submit an incident</h2></div>
 <p class="section-subtitle">Follow the guided steps. Review the Order ID and time before saving.</p>
 <form id="incidentForm">
@@ -153,14 +153,11 @@ body[data-screen="report"] #incidentSection,body[data-screen="records"] #records
 </section><section class="creator-card" aria-label="About the creator">
   <img id="creatorPhoto" class="creator-photo" alt="Portrait of the creator" width="112" height="112" loading="lazy">
   <div class="creator-copy"><span class="creator-eyebrow">ABOUT THE CREATOR</span><strong>Maddula Venkata Ramana</strong><span>Creator of SOP &amp; Proof Hub</span><div class="creator-links"><a href="privacy.html">Privacy policy</a><span aria-hidden="true">·</span><span id="appBuild">Build 2026.11.25 · Full portrait</span></div></div>
-</section></main>
-<nav class="bottom-nav app-bottom-nav" aria-label="Main navigation">
-<a class="nav-item active" href="#homeSection" data-screen-link="home"><span>⌂</span><small>Home</small></a>
-<a class="nav-item" href="#incidentSection" data-screen-link="report"><span>▤</span><small>Report</small></a>
-<a class="nav-item nav-create" href="#incidentSection" data-screen-link="report" aria-label="Create report"><span>＋</span></a>
-<a class="nav-item" href="#recordsSection" data-screen-link="records"><span>▱</span><small>Records</small></a>
-<button class="nav-item" id="languageToggleMobile" type="button" aria-label="Switch language"><span>⠿</span><small>More</small></button>
-</nav><script>
+</section></main><nav class="bottom-nav app-bottom-nav" aria-label="Main navigation"><a class="nav-item active" href="#homeSection" data-screen-link="home"><span>⌂</span><small>Home</small></a><a class="nav-item" href="#incidentSection" data-screen-link="report"><span>▤</span><small>Report</small></a><a class="nav-item nav-create" href="#incidentSection" data-screen-link="report" aria-label="Create report"><span>＋</span></a><a class="nav-item" href="#recordsSection" data-screen-link="records"><span>▱</span><small>Records</small></a><button class="nav-item" id="languageToggleMobile" type="button" aria-label="Switch language"><span>⠿</span><small>More</small></button></nav>
+</main>
+<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggleMobile" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
+
+<script>
 
 const $=id=>document.getElementById(id);
 
@@ -180,9 +177,9 @@ const uiText={
  en:{
   headerSub:'Document store-related incidents, preserve evidence and review what happened against SOPs and policies.',
   create:'＋ Create a report',saved:'View saved records',share:'Share app',incidentTitle:'Submit an incident',incidentSub:'Follow the guided steps. Verify the Order ID and incident date/time before saving.',
-  eyebrow:'SOP & PROOF · INCIDENT DOCUMENTATION',hero:'LOG<br>PROOF<br><em>RESOLVE</em>',
-  heroSub:'Create issue reports with evidence, track actions and keep everything ready.',
-  newIncident:'＋ Create Report',browse:'Browse records ↗',workspace:'▥ &nbsp; Workspace',device:'● Saved on this device',
+  eyebrow:'SOP & PROOF · INCIDENT DOCUMENTATION',hero:'Every issue.<br><em>Properly documented.</em>',
+  heroSub:'Capture clear evidence, verify the order details, and keep a report ready when you need it.',
+  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● Stored on this device',
   savedCount:'Saved incident records',step1:'<b>01</b> Capture screenshot',step2:'<b>02</b> Add evidence',step3:'<b>03</b> Save report',
   notice:'<strong>Device-only storage:</strong> Reports and evidence stay on this phone. They are not uploaded to a cloud account.<br><span class="pill">Required</span>',
   orderHint:'Upload the order screenshot. The app tries to read the Order ID and screenshot time automatically. Check the details and correct them if needed.',
@@ -235,7 +232,7 @@ function setLanguage(lang){
  put('header .sub',t.headerSub);put('.top-actions a[href="#incidentSection"]',t.create);put('.top-actions a[href="#recordsSection"]',t.saved);put('#shareAppBtn',t.share);
  put('.eyebrow',t.eyebrow);put('.command-copy h2',t.hero,true);put('.command-copy p',t.heroSub);
  put('.command-primary',t.newIncident);put('.command-secondary',t.browse);put('.overview-top span:first-child',t.workspace);put('.storage-indicator',t.device);
- /* Dashboard metric labels remain attached to their live counter IDs. */
+ put('.overview-stat span',t.savedCount);put('.overview-bottom span:nth-child(1)',t.step1,true);put('.overview-bottom span:nth-child(2)',t.step2,true);put('.overview-bottom span:nth-child(3)',t.step3,true);
  const notice=document.querySelector('.notice');if(notice){const ocr=$('ocrState');notice.innerHTML=t.notice+'<br>';if(ocr){ocr.id='ocrState';notice.append(ocr);setOcrState(ocrState);}}
  put('#incidentSection h2',t.incidentTitle);put('#incidentSection .section-subtitle',t.incidentSub);
  put('label[for="orderShot"]',t.orderShot,true);put('#orderShot + .hint',t.orderHint);
@@ -1395,295 +1392,8 @@ function applyRecordSearch(){
 if(searchInput)searchInput.addEventListener('input',applyRecordSearch);
 
 
-// Dashboard shortcut actions
- document.querySelectorAll('[data-focus-search]').forEach(b=>b.addEventListener('click',()=>{const x=document.getElementById('recordSearch');if(x){document.getElementById('recordsSection').scrollIntoView({behavior:'smooth'});setTimeout(()=>x.focus(),350)}}));
- document.querySelectorAll('[data-export-shortcut]').forEach(b=>b.addEventListener('click',()=>document.getElementById('exportBtn')?.click()));
- document.querySelectorAll('[data-share-shortcut]').forEach(b=>b.addEventListener('click',()=>document.getElementById('shareAppBtn')?.click()));
- document.querySelectorAll('[data-upload-shortcut]').forEach(b=>b.addEventListener('click',()=>{setTimeout(()=>document.getElementById('orderShot')?.click(),250)}));
-function printEvidenceReport(){const b=document.getElementById("printReportBtn");if(b){b.disabled=true;b.textContent="Preparing report…";}const imgs=Array.from(document.images);Promise.all(imgs.map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;}))).then(()=>{if(b){b.disabled=false;b.textContent="Print / Save as PDF";}setTimeout(()=>window.print(),250);});}</'+ '/script></body></html>';
-}
-let pdfLibPromise=null;
-const PDF_LIB_SOURCES=['https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js','https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js'];
-function loadPdfLibrary(){
- if(window.PDFLib)return Promise.resolve(window.PDFLib);
- if(pdfLibPromise)return pdfLibPromise;
- pdfLibPromise=(async()=>{
-  let lastError=null;
-  for(const src of PDF_LIB_SOURCES){
-   try{
-    await new Promise((resolve,reject)=>{
-     const script=document.createElement('script');let settled=false,timer;
-     const finish=error=>{if(settled)return;settled=true;clearTimeout(timer);script.onload=null;script.onerror=null;if(error){script.remove();reject(error);}else resolve();};
-     timer=setTimeout(()=>finish(new Error('Timed out loading PDF library')),12000);
-     script.src=src;script.async=true;
-     script.onload=()=>window.PDFLib?finish():finish(new Error('PDF library did not initialize'));
-     script.onerror=()=>finish(new Error('Could not load PDF library from '+new URL(src).hostname));
-     document.head.appendChild(script);
-    });
-    if(window.PDFLib)return window.PDFLib;
-   }catch(error){lastError=error;}
-  }
-  throw lastError||new Error('PDF library is unavailable');
- })().catch(error=>{pdfLibPromise=null;throw error;});
- return pdfLibPromise;
-}
-function imageAsJpeg(dataUrl){
- return new Promise((resolve,reject)=>{
-  const img=new Image();
-  img.onload=()=>{
-   try{
-    const scale=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));
-    const canvas=document.createElement('canvas');
-    canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
-    canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
-    const ctx=canvas.getContext('2d');
-    if(!ctx)throw new Error('Image processing is unavailable.');
-    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(img,0,0,canvas.width,canvas.height);
-    resolve({dataUrl:canvas.toDataURL('image/jpeg',0.82),width:canvas.width,height:canvas.height});
-   }catch(error){reject(error);}
-  };
-  img.onerror=()=>reject(new Error('An evidence image could not be decoded for the PDF.'));
-  img.src=dataUrl;
- });
-}
-function pdfAscii(value){return new TextEncoder().encode(String(value));}
-function pdfJoin(parts){
- const size=parts.reduce((n,p)=>n+p.length,0),out=new Uint8Array(size);let offset=0;
- for(const part of parts){out.set(part,offset);offset+=part.length;}
- return out;
-}
-function pdfText(value){
- return String(value??'').replace(/[\r\n]+/g,' ').replace(/[^\x20-\x7E]/g,' ')
-  .replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
-}
-function pdfTextLine(value,x,y,size=10,bold=false){
- return 'BT /'+(bold?'F2':'F1')+' '+size+' Tf 1 0 0 1 '+x+' '+y+' Tm ('+pdfText(value)+') Tj ET\n';
-}
-function pdfImagePlacement(name,image,x,y,maxW,maxH){
- const scale=Math.min(maxW/image.width,maxH/image.height);
- const w=image.width*scale,h=image.height*scale;
- return 'q '+w.toFixed(2)+' 0 0 '+h.toFixed(2)+' '+(x+(maxW-w)/2).toFixed(2)+' '+(y+(maxH-h)/2).toFixed(2)+' cm /'+name+' Do Q\n';
-}
-function pdfStream(dictionary,bytes){
- return pdfJoin([pdfAscii(dictionary+' /Length '+bytes.length+' >>\nstream\n'),bytes,pdfAscii('\nendstream')]);
-}
-async function createEvidencePdfBlob(rows){
- if(!Array.isArray(rows)||!rows.length)throw new Error('There are no saved incidents to include in the PDF.');
- const objects=new Map();
- objects.set(1,pdfAscii('<< /Type /Catalog /Pages 2 0 R >>'));
- objects.set(3,pdfAscii('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'));
- objects.set(4,pdfAscii('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>'));
- const pageIds=[];
- let nextId=5;
- for(let i=0;i<rows.length;i++){
-  const r=rows[i];
-  const shotRecords=[{name:'Order screenshot',data:r.orderScreenshot&&r.orderScreenshot.data}]
-   .concat((r.supportingEvidence||[]).map((item,j)=>({name:'Supporting evidence '+(j+1),data:item&&item.data})));
-  if(shotRecords.some(item=>typeof item.data!=='string'||!item.data.startsWith('data:image/')))
-   throw new Error('Incident '+(i+1)+' is missing an image. Reopen the report and check its attachments.');
-  const images=[];
-  for(const item of shotRecords){
-   const jpeg=await imageAsJpeg(item.data);
-   const base64=jpeg.dataUrl.split(',')[1];
-   const binary=atob(base64),bytes=new Uint8Array(binary.length);
-   for(let j=0;j<binary.length;j++)bytes[j]=binary.charCodeAt(j);
-   images.push({name:item.name,width:jpeg.width,height:jpeg.height,bytes});
-  }
-  const pageId=nextId++,contentId=nextId++;
-  pageIds.push(pageId);
-  let content='';
-  content+=pdfTextLine('SOP & EVIDENCE HUB',40,798,15,true);
-  content+=pdfTextLine('Incident '+(i+1)+' of '+rows.length,430,800,9,false);
-  content+='0.09 0.29 0.23 RG 40 786 m 555 786 l S\n';
-  const fields=[
-   ['Issue category',r.category],['Order ID',r.orderId],['Store / hub',r.store],
-   ['Incident date & time',new Date(r.incidentAt).toLocaleString()],['Description',r.notes||'—']
-  ];
-  let y=762;
-  for(const [label,value] of fields){
-   content+=pdfTextLine(label,40,y,9,true);
-   const clean=String(value??'—').replace(/[\r\n]+/g,' ');
-   const max=label==='Description'?64:58;
-   const shown=clean.length>max?clean.slice(0,max-1)+'…':clean;
-   content+=pdfTextLine(shown,165,y,10,false);
-   y-=24;
-  }
-  content+='0.86 0.90 0.87 RG 40 632 m 555 632 l S\n';
-  const imageIds=[];
-  for(let j=0;j<images.length;j++){
-   const image=images[j],imageId=nextId++,resource='Im'+j;
-   imageIds.push({resource,id:imageId});
-   objects.set(imageId,pdfStream('<< /Type /XObject /Subtype /Image /Width '+image.width+' /Height '+image.height+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode',image.bytes));
-   content+=pdfTextLine(image.name,40,j===0?610:365,9,true);
-   if(j===0)content+=pdfImagePlacement(resource,image,40,390,515,205);
-   else content+=pdfImagePlacement(resource,image,j===1?40:305,175,250,170);
-  }
-  content+=pdfTextLine('Prepared by: SOP & Proof Hub',40,38,8,false);
-  const contentBytes=pdfAscii(content);
-  objects.set(contentId,pdfStream('<<',contentBytes));
-  const xObjectDictionary=imageIds.map(item=>'/'+item.resource+' '+item.id+' 0 R').join(' ');
-  objects.set(pageId,pdfAscii('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> /XObject << '+xObjectDictionary+' >> >> /Contents '+contentId+' 0 R >>'));
- }
- objects.set(2,pdfAscii('<< /Type /Pages /Kids ['+pageIds.map(id=>id+' 0 R').join(' ')+'] /Count '+pageIds.length+' >>'));
- const maxId=Math.max(...objects.keys()),parts=[pdfAscii('%PDF-1.4\n% SOP Proof Hub\n')],offsets=[0];
- let total=parts[0].length;
- for(let id=1;id<=maxId;id++){
-  const body=objects.get(id);if(!body)throw new Error('PDF assembly failed: missing object '+id);
-  const prefix=pdfAscii(id+' 0 obj\n'),suffix=pdfAscii('\nendobj\n');
-  offsets[id]=total;parts.push(prefix,body,suffix);total+=prefix.length+body.length+suffix.length;
- }
- const xrefOffset=total;
- let xref='xref\n0 '+(maxId+1)+'\n0000000000 65535 f \n';
- for(let id=1;id<=maxId;id++)xref+=String(offsets[id]).padStart(10,'0')+' 00000 n \n';
- parts.push(pdfAscii(xref+'trailer\n<< /Size '+(maxId+1)+' /Root 1 0 R >>\nstartxref\n'+xrefOffset+'\n%%EOF'));
- const blob=new Blob([pdfJoin(parts)],{type:'application/pdf'});
- if(blob.size<500)throw new Error('The PDF file was unexpectedly empty.');
- return blob;
-}
-function downloadPdfBlob(blob){
- if(!(blob instanceof Blob)||blob.type!=='application/pdf'||blob.size<500)throw new Error('The PDF file is invalid or empty.');
- const url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download='sop-proof-hub-report-'+new Date().toISOString().slice(0,10)+'.pdf';
- a.rel='noopener';a.style.display='none';document.body.appendChild(a);
- a.click();a.remove();
- setTimeout(()=>URL.revokeObjectURL(url),120000);
-}
-async function sharePdf(rows){
- const blob=await createEvidencePdfBlob(rows);
- const file=new File([blob],'sop-proof-hub-report-'+new Date().toISOString().slice(0,10)+'.pdf',{type:'application/pdf'});
- if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-  await navigator.share({title:'SOP & Evidence Hub incident report',text:'Incident report and supporting evidence.',files:[file]});
- }else{
-  downloadPdfBlob(blob);
-  alert('Direct PDF sharing is not supported by this browser. The PDF has been downloaded. Attach it from your Downloads folder in WhatsApp, Email or Google Drive.');
- }
-}
-function printRecords(rows){
-  // Keep the report inside the current page: Android in-app browsers often
-  // block window.open() and leave the user on an empty about:blank tab.
-  const old=document.getElementById('reportPreviewLayer');
-  if(old)old.remove();
-  const layer=document.createElement('div');
-  layer.id='reportPreviewLayer';
-  layer.style.cssText='position:fixed;inset:0;z-index:99999;background:#fff;display:flex;flex-direction:column';
-  const tools=document.createElement('div');
-  tools.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;background:#174b3b;color:#fff;font:14px Arial,sans-serif;flex-wrap:wrap';
-  const label=document.createElement('strong');
-  label.textContent='SOP & Evidence Hub — Combined Incident Report';
-  const actions=document.createElement('div');
-  actions.style.cssText='display:flex;gap:8px;align-items:center';
-  const download=document.createElement('button');
-  download.type='button';download.textContent='Download PDF';
-  download.style.cssText='border:0;border-radius:7px;padding:9px 14px;font-weight:700;background:#fff;color:#174b3b';
-  download.addEventListener('click',async()=>{
-    download.disabled=true;download.textContent='Creating PDF…';
-    try{const blob=await createEvidencePdfBlob(rows);downloadPdfBlob(blob);}
-    catch(err){console.error('Direct PDF creation failed; opening the browser print-to-PDF fallback.',err);try{frame.contentWindow.focus();frame.contentWindow.print();alert('The direct PDF download was unavailable. Use the print screen and choose Save as PDF to create your report.');}catch(printError){alert('PDF creation failed: '+(err.message||'Unknown PDF error')+'. The report preview is still open; use the Print button to save it as PDF.');}}
-    finally{download.disabled=false;download.textContent='Download PDF';}
-  });
-  const print=document.createElement('button');
-  print.type='button';print.textContent='Print';
-  print.style.cssText='border:1px solid #fff;border-radius:7px;padding:9px 12px;font-weight:700;background:transparent;color:#fff';
-  print.addEventListener('click',()=>{try{frame.contentWindow.focus();frame.contentWindow.print();}catch(e){alert('Use the Download PDF button instead.');}});
-  const close=document.createElement('button');
-  close.type='button';close.textContent='Close';
-  close.style.cssText='border:0;border-radius:7px;padding:9px 12px;font-weight:700;background:#e8eee9;color:#174b3b';
-  close.addEventListener('click',()=>layer.remove());
-  const share=document.createElement('button');
-  share.type='button';share.textContent='Share PDF';
-  share.style.cssText='border:0;border-radius:7px;padding:9px 12px;font-weight:700;background:#dff2e7;color:#174b3b';
-  share.addEventListener('click',async()=>{share.disabled=true;share.textContent='Preparing…';try{await sharePdf(rows);}catch(err){if(err.name!=='AbortError')alert('Sharing failed. Please download the PDF and share it manually.');}finally{share.disabled=false;share.textContent='Share PDF';}});
-  actions.append(download,share,print,close);
-  tools.append(label,actions);
-  const frame=document.createElement('iframe');
-  frame.title='SOP & Evidence Hub incident report preview';
-  frame.style.cssText='display:block;flex:1;width:100%;height:100%;border:0;background:#fff';
-  frame.setAttribute('sandbox','allow-scripts allow-modals allow-same-origin');
-  frame.srcdoc=reportHtml(rows);
-  layer.append(tools,frame);
-  document.body.appendChild(layer);
-}
-$('exportBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to export.');return;}printRecords(rows);});
-$('backupBtn').addEventListener('click',async()=>{const rows=await allRecords();if(!rows.length){alert('No records to back up.');return;}const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),records:rows},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='sop-proof-hub-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);});
+/* Reference-led mobile app navigation */
+(function(){document.body.dataset.screen='home';const links=[...document.querySelectorAll('[data-screen-link]')];function showScreen(screen){document.body.dataset.screen=screen;links.forEach(a=>a.classList.toggle('active',a.dataset.screenLink===screen&&!a.classList.contains('nav-create')));window.scrollTo({top:0,behavior:'smooth'});}links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showScreen(a.dataset.screenLink);}));document.querySelectorAll('.command-primary,[data-upload-shortcut]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showScreen('report');}));document.getElementById('viewAllRecords')?.addEventListener('click',()=>showScreen('records'));document.querySelectorAll('[data-export-shortcut]').forEach(a=>a.addEventListener('click',()=>document.getElementById('exportBtn')?.click()));document.querySelectorAll('[data-share-shortcut]').forEach(a=>a.addEventListener('click',()=>document.getElementById('shareAppBtn')?.click()));document.querySelectorAll('[data-focus-search]').forEach(a=>a.addEventListener('click',()=>{showScreen('records');setTimeout(()=>document.getElementById('recordSearch')?.focus(),100);}));})();
+</script>
 
-async function loadCreatorPhoto(){
- const image=document.getElementById('creatorPhoto');if(!image)return;
- try{const response=await fetch(new URL('assets/creator-photo-20261125.b64',document.baseURI),{cache:'no-store'});if(!response.ok)throw new Error('Portrait asset unavailable');const encoded=(await response.text()).trim();if(!encoded.startsWith('/9j/')||!encoded.endsWith('/9k='))throw new Error('Portrait image data is invalid');image.src='data:image/jpeg;base64,'+encoded;}catch(error){console.error('Creator portrait could not be loaded:',error);image.hidden=true;}
-}
-loadCreatorPhoto();
-const themeToggle=document.getElementById('themeToggle');
-function applyTheme(theme){
-  const dark=theme==='dark';
-  document.body.dataset.theme=dark?'dark':'light';
-  if(themeToggle){
-    themeToggle.textContent=dark?'☀ Light mode':'☾ Dark mode';
-    themeToggle.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
-    themeToggle.setAttribute('aria-pressed',String(dark));
-  }
-  const meta=document.querySelector('meta[name="theme-color"]');
-  if(meta)meta.content=dark?'#172820':'#123d32';
-}
-let savedTheme='light';
-try{savedTheme=localStorage.getItem('deliveryEvidenceTheme')||'light';}catch(e){}
-applyTheme(savedTheme);
-let initialLanguage='en';try{initialLanguage=localStorage.getItem('deliveryEvidenceLanguage')||'en';}catch(e){}
-setLanguage(initialLanguage);
-themeToggle?.addEventListener('click',()=>{
-  const next=document.body.dataset.theme==='dark'?'light':'dark';
-  applyTheme(next);
-  try{localStorage.setItem('deliveryEvidenceTheme',next);}catch(e){}
-});
-
-(async()=>{try{await ensureDB();try{const migrated=await migrateLegacyDatabase();if(migrated.records||migrated.draft)setStatus('Recovered '+migrated.records+' previous report(s) and '+(migrated.draft?'an unfinished draft.':'saved your existing data.'));}catch(migrationError){console.error('Previous report migration warning:',migrationError);setStatus('New report storage is ready, but previous reports could not be copied: '+(migrationError.message||'Please keep the old app data.'),true);}setupDraftAutosave();await restoreDraft();await render();}catch(e){console.error(e);setStatus('Report storage could not start: '+(e.message||'Please check browser storage permissions.'),true);}})();
-
-/* Dashboard count and instant record search */
-const dashboardCount=document.getElementById('dashboardCount');
-const countNode=document.getElementById('count');
-const searchInput=document.getElementById('recordSearch');
-const searchCount=document.getElementById('searchCount');
-function syncDashboardCount(){
- if(dashboardCount&&countNode)dashboardCount.textContent=countNode.textContent||'0';
-}
-if(countNode&&dashboardCount){
- new MutationObserver(syncDashboardCount).observe(countNode,{childList:true,characterData:true,subtree:true});
- syncDashboardCount();
-}
-function applyRecordSearch(){
- const q=searchInput?searchInput.value.trim().toLowerCase():'';
- const list=document.getElementById('records');if(!list)return;
- const cards=[...list.children].filter(el=>el.matches('.record'));let shown=0;
- cards.forEach(card=>{const match=!q||card.textContent.toLowerCase().includes(q);card.hidden=!match;if(match)shown++;});
- if(searchCount)searchCount.textContent=q?(shown+' match'+(shown===1?'':'es')):(currentLanguage==='te'?'అన్ని రికార్డులు':'All records');
- let empty=list.querySelector('.search-empty');
- if(q&&cards.length&&shown===0){if(!empty){empty=document.createElement('p');empty.className='hint search-empty';empty.textContent=currentLanguage==='te'?'సరిపోలే రికార్డులు లేవు. మరో Order ID లేదా పదంతో వెతకండి.':'No matching records. Try another Order ID or keyword.';list.appendChild(empty);}}
- else if(empty)empty.remove();
-}
-if(searchInput)searchInput.addEventListener('input',applyRecordSearch);
-
-
-// Dashboard shortcut actions
- document.querySelectorAll('[data-focus-search]').forEach(b=>b.addEventListener('click',()=>{const x=document.getElementById('recordSearch');if(x){document.getElementById('recordsSection').scrollIntoView({behavior:'smooth'});setTimeout(()=>x.focus(),350)}}));
- document.querySelectorAll('[data-export-shortcut]').forEach(b=>b.addEventListener('click',()=>document.getElementById('exportBtn')?.click()));
- document.querySelectorAll('[data-share-shortcut]').forEach(b=>b.addEventListener('click',()=>document.getElementById('shareAppBtn')?.click()));
- document.querySelectorAll('[data-upload-shortcut]').forEach(b=>b.addEventListener('click',()=>{setTimeout(()=>document.getElementById('orderShot')?.click(),250)}));
-
-
-<script>
-(function mobileAppNavigation(){
- document.body.dataset.screen='home';
- const links=[...document.querySelectorAll('[data-screen-link]')];
- function showScreen(screen){
-  document.body.dataset.screen=screen;
-  links.forEach(link=>link.classList.toggle('active',link.dataset.screenLink===screen && !link.classList.contains('nav-create')));
-  if(screen==='report'){setTimeout(()=>document.getElementById('incidentSection')?.scrollIntoView({block:'start'}),20);}
-  else if(screen==='records'){setTimeout(()=>document.getElementById('recordsSection')?.scrollIntoView({block:'start'}),20);}
-  else{window.scrollTo({top:0,behavior:'smooth'});}
- }
- links.forEach(link=>link.addEventListener('click',event=>{event.preventDefault();showScreen(link.dataset.screenLink);}));
- document.querySelectorAll('.command-primary,[data-upload-shortcut],#viewAllRecords').forEach(el=>el.addEventListener('click',event=>{if(el.id==='viewAllRecords'){event.preventDefault();showScreen('records');}else{event.preventDefault();showScreen('report');}}));
- document.querySelectorAll('[data-export-shortcut]').forEach(el=>el.addEventListener('click',()=>document.getElementById('exportBtn')?.click()));
- document.querySelectorAll('[data-share-shortcut]').forEach(el=>el.addEventListener('click',()=>document.getElementById('shareAppBtn')?.click()));
- document.querySelectorAll('[data-focus-search]').forEach(el=>el.addEventListener('click',()=>{showScreen('records');setTimeout(()=>document.getElementById('recordSearch')?.focus(),100);}));
-})();
-</script></body></html>
+</body></html>
