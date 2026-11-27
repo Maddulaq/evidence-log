@@ -2541,9 +2541,9 @@ const uiText={
  en:{
   headerSub:'Document store-related incidents, preserve evidence and review what happened against SOPs and policies.',
   create:'＋ Create a report',saved:'View saved records',share:'Share app',incidentTitle:'Submit an incident',incidentSub:'Follow the guided steps. Verify the Order ID and incident date/time before saving.',
-  eyebrow:'SOP & PROOF · INCIDENT DOCUMENTATION',hero:'Every issue.<br><em>Properly documented.</em>',
-  heroSub:'Capture clear evidence, verify the order details, and keep a report ready when you need it.',
-  newIncident:'＋ New incident',browse:'Browse records ↗',workspace:'YOUR WORKSPACE',device:'● Stored on this device',
+  eyebrow:'SOP & PROOF · INCIDENT DOCUMENTATION',hero:'LOG<br>PROOF<br><em>RESOLVE</em>',
+  heroSub:'Create issue reports with evidence, track actions and keep everything ready.',
+  newIncident:'＋ Create Report',browse:'Browse records ↗',workspace:'▥ &nbsp; Workspace',device:'● Saved on this device',
   savedCount:'Saved incident records',step1:'<b>01</b> Capture screenshot',step2:'<b>02</b> Add evidence',step3:'<b>03</b> Save report',
   notice:'<strong>Device-only storage:</strong> Reports and evidence stay on this phone. They are not uploaded to a cloud account.<br><span class="pill">Required</span>',
   orderHint:'Upload the order screenshot. The app tries to read the Order ID and screenshot time automatically. Check the details and correct them if needed.',
@@ -2596,7 +2596,7 @@ function setLanguage(lang){
  put('header .sub',t.headerSub);put('.top-actions a[href="#incidentSection"]',t.create);put('.top-actions a[href="#recordsSection"]',t.saved);put('#shareAppBtn',t.share);
  put('.eyebrow',t.eyebrow);put('.command-copy h2',t.hero,true);put('.command-copy p',t.heroSub);
  put('.command-primary',t.newIncident);put('.command-secondary',t.browse);put('.overview-top span:first-child',t.workspace);put('.storage-indicator',t.device);
- put('.overview-stat span',t.savedCount);put('.overview-bottom span:nth-child(1)',t.step1,true);put('.overview-bottom span:nth-child(2)',t.step2,true);put('.overview-bottom span:nth-child(3)',t.step3,true);
+ /* Dashboard metric labels remain attached to their live counter IDs. */
  const notice=document.querySelector('.notice');if(notice){const ocr=$('ocrState');notice.innerHTML=t.notice+'<br>';if(ocr){ocr.id='ocrState';notice.append(ocr);setOcrState(ocrState);}}
  put('#incidentSection h2',t.incidentTitle);put('#incidentSection .section-subtitle',t.incidentSub);
  put('label[for="orderShot"]',t.orderShot,true);put('#orderShot + .hint',t.orderHint);
