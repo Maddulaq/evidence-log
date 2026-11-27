@@ -2380,26 +2380,101 @@ button.danger{background:#3b2029;color:#ffb9bd;border-color:#79404b}
  label,.card h2,.record h3{color:#111}
 }
 
+
+/* REBUILT MOBILE-FIRST SOP & PROOF HUB — screenshot-led interface */
+:root{color-scheme:dark;--app-bg:#080a12;--app-panel:#111522;--app-panel2:#171b2b;--app-line:#2b3044;--app-text:#f7f5fb;--app-muted:#a7aabd;--app-orange:#ff8a24;--app-pink:#f34bb7;--app-violet:#713cff;--app-cyan:#42d7e9}
+html{scroll-behavior:smooth;background:var(--app-bg)}
+body{margin:0;background:radial-gradient(ellipse at 50% -12%,#25203d 0,transparent 42%),var(--app-bg);color:var(--app-text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:92px}
+.app-topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px max(15px,calc((100vw - 560px)/2));background:rgba(8,10,18,.91);border-bottom:1px solid #ffffff12;backdrop-filter:blur(18px)}
+.brand-lockup{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;min-width:0}
+.brand-mark{width:43px;height:43px;display:grid;place-items:center;border:2px solid transparent;border-radius:12px;background:linear-gradient(#0d111d,#0d111d) padding-box,linear-gradient(135deg,#d75cff,#48d7ed) border-box;font-weight:900;font-size:19px;letter-spacing:-2px}
+.brand-words{display:flex;flex-direction:column;gap:2px;min-width:0}.brand-words strong{font-size:15px;white-space:nowrap}.brand-words small{font-size:9px;color:#aeb2c4;letter-spacing:.25px;white-space:nowrap}
+.app-topbar .top-actions{display:flex;gap:6px;align-items:center;margin:0}
+.icon-action{min-width:34px;height:34px;padding:0 8px;border-radius:11px;background:#171b2b;border:1px solid #30354b;color:#fff;font-size:15px;box-shadow:none}
+.icon-action#languageToggle{font-size:10px;font-weight:800}
+.app-shell{width:min(100%,560px);margin:0 auto;padding:13px 13px 30px;box-sizing:border-box}
+.command-center{position:relative;isolation:isolate;display:flex;align-items:center;min-height:385px;overflow:hidden;padding:23px 18px;border:1px solid #704c83;border-radius:25px;background:linear-gradient(90deg,rgba(5,8,18,.94) 0%,rgba(8,9,21,.76) 48%,rgba(8,9,21,.1) 100%),linear-gradient(0deg,rgba(5,8,18,.68),transparent 58%),url('assets/gta6-inspired-hero.jpg') 58% center/cover no-repeat;box-shadow:0 18px 45px #0009,0 0 26px #9e43e526}
+.command-center:after{content:"";position:absolute;inset:auto 0 0;height:3px;background:linear-gradient(90deg,var(--app-orange),var(--app-pink),var(--app-violet));z-index:-1}
+.command-copy{width:min(70%,330px);position:relative;z-index:1}.eyebrow{display:flex;align-items:center;gap:7px;font-size:8px;letter-spacing:1.15px;font-weight:850;color:#f5b8e5}.live-dot{width:7px;height:7px;border-radius:50%;background:#ff9a2d;box-shadow:0 0 12px #ff8a24}
+.command-copy h2{font-size:clamp(36px,10vw,54px);line-height:.91;letter-spacing:-2px;margin:21px 0 13px;font-weight:950;color:#fff;text-shadow:0 4px 22px #000}.command-copy h2 em{font-style:normal;color:#fff}.command-copy p{font-size:12px;line-height:1.45;color:#e0deeb;max-width:210px;margin:0}
+.command-actions{margin-top:20px}.command-primary{display:flex!important;align-items:center;justify-content:space-between;gap:10px;width:100%;box-sizing:border-box;min-height:58px;padding:0 17px!important;border:2px solid #ffd3a4;border-radius:40px!important;background:linear-gradient(100deg,#ff8b22 0%,#ff4b86 48%,#672bff 100%);color:#fff!important;text-decoration:none;font-size:17px!important;font-weight:900!important;box-shadow:0 0 18px #ff812c99,0 0 30px #a43eff55,inset 0 1px 0 #ffffff99}.cta-cross{font-size:26px;font-weight:400}.cta-arrow{font-size:26px}
+.shortcut-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:13px 0}
+.shortcut-card{min-width:0;min-height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:10px 4px;border:1px solid #30354a;border-radius:17px;background:linear-gradient(145deg,#1b2031,#111522);color:#f4f2fa;text-align:center;text-decoration:none;box-shadow:0 8px 20px #0004;font:inherit}
+.shortcut-card strong{font-size:11px;line-height:1.25}.shortcut-icon{height:27px;display:grid;place-items:center;color:#e68cff;font-size:25px;font-weight:800}.shortcut-card:nth-child(1) .shortcut-icon{color:#fff}.shortcut-card:nth-child(3) .shortcut-icon{font-size:13px;border:1.5px solid #e68cff;border-radius:5px;padding:0 3px}
+.workspace-overview{margin:0 0 17px;padding:15px 14px;border-radius:18px;background:linear-gradient(140deg,#151a2b,#101522);border:1px solid #32384f;box-shadow:0 12px 30px #0005}
+.overview-top{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#fff;font-size:15px;font-weight:850}.storage-indicator{font-size:9px;color:#9ba7b9}
+.dashboard-metrics{display:grid;grid-template-columns:repeat(3,1fr);margin-top:13px}.dashboard-metric{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 4px;border-right:1px solid #30364a}.dashboard-metric:last-child{border:0}.dashboard-metric strong{font-size:27px;line-height:1;font-weight:950;color:#55d8eb}.dashboard-metric:nth-child(2) strong{color:#d879f2}.dashboard-metric:nth-child(3) strong{color:#ff9b3f}.dashboard-metric span{font-size:10px;color:#e2e0e9;text-align:center}
+.overview-bottom{display:flex;justify-content:space-between;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid #292f43;color:#aeb5c8;font-size:9px}.overview-bottom b{color:#ff9b3f}
+#recordsSection,#incidentSection{background:transparent;border:0;box-shadow:none;padding:0;margin:20px 0}
+#recordsSection .records-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+#recordsSection .section-heading{display:flex;align-items:center;gap:8px}#recordsSection .section-heading h2{font-size:17px;color:#fff}
+#recordsSection .section-number{display:none}#recordsSection .records-head small{color:#9ca4b8;font-size:10px}
+#recordsSection .records-head .actions{gap:5px}#recordsSection .records-head .actions button{font-size:9px;padding:7px 8px}
+#recordsSection .record-tools{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#111522;border:1px solid #30364a;border-radius:13px}
+#recordsSection .record-tools input{border:0!important;background:transparent!important;box-shadow:none!important;min-width:0;font-size:12px}
+#recordsSection .selection-tools{background:#151a29;border:1px solid #30364a;border-radius:13px;color:#fff;padding:10px;margin-top:9px}
+#records{display:grid;gap:9px;margin-top:10px!important}
+#records .record{margin:0;padding:12px;border:1px solid #353a50;border-radius:16px;background:linear-gradient(145deg,#1b2030,#121724);box-shadow:0 7px 20px #0004}
+#records .record h3{font-size:13px;color:#fff}#records .record p{font-size:10px;color:#aeb6c9}
+#incidentSection{padding:16px 13px!important;border:1px solid #32384f!important;border-radius:20px!important;background:linear-gradient(150deg,#171c2b,#101521)!important}
+#incidentSection .section-heading h2{color:#fff;font-size:20px}#incidentSection .section-subtitle{color:#aeb6c9;font-size:11px}
+#incidentSection .section-number{background:linear-gradient(135deg,#ff8b25,#f14ab5);color:#fff}
+#incidentSection .guided-intro,#incidentSection .guided-progress a,#incidentSection .guided-check{background:#0e1320;color:#dce0ec;border-color:#343b52}
+#incidentSection .guided-progress a.is-current{border-color:#ff8b35;color:#fff}
+#incidentSection .form-stage{padding:14px 11px;margin-top:10px;border:1px solid #2e354a;border-radius:15px;background:#111725}
+#incidentSection .form-stage-title{color:#fff;font-size:14px}
+#incidentSection label{color:#e9e7f0;font-size:11px}
+#incidentSection input,#incidentSection select,#incidentSection textarea{background:#0a0f1b!important;color:#f6f3fa!important;border:1px solid #3b4258!important;border-radius:11px!important;font-size:13px;padding:12px}
+#incidentSection .hint,#incidentSection .section-subtitle{color:#a8afc1}
+#incidentSection .actions button,#incidentSection button{border-radius:12px}
+#incidentSection #saveBtn{background:linear-gradient(100deg,#ff8b24,#ff4c89,#713bff);border:0;min-height:48px;font-weight:900}
+.creator-card{background:#121725;border:1px solid #30364a;border-radius:16px;margin:18px 0;padding:14px;color:#fff}
+.bottom-nav.app-bottom-nav{position:fixed;z-index:1000;left:50%;transform:translateX(-50%);bottom:max(7px,env(safe-area-inset-bottom));width:min(calc(100% - 18px),540px);display:grid;grid-template-columns:repeat(5,1fr);align-items:end;gap:3px;padding:7px 9px 8px;border:1px solid #46465d;border-radius:25px;background:rgba(10,13,23,.96);box-shadow:0 12px 35px #000b,0 0 18px #a24bdf24;backdrop-filter:blur(20px)}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:47px;color:#d7d8e2;text-decoration:none;border-radius:14px}
+.nav-item span{font-size:20px;line-height:1}.nav-item small{font-size:9px;color:inherit}.nav-item.active{color:#ff962d;background:#2b1d22}
+.nav-item.nav-create{width:62px;height:62px;min-height:62px;justify-self:center;margin-top:-25px;border:2px solid #ffc078;border-radius:50%;background:radial-gradient(circle at 35% 25%,#ff9d3b,#ff4d75 55%,#6a2bff);box-shadow:0 0 15px #ff7c34,0 0 27px #aa36ed;color:#fff}.nav-item.nav-create span{font-size:38px;font-weight:300}
+.notice{padding:12px!important;border-radius:13px!important;background:#211d28!important;border:1px solid #66503e!important;color:#e9d7c4!important;font-size:10px}
+body[data-theme="light"]{color-scheme:dark!important;background:var(--app-bg)!important;color:var(--app-text)!important}
+@media(min-width:700px){.app-shell{padding-top:20px}.command-center{min-height:430px}.command-copy{width:55%}.command-copy h2{font-size:58px}.shortcut-card{min-height:112px}}
+@media(max-width:390px){.app-shell{padding-left:10px;padding-right:10px}.command-center{min-height:350px;padding:18px 14px;background-position:61% center}.command-copy{width:76%}.command-copy h2{font-size:38px}.command-primary{font-size:15px!important;min-height:53px}.brand-words strong{font-size:13px}.brand-words small{font-size:8px}.shortcut-card{min-height:96px}.shortcut-card strong{font-size:10px}}
 </style>
 </head>
 <body>
-<header><h1>SOP &amp; Proof Hub</h1><p class="sub">Document store-related incidents, preserve evidence and review what happened against SOPs and policies.</p><div class="top-actions"><a href="#incidentSection">＋ Create a report</a><a class="outline" href="#recordsSection">View saved records</a><button class="outline" id="languageToggle" type="button" aria-label="Switch language">తెలుగు</button><button class="outline" id="shareAppBtn" type="button">Share app</button><button class="outline theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">☾ Dark mode</button></div></header>
-<main>
-
-
-<section class="command-center " aria-label="Workspace overview">
-  <div class="command-copy"><span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span><h2>Every issue.<br><em>Properly documented.</em></h2><p>Capture clear evidence, verify the order details, and keep a report ready when you need it.</p>
-    <div class="command-actions"><a class="command-primary" href="#incidentSection">＋ New incident</a><a class="command-secondary" href="#recordsSection">Browse records <span aria-hidden="true">↗</span></a></div>
+<header class="app-topbar">
+  <a class="brand-lockup" href="#homeSection" aria-label="SOP and Proof Hub home"><span class="brand-mark">SP</span><span class="brand-words"><strong>SOP &amp; Proof Hub</strong><small>Capture · Document · Report · Resolve</small></span></a>
+  <div class="top-actions">
+    <button class="icon-action" type="button" data-focus-search aria-label="Search reports">⌕</button>
+    <button class="icon-action" id="languageToggle" type="button" aria-label="Switch language">తెలుగు</button>
+    <button class="icon-action" id="shareAppBtn" type="button" aria-label="Share app">↗</button>
+    <button class="icon-action theme-toggle" id="themeToggle" type="button" aria-label="Switch theme" aria-pressed="false">◐</button>
+  </div>
+</header><main id="homeSection" class="app-shell">
+<section class="command-center" aria-label="SOP and Proof Hub dashboard">
+  <div class="command-copy">
+    <span class="eyebrow"><span class="live-dot"></span> SOP &amp; PROOF · INCIDENT DOCUMENTATION</span>
+    <h2>LOG<br>PROOF<br><em>RESOLVE</em></h2>
+    <p>Create issue reports with evidence, track actions and keep everything ready.</p>
+    <div class="command-actions"><a class="command-primary" href="#incidentSection"><span class="cta-cross">＋</span> Create Report <span class="cta-arrow">→</span></a></div>
   </div>
 </section>
-<section class="overview-panel workspace-overview" aria-label="Workspace overview"><div class="overview-top"><span>YOUR WORKSPACE</span><span class="storage-indicator">● Saved on this device</span></div>
-    <div class="overview-stat"><strong id="dashboardCount">0</strong><span>Saved incident records</span></div>
-    <div class="dashboard-metrics" aria-label="Report summary"><div class="dashboard-metric"><span>Added this week</span><strong id="dashboardWeek">0</strong></div><div class="dashboard-metric"><span>Issue categories</span><strong id="dashboardTypes">0</strong></div><div class="dashboard-metric"><span>Evidence photos</span><strong id="dashboardEvidence">0</strong></div></div>
-    <div class="overview-rule" style="margin-top:15px"></div>
-    <div class="overview-bottom"><span><b>01</b> Capture screenshot</span><span><b>02</b> Add evidence</span><span><b>03</b> Save report</span></div>
+<section class="shortcut-grid" aria-label="Quick actions">
+  <a class="shortcut-card" href="#incidentSection" data-upload-shortcut><span class="shortcut-icon">▣</span><strong>Upload<br>Evidence</strong></a>
+  <a class="shortcut-card" href="#recordsSection"><span class="shortcut-icon">▱</span><strong>My<br>Reports</strong></a>
+  <button class="shortcut-card" type="button" data-export-shortcut><span class="shortcut-icon">PDF</span><strong>Export<br>PDF</strong></button>
+  <button class="shortcut-card" type="button" data-share-shortcut><span class="shortcut-icon">⌯</span><strong>Share<br>App</strong></button>
 </section>
-<div class="notice "><strong>Prototype storage notice:</strong> Records are currently saved only in this browser on this device. They are not uploaded to a shared server or visible to other partners. Export backups regularly. Do not treat this prototype as secure central evidence storage.<br><strong id="ocrState" style="color:#624c20">Loading OCR engine…</strong></div>
-<section class="card " id="incidentSection">
+<section class="overview-panel workspace-overview" aria-label="Workspace statistics">
+  <div class="overview-top"><span>▥ &nbsp; Workspace</span><span class="storage-indicator">● Saved on this device</span></div>
+  <div class="dashboard-metrics" aria-label="Report summary">
+    <div class="dashboard-metric"><strong id="dashboardCount">0</strong><span>Total Reports</span></div>
+    <div class="dashboard-metric"><strong id="dashboardTypes">0</strong><span>Categories</span></div>
+    <div class="dashboard-metric"><strong id="dashboardEvidence">0</strong><span>Evidence Photos</span></div>
+  </div>
+  <div class="overview-bottom"><span><b id="dashboardWeek">0</b> Added this week</span><span>Private device storage</span></div>
+</section><section class="card " id="recordsSection">
+<div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
+<div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div class="selection-tools no-print"><div><strong id="selectionCount">0 complaints selected</strong><small id="selectionHelp">Select multiple complaints to combine them into one PDF, with a separate section for each complaint.</small></div><div class="actions"><button class="secondary" id="selectAllBtn" type="button">Select all</button><button id="combinedPdfBtn" type="button" disabled>Generate combined PDF</button></div></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
+</section><section class="card " id="incidentSection">
 <div class="section-heading"><span class="section-number">01</span><h2>Submit an incident</h2></div>
 <p class="section-subtitle">Follow the guided steps. Review the Order ID and time before saving.</p>
 <form id="incidentForm">
@@ -2436,19 +2511,17 @@ button.danger{background:#3b2029;color:#ffb9bd;border-color:#79404b}
 <div class="status" id="formStatus" role="status" aria-live="polite"></div>
 </div>
 </form>
-</section>
-<section class="card " id="recordsSection">
-<div class="records-head"><div><div class="section-heading"><span class="section-number">02</span><h2 style="margin:0">Saved records <span class="pill" id="count">0</span></h2></div><small>Stored on this device only</small></div><div class="actions" style="margin:0;justify-content:flex-end"><button class="secondary" id="exportBtn" type="button">Export report / PDF</button><button class="secondary" id="backupBtn" type="button">Download backup</button></div></div>
-<div class="record-tools"><label class="sr-only" for="recordSearch">Search saved records</label><span class="search-symbol" aria-hidden="true">⌕</span><input id="recordSearch" type="search" placeholder="Search by Order ID, store or issue…" autocomplete="off"><span id="searchCount" class="search-count">All records</span></div><div class="selection-tools no-print"><div><strong id="selectionCount">0 complaints selected</strong><small id="selectionHelp">Select multiple complaints to combine them into one PDF, with a separate section for each complaint.</small></div><div class="actions"><button class="secondary" id="selectAllBtn" type="button">Select all</button><button id="combinedPdfBtn" type="button" disabled>Generate combined PDF</button></div></div><div id="records" style="margin-top:12px"><p class="hint">No records saved yet.</p></div>
-</section>
-<section class="creator-card" aria-label="About the creator">
+</section><section class="creator-card" aria-label="About the creator">
   <img id="creatorPhoto" class="creator-photo" alt="Portrait of the creator" width="112" height="112" loading="lazy">
   <div class="creator-copy"><span class="creator-eyebrow">ABOUT THE CREATOR</span><strong>Maddula Venkata Ramana</strong><span>Creator of SOP &amp; Proof Hub</span><div class="creator-links"><a href="privacy.html">Privacy policy</a><span aria-hidden="true">·</span><span id="appBuild">Build 2026.11.25 · Full portrait</span></div></div>
-</section>
-</main>
-<nav class="bottom-nav" aria-label="Quick navigation"><a class="primary" href="#incidentSection">＋ New report</a><a href="#recordsSection">▤ Saved records</a><button id="languageToggleMobile" type="button" class="secondary" aria-label="Switch language">తెలుగు</button></nav>
-
-<script>
+</section></main>
+<nav class="bottom-nav app-bottom-nav" aria-label="Main navigation">
+  <a class="nav-item active" href="#homeSection"><span>⌂</span><small>Home</small></a>
+  <a class="nav-item" href="#incidentSection"><span>▤</span><small>Report</small></a>
+  <a class="nav-item nav-create" href="#incidentSection" aria-label="Create report"><span>＋</span></a>
+  <a class="nav-item" href="#recordsSection"><span>▱</span><small>Records</small></a>
+  <a class="nav-item" href="privacy.html"><span>⠿</span><small>More</small></a>
+</nav><script>
 
 const $=id=>document.getElementById(id);
 
@@ -3682,6 +3755,12 @@ function applyRecordSearch(){
 }
 if(searchInput)searchInput.addEventListener('input',applyRecordSearch);
 
+
+// Dashboard shortcut actions
+ document.querySelectorAll('[data-focus-search]').forEach(b=>b.addEventListener('click',()=>{const x=document.getElementById('recordSearch');if(x){document.getElementById('recordsSection').scrollIntoView({behavior:'smooth'});setTimeout(()=>x.focus(),350)}}));
+ document.querySelectorAll('[data-export-shortcut]').forEach(b=>b.addEventListener('click',()=>document.getElementById('exportBtn')?.click()));
+ document.querySelectorAll('[data-share-shortcut]').forEach(b=>b.addEventListener('click',()=>document.getElementById('shareAppBtn')?.click()));
+ document.querySelectorAll('[data-upload-shortcut]').forEach(b=>b.addEventListener('click',()=>{setTimeout(()=>document.getElementById('orderShot')?.click(),250)}));
 </script>
 
 </body></html>
